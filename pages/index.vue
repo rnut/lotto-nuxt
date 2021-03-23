@@ -1,42 +1,16 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">nuxt</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-    <hr class="divider" />
-      <div v-if="loggedIn">
-        <h1>Hello, {{ user.name }}</h1>
-        <button @click="logout" class="button--grey">Logout</button>
-      </div>
-      <div v-else>
-        <nuxt-link to="/login" class="button--grey">Login</nuxt-link>
-      </div>
+  <div>
+    <NavBar/>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
+import NavBar from '~/components/NavBar'
 
 export default {
+  components: {
+    NavBar
+  },
   data() {
     return {
       user: this.$auth.user,
@@ -49,7 +23,7 @@ export default {
       this.$router.push('/login');
     }
   },
-  middleware: 'auth',
+  // middleware: 'auth',
 }
 </script>
 
