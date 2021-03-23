@@ -77,10 +77,11 @@
 <script>
 import {} from '@nuxtjs/axios'
 export default {
+  layout: 'auth',
   data() {
     return {
       username: '',
-      password: '',
+      password: ''
     }
   },
   methods: {
@@ -88,7 +89,7 @@ export default {
       e.preventDefault()
       const payload = {
         username: this.username,
-        password: this.password,
+        password: this.password
       }
       try {
         await this.$auth.loginWith('local', { data: payload })
@@ -96,8 +97,8 @@ export default {
       } catch (e) {
         this.$router.push('/login')
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -121,7 +121,8 @@
       <span
         @click="isOpen = false"
         class="flex items-center p-4 hover:bg-indigo-500 hover:text-white"
-        ><span class="mr-2">
+      >
+        <span class="mr-2">
           <svg
             fill="none"
             stroke="currentColor"
@@ -261,13 +262,13 @@
 export default {
   data() {
     return {
-      isOpen: false,
+      isOpen: false
     }
   },
   methods: {
     drawer() {
       this.isOpen = !this.isOpen
-    },
+    }
   },
   watch: {
     isOpen: {
@@ -277,15 +278,15 @@ export default {
           if (isOpen) document.body.style.setProperty('overflow', 'hidden')
           else document.body.style.removeProperty('overflow')
         }
-      },
-    },
+      }
+    }
   },
   mounted() {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-          this.drawer()
+        this.drawer()
       }
     })
-  },
+  }
 }
 </script>

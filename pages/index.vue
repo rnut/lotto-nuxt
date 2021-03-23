@@ -1,28 +1,76 @@
 <template>
-  <div>
-    <NavBar/>
+  <div class="w-full h-full p-16">
+    <h1>Market</h1>
+    <section class="mx-4 flex flex-row flex-wrap">
+      <div
+        v-for="item in items"
+        :key="item.id"
+        class="rounded-md border-2 border-gray-100 p-24 m-2 bg-gray-100"
+      >
+        <h1>หุ้นไต้หวัน</h1>
+        <h2>รอบ(3) 05:00</h2>
+        <div>เหลือเวลา 56 นาที</div>
+      </div>
+
+      <div class="rounded border-2 border-indigo-600">
+        <h1>หุ้นไต้หวัน</h1>
+        <h2>รอบ(3) 05:00</h2>
+        <div>เหลือเวลา 56 นาที</div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import NavBar from '~/components/NavBar'
-
+import Logo from '~/components/Logo'
 export default {
   components: {
-    NavBar
+    Logo
   },
   data() {
     return {
+      items: [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
       user: this.$auth.user,
       loggedIn: this.$auth.loggedIn
-    };
+    }
   },
   methods: {
     async logout() {
-      await this.$auth.logout();
-      this.$router.push('/login');
+      await this.$auth.logout()
+      this.$router.push('/login')
     }
-  },
+  }
   // middleware: 'auth',
 }
 </script>
