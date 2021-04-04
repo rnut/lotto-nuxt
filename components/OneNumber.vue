@@ -53,6 +53,7 @@
         </div>
         <div class="flex flex-col pt-7 items-start">
           <button
+            @click="submit"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
           >
             ยืนยัน
@@ -130,6 +131,10 @@ export default {
       })
       console.log('checkDup', duplicated, ' length:', duplicated.length)
       return duplicated.length > 0
+    },
+    submit() {
+      console.log('submit one numbers: ', this.activeNumbers)
+      this.$emit('onSubmited', this.activeNumbers)
     }
   }
 }

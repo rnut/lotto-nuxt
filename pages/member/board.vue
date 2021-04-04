@@ -5,7 +5,7 @@
     <!-- <ThreeNumber /> -->
     <!-- <SixNumber /> -->
     <!-- <NineTeenNumber /> -->
-    <OneNumber />
+    <OneNumber @onSubmited="onSubmit" />
   </div>
 </template>
 <script>
@@ -21,6 +21,11 @@ export default {
     SixNumber,
     NineTeenNumber,
     OneNumber
+  },
+  methods: {
+    onSubmit(value) {
+      console.log('submit', value)
+    }
   }
 }
 </script>
