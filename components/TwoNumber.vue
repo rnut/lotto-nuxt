@@ -1,11 +1,10 @@
 <template>
-  <div class="p-16">
-    <h1 class="text-2xl">2 ตัว</h1>
+  <div class="">
     <div class="border border-gray-800 pt-8 pb-16 px-8 mx-2 my-8 rounded-lg">
       <div class="grid grid-cols-4 gap-4 my-4">
         <div class="col-span-2">
           <label class="block" for="priceBon">
-            <span class="text-gray-700 text-sm">เลข</span>
+            <span class="text-gray-700 text-sm">เลข 2 ตัว</span>
             <div
               class="rounded bg-gray-50 border border-gray-200 shadow-md p-4 flex flex-row flex-wrap activeNumbers"
             >

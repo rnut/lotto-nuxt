@@ -15,54 +15,18 @@
 </template>
 <script>
 export default {
+  components: {},
   head() {
     return {
-      title: 'Nuxt Fetch API'
+      title: ''
     }
   },
-  mounted() {
-    const source = '112'
-    const swap = this.swap6Numbers(source)
-    console.log('results: ', swap)
-  },
+  mounted() {},
   async asyncData({ $axios }) {
     // const photos = await $axios.$get('https://picsum.photos/v2/list?limit=12')
     // return { photos }
   },
-  methods: {
-    checkDuplicatedInList(list, val) {
-      const duplicated = list.filter((obj) => {
-        return obj === val
-      })
-      return duplicated.length > 0
-    },
-    swap(number1, number2) {
-      return `${number2}${number1}`
-    },
-    swap6Numbers(source) {
-      var results = Array()
-      for (let index = 0; index < 6; index++) {
-        const first = source.charAt((0 + index) % 3)
-        const second = source.charAt((1 + index) % 3)
-        const third = source.charAt((2 + index) % 3)
-        const combine = `${first}${second}${third}`
-        const isDuplicated = this.checkDuplicatedInList(results, combine)
-        if (!isDuplicated) {
-          results.push(combine)
-        }
-        const swaped = this.swap(second, third)
-        const combineSwap = `${first}${swaped}`
-        const isDuplicatedSwap = this.checkDuplicatedInList(
-          results,
-          combineSwap
-        )
-        if (!isDuplicatedSwap) {
-          results.push(combineSwap)
-        }
-      }
-      return results
-    }
-  }
+  methods: {}
 }
 </script>
 <style scoped>

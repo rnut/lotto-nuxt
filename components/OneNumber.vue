@@ -1,5 +1,5 @@
 <template>
-  <div class="p-16">
+  <div class="">
     <h1 class="text-2xl">วิ่ง</h1>
     <div class="border border-gray-800 pt-8 pb-16 px-8 mx-2 my-8 rounded-lg">
       <div class="grid grid-cols-4 gap-4 my-4">
