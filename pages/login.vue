@@ -92,9 +92,11 @@ export default {
         password: this.password
       }
       try {
-        await this.$auth.loginWith('local', { data: payload })
+        const resp = await this.$auth.loginWith('local', { data: payload })
+        this.$auth.setToken('local', 'Bearer ' + resp.data.token)
         this.$router.push('/')
       } catch (e) {
+        console.log('e', e)
         this.$router.push('/login')
       }
     }

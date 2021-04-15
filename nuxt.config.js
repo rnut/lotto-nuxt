@@ -45,7 +45,10 @@ export default {
   axios: {
     baseURL: 'http://127.0.0.1:8080/api/v1',
     proxyHeaders: false,
-    credentials: false
+    credentials: false,
+    headers: {
+      Authrization: 'Bearer'
+    }
   },
   auth: {
     strategies: {
@@ -53,7 +56,7 @@ export default {
         endpoints: {
           login: { url: 'auth/signin', method: 'post', propertyName: 'token' },
           user: { url: '/auth/me', method: 'get', propertyName: false },
-          logout: false
+          logout: { url: '/auth/signout', method: 'post' }
         }
       }
     },

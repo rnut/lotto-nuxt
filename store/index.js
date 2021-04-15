@@ -2,7 +2,30 @@ export const state = () => ({
   counter: 0,
 })
 export const mutations = {
-  increment(state) {
+  increment (state) {
     state.counter++
   },
+}
+export const getters = {
+  isAuthenticated (state) {
+    return state.auth.loggedIn
+  },
+
+  loggedInUser (state) {
+    return state.auth.user
+  },
+
+  navigations (state) {
+    switch (state.auth.user.role) {
+      case 'admin':
+        return [
+          { title: 'สรุป', link: '/admin/dashboard' },
+          { title: 'รายการแทง', link: '/admin/bills' },
+          { title: 'จัดการสมาชิก', link: '/admin/manage/members' }]
+      case 'agent':
+        return []
+      default:
+        return [{ title: 'แทง', link: 'member/board' },]
+    }
+  }
 }
