@@ -1,6 +1,9 @@
 <template>
   <div class="w-full h-full p-16 overflow-auto">
     <button class="bg-red-300"></button>
+    <NuxtLink :to="`blogs/ioiweuprio`">
+      <li>test</li>
+    </NuxtLink>
   </div>
 </template>
 
@@ -10,7 +13,9 @@ export default {
   components: {
     Logo
   },
-  data() {},
+  data() {
+    return {}
+  },
   methods: {},
   middleware: 'auth'
 }

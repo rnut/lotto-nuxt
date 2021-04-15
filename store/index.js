@@ -21,7 +21,7 @@ export const getters = {
         return [
           { title: 'สรุป', link: '/admin/dashboard' },
           { title: 'รายการแทง', link: '/admin/bills' },
-          { title: 'จัดการสมาชิก', link: '/admin/manage/members' }]
+          { title: 'จัดการสมาชิก', link: '/members' }]
       case 'agent':
         return []
       default:
