@@ -5,15 +5,15 @@
       <div class="h-16"></div>
     </div>
     <div class="m-4 grid lg:grid-cols-5 lg:gap-16 sm:grid-cols-1">
-      <div class="">
-        <p class="text-sm underline">สรุปรายการ</p>
+      <!-- // summary -->
+      <Summary :lottos="lottos" />
 
+      <!-- // calculated -->
+      <div class="" v-if="calculated">
         <div class="grid grid-cols-5 gap-8 bg-purple-200">
           <div class="py-3 text-center">ประเภท</div>
           <div class="py-3 text-center">หมายเลข</div>
           <div class="py-3 text-center">ยอด</div>
-          <div class="py-3 text-center">เรทจ่าย</div>
-          <div class="py-3 text-center">ส่วนลด</div>
         </div>
         <hr />
         <div class="divide-y-2 divide-purple-200 divide-solid">
@@ -25,12 +25,8 @@
             <div class="py-3">{{ lotto.type }}</div>
             <div class="py-3">{{ lotto.number }}</div>
             <div class="py-3">{{ lotto.price }}</div>
-            <div class="py-3">{{ lotto.reward }}</div>
-            <div class="py-3">{{ lotto.sale }}</div>
           </div>
         </div>
-
-        <!-- <div class="divide-y-2 divide-purple-600 divide-solid"></div> -->
       </div>
       <div class="col-span-2 sm:mt-16">
         <div class="bg-white">
@@ -124,24 +120,21 @@ import TwoNumber from '~/components/TwoNumber'
 import SixNumber from '~/components/SixNumber'
 import NineTeenNumber from '~/components/NineTeenNumber'
 import OneNumber from '~/components/OneNumber.vue'
+import Summary from '~/components/Summary.vue'
 export default {
   components: {
     TwoNumber,
     ThreeNumber,
     SixNumber,
     NineTeenNumber,
-    OneNumber
+    OneNumber,
+    Summary
   },
   data() {
     return {
+      calculated: false,
       openTab: 1,
-      lottos: [
-        { type: '2 ตัวบน', number: 32, price: 100, reward: 92, sale: 8 },
-        { type: '2 ตัวบน', number: 13, price: 100, reward: 92, sale: 8 },
-        { type: '2 ตัวบน', number: 23, price: 100, reward: 92, sale: 8 },
-        { type: '2 ตัวบน', number: 45, price: 100, reward: 92, sale: 8 },
-        { type: '2 ตัวบน', number: 67, price: 100, reward: 92, sale: 8 }
-      ]
+      lottos: []
     }
   },
   methods: {
@@ -152,7 +145,10 @@ export default {
       this.openTab = tabNumber
     },
     onSubmittedNumbers(n) {
-      console.log('numbers: ', n)
+      console.log('lottos-before', this.lottos)
+      this.lottos = this.lottos.concat(n)
+      console.log('submit', n)
+      console.log('lottos', this.lottos)
     }
   }
 }

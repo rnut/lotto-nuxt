@@ -132,7 +132,13 @@ export default {
           }
         ]
       })
-      const emitDatas = lottos.flat()
+      const emitDatas = {
+        title: '2 ตัว',
+        subtitle: 'บน x ล่าง',
+        detail: `${this.bonPrice} x ${this.langPrice}`,
+        numbers: lottos.flat()
+      }
+
       this.$emit('numbers-submitted', emitDatas)
       this.reset()
     },
