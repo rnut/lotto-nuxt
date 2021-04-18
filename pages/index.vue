@@ -1,17 +1,16 @@
 <template>
-  <div class="w-full h-full p-16 overflow-auto">
-    <button class="bg-red-300"></button>
-    <NuxtLink :to="`blogs/ioiweuprio`">
-      <li>test</li>
-    </NuxtLink>
-  </div>
+  <div class="w-full h-full p-16 overflow-auto"></div>
 </template>
 
 <script>
+import VueCountdown from '@chenfengyuan/vue-countdown'
 import Logo from '~/components/Logo'
+import Clock from '~/components/Clock'
 export default {
   components: {
-    Logo
+    Clock,
+    Logo,
+    VueCountdown
   },
   data() {
     return {}

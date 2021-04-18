@@ -21,11 +21,12 @@ export const getters = {
         return [
           { title: 'สรุป', link: '/admin/dashboard' },
           { title: 'รายการแทง', link: '/admin/bills' },
-          { title: 'จัดการสมาชิก', link: '/members' }]
+          { title: 'จัดการสมาชิก', link: '/members' },
+          { title: 'จัดการตลาด', link: '/markets' }]
       case 'agent':
         return []
       default:
-        return [{ title: 'แทง', link: 'member/board' },]
+        return [{ title: 'แทง', link: '/boards' },]
     }
   }
 }

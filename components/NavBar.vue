@@ -19,9 +19,9 @@
       </button>
       <!-- <img src="/logos/shuttle.png" alt="Logo" class="h-auto w-24" /> -->
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center justify-items-center">
       <div class="hidden md:block md:flex md:justify-between md:bg-transparent">
-        <button
+        <!-- <button
           title="Wishlist"
           class="flex items-center p-3 font-medium mr-2 text-center bg-gray-300 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
         >
@@ -38,6 +38,7 @@
           </svg>
           <span>Wishlist</span>
         </button>
+
         <button
           class="flex items-center p-3 font-medium mr-2 text-center bg-gray-300 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
         >
@@ -55,6 +56,7 @@
             ></path>
           </svg>
         </button>
+
         <button
           class="flex items-cente p-3 font-medium mr-2 text-center bg-gray-300 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
         >
@@ -71,21 +73,11 @@
               d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             ></path>
           </svg>
-        </button>
-        <a
-          rel="noopener"
-          href="https://www.buymeacoffee.com/fayazahmed"
-          target="_blank"
-          title="Help me keep this site alive"
-          class="flex items-center px-3 py-3 font-medium mr-2 text-center bg-orange-600 rounded text-white hover:bg-orange-700 focus:outline-none focus:bg-orange-400"
-        >
-          <img
-            class="mr-2 h-6 w-auto"
-            src="/sidebar/bmc.svg"
-            alt="Buy Me Coffee"
-          />
-          <p class="font-bold">Buy me a Coffee</p></a
-        >
+        </button> -->
+
+        <div class="flex flex-col items-center">
+          <clock />
+        </div>
       </div>
     </div>
 
@@ -157,7 +149,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Clock from './Clock.vue'
 export default {
+  components: { Clock },
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser', 'navigations'])
   },
