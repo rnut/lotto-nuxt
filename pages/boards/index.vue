@@ -8,6 +8,7 @@
         :key="item.id"
         v-bind:style="{ 'background-color': item.color }"
         class="transition duration-600 ease-in transform hover:scale-125 rounded-md bg-white border border-gray-100 py-8 px-8 m-4 shadow"
+        @click="onClickMarket(item)"
       >
         <p
           class="text-2xl text-left tracking-wide overflow-ellipsis overflow-hidden text-gray-700"
@@ -60,28 +61,29 @@ export default {
       await this.$auth.logout()
       this.$router.push('/login')
     },
+    async onClickMarket(item) {
+      const url = `${this.$axios.defaults.baseURL}/markets/status/${item._id}`
+      try {
+        await this.$axios.$get(url)
+        this.$router.push(`/boards/${item._id}`)
+      } catch (e) {
+        alert('ตลาดนี้ยังไม่พร้อมใช้งาน')
+      }
+    },
     getTimeRemaining(openTime, closeTime) {
       const timeFormat = 'HH:mm'
       const startTime = moment(openTime, timeFormat)
       const endTime = moment(closeTime, timeFormat)
       const currentTime = moment()
-      // const started = true
       const started = currentTime.isAfter(startTime)
       const ended = currentTime.isAfter(endTime)
       const remaining = endTime.diff(currentTime, 'seconds')
-      console.log('startTime: ', startTime)
-      console.log('endTime: ', endTime)
-      console.log('currentTime: ', currentTime)
-      console.log('started: ', started)
-      console.log('ended: ', ended)
-      console.log('remaining: ', remaining)
       if (started && !ended) {
-        return endTime.diff(currentTime, 'seconds') * 1000
+        return remaining * 1000
       } else {
         return 0
       }
     }
   }
-  // middleware: 'auth',
 }
 </script>

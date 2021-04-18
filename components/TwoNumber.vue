@@ -26,6 +26,7 @@
                   >บน</span
                 >
                 <input
+                  v-model="bonPrice"
                   name="priceBon"
                   id="priceBon"
                   type="number"
@@ -40,6 +41,7 @@
                   >ล่าง</span
                 >
                 <input
+                  v-model="langPrice"
                   name="priceLang"
                   id="priceLang"
                   type="number"
@@ -52,12 +54,14 @@
         </div>
         <div class="flex flex-col pt-7 items-start">
           <button
+            @click="submit"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
           >
             ยืนยัน
           </button>
 
           <button
+            @click="reset"
             class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
           >
             รีเซ็ต
@@ -83,6 +87,8 @@
 export default {
   data() {
     return {
+      bonPrice: Number,
+      langPrice: Number,
       activeNumber: Number,
       activeNumbers: [],
       activeNumberError: ''
@@ -104,6 +110,32 @@ export default {
     }
   },
   methods: {
+    reset() {
+      this.bonPrice = null
+      this.langPrice = null
+      this.activeNumber = null
+      this.activeNumbers = []
+      this.activeNumberError = ''
+    },
+    submit() {
+      const lottos = this.activeNumbers.map((number) => {
+        return [
+          {
+            type: 'char2bon',
+            number: number.data,
+            price: this.bonPrice
+          },
+          {
+            type: 'char2lang',
+            number: number.data,
+            price: this.langPrice
+          }
+        ]
+      })
+      const emitDatas = lottos.flat()
+      this.$emit('numbers-submitted', emitDatas)
+      this.reset()
+    },
     isNumber(evt) {
       this.activeNumberError = ''
       evt = evt ? evt : window.event
@@ -120,10 +152,8 @@ export default {
     },
     checkDuplicatedActiveNumber(val) {
       const duplicated = this.activeNumbers.filter((obj) => {
-        console.log('data: ', obj.data)
         return obj.data === val
       })
-      console.log('checkDup', duplicated, ' length:', duplicated.length)
       return duplicated.length > 0
     }
   }

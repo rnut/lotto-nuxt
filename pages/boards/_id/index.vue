@@ -94,16 +94,12 @@
         </div>
         <div class="relative bg-indigo-200">
           <transition name="fade ">
-            <TwoNumber v-show="openTab === 1" class="absolute" />
+            <TwoNumber
+              v-show="openTab === 1"
+              class="absolute"
+              @numbers-submitted="onSubmittedNumbers"
+            />
           </transition>
-          <!-- <TwoNumber
-        v-bind:class="{
-          'transition -translate-y-full opacity-0 ease-out duration-300 motion-reduce:transition-none motion-reduce:transform-none hidden':
-            openTab !== 1,
-          'block transform opacity-100 visible ease-in duration-500':
-            openTab === 1
-        }"
-      /> -->
           <transition name="fade">
             <ThreeNumber v-show="openTab === 2" class="absolute" />
           </transition>
@@ -116,12 +112,6 @@
           <transition name="fade">
             <OneNumber v-show="openTab === 5" class="absolute" />
           </transition>
-          <!-- <SixNumber/> -->
-          <!-- <NineTeenNumber /> -->
-          <!-- <OneNumber
-      v-bind:class="{ hidden: openTab !== 2, block: openTab === 2 }"
-      @onSubmited="onSubmit"
-    /> -->
         </div>
       </div>
       <div class="col-span-2"></div>
@@ -160,6 +150,9 @@ export default {
     },
     toggleTabs(tabNumber) {
       this.openTab = tabNumber
+    },
+    onSubmittedNumbers(n) {
+      console.log('numbers: ', n)
     }
   }
 }
