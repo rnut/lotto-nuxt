@@ -117,7 +117,7 @@ export default {
   async asyncData({ $axios }) {
     const url = `${$axios.defaults.baseURL}/markets`
     const resp = await $axios.$get(url)
-    const markets = resp.markets
+    const markets = resp.data
     return { markets }
   },
   methods: {

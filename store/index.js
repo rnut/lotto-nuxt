@@ -26,7 +26,10 @@ export const getters = {
       case 'agent':
         return []
       default:
-        return [{ title: 'แทง', link: '/boards' },]
+        return [
+          { title: 'รายการแทง', link: '/dashboard/member' },
+          { title: 'แทง', link: '/boards' }
+        ]
     }
   }
 }
