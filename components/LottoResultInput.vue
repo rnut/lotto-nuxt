@@ -1,12 +1,21 @@
 <template>
   <div class="tag-input">
-    <div v-for="(tag, index) in tags" :key="tag" class="tag-input__tag">
-      <span @click="removeTag(index)">x</span>
+    <div
+      v-for="(tag, index) in lottoResult.result"
+      :key="tag"
+      v-bind:class="{
+        'bg-purple-500 text-white': !disabled,
+        'bg-gray-300 text-gray-800': disabled
+      }"
+      class="tag-input__tag p-1"
+    >
+      <span v-if="!disabled" @click="removeTag(index)">x</span>
       {{ tag }}
     </div>
     <input
+      v-if="!disabled"
       type="text"
-      placeholder="Enter a Tag"
+      placeholder="ระบุหมายเลขรางวัล"
       class="tag-input__text"
       @keydown.enter="addTag"
       @keydown.188="addTag"
@@ -16,19 +25,21 @@
 </template>
 <script>
 export default {
+  props: ['lottoResult', 'disabled'],
   data() {
     return {
-      tags: ['hello', 'world']
+      tags: []
     }
   },
   methods: {
     addTag(event) {
       event.preventDefault()
       var val = event.target.value.trim()
-      if (val.length > 0) {
+      if (val.length > 0 && !this.tags.includes(val)) {
         this.tags.push(val)
         event.target.value = ''
-        this.$emit('onSubmitTags', this.tags)
+        this.lottoResult.result = this.tags
+        this.$emit('onSubmitResult', this.lottoResult)
       }
     },
     removeTag(index) {
@@ -45,7 +56,6 @@ export default {
 <style scoped>
 .tag-input {
   width: 100%;
-  /* border: 1px solid #eee; */
   font-size: 0.9em;
   height: 50px;
   box-sizing: border-box;
@@ -56,7 +66,6 @@ export default {
   height: 30px;
   float: left;
   margin-right: 10px;
-  background-color: #eee;
   margin-top: 10px;
   line-height: 30px;
   padding: 0 5px;
