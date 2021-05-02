@@ -27,8 +27,9 @@ export const getters = {
         return []
       default:
         return [
-          { title: 'รายการแทง', link: '/dashboard/member' },
-          { title: 'แทง', link: '/boards' }
+          { title: 'สรุป', link: '/dashboard/member' },
+          { title: 'แทง', link: '/boards' },
+          { title: 'รายการแทง', link: '/transactions' },
         ]
     }
   }
