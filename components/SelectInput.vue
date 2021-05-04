@@ -33,7 +33,8 @@ export default {
     return {
       markets: this.sourceMarkets,
       selectedMarket: {},
-      tags: [
+      tags: [],
+      tagss: [
         {
           isActive: false,
           isDelete: false,

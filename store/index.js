@@ -19,10 +19,12 @@ export const getters = {
     switch (state.auth.user.role) {
       case 'admin':
         return [
-          { title: 'สรุป', link: '/admin/dashboard' },
+          { title: 'สรุป', link: '/dashboard/admin' },
           { title: 'รายการแทง', link: '/admin/bills' },
           { title: 'จัดการสมาชิก', link: '/members' },
-          { title: 'จัดการตลาด', link: '/markets' }]
+          { title: 'จัดการตลาด', link: '/markets' },
+          { title: 'ตั้งค่า', link: '/settings' }
+        ]
       case 'agent':
         return []
       default:
