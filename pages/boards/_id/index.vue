@@ -1,6 +1,6 @@
 <template>
-  <div class="lg:p-8">
-    <div class="flex flex-row gap-8">
+  <div class="p-8">
+    <section class="flex flex-row gap-8">
       <div>
         <span class="font-extrabold text-2xl text-purple-600 py-3">
           {{ market.name }}
@@ -19,33 +19,11 @@
           </VueCountdown>
         </client-only>
       </div>
-    </div>
-    <div class="m-4 grid lg:grid-cols-5 lg:gap-16 sm:grid-cols-1">
-      <!-- // summary -->
-      <Summary :lottos="lottos" />
-
-      <!-- // calculated -->
-      <div class="" v-if="calculated">
-        <div class="grid grid-cols-5 gap-8 bg-purple-200">
-          <div class="py-3 text-center">ประเภท</div>
-          <div class="py-3 text-center">หมายเลข</div>
-          <div class="py-3 text-center">ยอด</div>
-        </div>
-        <hr />
-        <div class="divide-y-2 divide-purple-200 divide-solid">
-          <div
-            v-for="lotto in lottos"
-            :key="lotto.id"
-            class="grid grid-cols-5 gap-8"
-          >
-            <div class="py-3">{{ lotto.type }}</div>
-            <div class="py-3">{{ lotto.number }}</div>
-            <div class="py-3">{{ lotto.price }}</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-span-2 sm:mt-16">
-        <div class="bg-white">
+    </section>
+    <div class="flex">
+      <main class="w-1/2">
+        <!-- // creator -->
+        <div class="border border-gray-500 rounded-md p-4 h-72 my-4 w-auto">
           <nav class="flex flex-col sm:flex-row">
             <button
               v-on:click="toggleTabs(1)"
@@ -103,30 +81,201 @@
               วิ่ง
             </button>
           </nav>
+          <div class="relative bg-indigo-200">
+            <transition name="fade ">
+              <TwoNumber
+                v-show="openTab === 1"
+                class="absolute"
+                @numbers-submitted="onSubmittedNumbers"
+              />
+            </transition>
+            <transition name="fade">
+              <ThreeNumber v-show="openTab === 2" class="absolute" />
+            </transition>
+            <transition name="fade">
+              <SixNumber v-show="openTab === 3" class="absolute" />
+            </transition>
+            <transition name="fade">
+              <NineTeenNumber v-show="openTab === 4" class="absolute" />
+            </transition>
+            <transition name="fade">
+              <OneNumber v-show="openTab === 5" class="absolute" />
+            </transition>
+          </div>
         </div>
-        <div class="relative bg-indigo-200">
-          <transition name="fade ">
-            <TwoNumber
-              v-show="openTab === 1"
-              class="absolute"
-              @numbers-submitted="onSubmittedNumbers"
-            />
-          </transition>
-          <transition name="fade">
-            <ThreeNumber v-show="openTab === 2" class="absolute" />
-          </transition>
-          <transition name="fade">
-            <SixNumber v-show="openTab === 3" class="absolute" />
-          </transition>
-          <transition name="fade">
-            <NineTeenNumber v-show="openTab === 4" class="absolute" />
-          </transition>
-          <transition name="fade">
-            <OneNumber v-show="openTab === 5" class="absolute" />
-          </transition>
+
+        <div v-if="lottos.length > 0">
+          <!-- // summary -->
+          <Summary :lottos="lottos" />
+
+          <!-- // calculated -->
+          <div class="" v-if="calculated">
+            <div class="grid grid-cols-5 gap-8 bg-purple-200">
+              <div class="py-3 text-center">ประเภท</div>
+              <div class="py-3 text-center">หมายเลข</div>
+              <div class="py-3 text-center">ยอด</div>
+            </div>
+            <hr />
+            <div class="divide-y-2 divide-purple-200 divide-solid">
+              <div
+                v-for="lotto in lottos"
+                :key="lotto.id"
+                class="grid grid-cols-5 gap-8"
+              >
+                <div class="py-3">{{ lotto.type }}</div>
+                <div class="py-3">{{ lotto.number }}</div>
+                <div class="py-3">{{ lotto.price }}</div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="col-span-2"></div>
+      </main>
+
+      <section class="px-8 w-1/2">
+        <div class="bg-purple-600 rounded">
+          <table
+            class="table-auto w-full"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+          >
+            <thead>
+              <th></th>
+              <th>bill no.</th>
+              <th>market</th>
+              <th>time</th>
+              <th>volumn</th>
+              <th>price</th>
+              <th>discount</th>
+              <th>actions</th>
+            </thead>
+            <tbody class="bg-purple-100">
+              <template v-for="bill in bills">
+                <tr
+                  :key="bill._id"
+                  class="z-0 text-purple-900 border-t-2 border-white"
+                >
+                  <td class="cursor-pointer" @click="onClickBill(bill)">
+                    <img
+                      src="/svg/expand_more_black_24dp.svg"
+                      alt="Logo"
+                      class="h-auto mx-auto"
+                    />
+                  </td>
+                  <td>{{ bill._id }}</td>
+                  <td>{{ bill.createdBy.username }}</td>
+                  <td>{{ bill.createdBy.name }}</td>
+                  <td>{{ getBillMarketName(bill) }}</td>
+                  <td>
+                    {{ bill.createdAt | humanDateTime }}
+                  </td>
+                  <td>{{ getBillVolume(bill) }}</td>
+                  <td>{{ bill.totalPrice | currencies }}</td>
+                  <td>{{ bill.totalDiscount | currencies }}</td>
+                  <td>{{ bill.totalReward | currencies }}</td>
+                  <td>
+                    <span
+                      :class="{
+                        'text-red-500': getTotalSummaryBill(bill) < 0,
+                        'text-green-700': getTotalSummaryBill(bill) > 0,
+                        'text-gray-500': getTotalSummaryBill(bill) === 0
+                      }"
+                    >
+                      {{ getTotalSummaryBill(bill) | currencies }}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      class="p-2 rounded"
+                      v-bind:class="{
+                        'bg-red-500 text-white':
+                          getBillStatus(bill) === 'รอการชำระเงิน',
+                        'bg-yellow-200 text-gray-600':
+                          getBillStatus(bill) === 'รอผล',
+                        'bg-green-400 text-white':
+                          getBillStatus(bill) === 'ประกาศผลแล้ว'
+                      }"
+                      >{{ getBillStatus(bill) }}</span
+                    >
+                  </td>
+                  <td class="">
+                    <div class="flex gap">
+                      <button
+                        v-if="!bill.isConfirmPayment"
+                        @click="onClickDelete(bill)"
+                        class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                      >
+                        <img
+                          src="/svg/delete_white_24dp.svg"
+                          alt="Logo"
+                          class="h-auto mx-auto"
+                        />
+                      </button>
+
+                      <button
+                        v-if="!bill.isConfirmPayment"
+                        @click="onClickConfirmPayment(bill)"
+                        class="bg-green-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                      >
+                        <img
+                          src="/svg/payments_white_24dp.svg"
+                          alt="Logo"
+                          class="h-auto mx-auto"
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
+                  <td colspan="13">
+                    <table
+                      class="table-auto w-full bg-white border border-purple-400"
+                      cellpadding="0"
+                      cellspacing="0"
+                    >
+                      <thead class="bg-purple-400 rounded">
+                        <th>ประเภท</th>
+                        <th>หมายเลข</th>
+                        <th>ยอด</th>
+                        <th>เรทจ่าย</th>
+                        <th>ส่วนลด</th>
+                        <th>ยอดถูก</th>
+                        <th>สถานะ</th>
+                      </thead>
+
+                      <tbody>
+                        <tr v-for="lotto in bill.lottos" :key="lotto._id">
+                          <td>{{ lotto.lotto.title }}</td>
+                          <td>{{ lotto.number }}</td>
+                          <td>{{ lotto.price | currencies }}</td>
+                          <td>{{ lotto.lotto.reward | currencies }}</td>
+                          <td>{{ lotto.totalDiscount | currencies }}</td>
+                          <td>
+                            <span
+                              :class="{
+                                'text-red-500': getLottoResultReward(lotto) < 0,
+                                'text-green-700':
+                                  getLottoResultReward(lotto) > 0,
+                                'text-gray-500':
+                                  getLottoResultReward(lotto) === 0
+                              }"
+                            >
+                              {{ getLottoResultReward(lotto) | currencies }}
+                            </span>
+                          </td>
+                          <td>{{ lotto.resultStatus }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   </div>
 </template>

@@ -1,38 +1,36 @@
 <template>
   <div class="">
-    <div class="border border-gray-800 pt-8 pb-16 px-8 mx-2 my-8 rounded-lg">
-      <div class="grid grid-cols-4 gap-4 my-4">
+    <div class="">
+      <div class="grid grid-cols-4 gap-4">
         <div class="col-span-2">
-          <label class="block" for="priceBon">
-            <span class="text-gray-700 text-sm">เลข 2 ตัว</span>
-            <div
-              class="rounded bg-gray-50 border border-gray-200 shadow-md p-4 flex flex-row flex-wrap activeNumbers"
-            >
-              <div class="tag-input">
-                <div
-                  v-for="item in activeNumbers"
-                  :key="item.data"
-                  class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
-                  @click="removeNumber(index)"
-                >
-                  {{ item.data }}
-                </div>
-                <input
-                  v-model="activeNumber"
-                  type="text"
-                  placeholder="ระบุตัวเลข"
-                  class="tag-input__text"
-                  @keypress="isNumber($event)"
-                  @keydown.delete="removeLastNumber"
-                />
+          <div
+            class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
+          >
+            <div class="tag-input">
+              <div
+                v-for="item in activeNumbers"
+                :key="item.data"
+                class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
+                @click="removeNumber(index)"
+              >
+                {{ item.data }}
               </div>
+              <input
+                v-model="activeNumber"
+                type="text"
+                placeholder="ระบุตัวเลข"
+                class="tag-input__text"
+                @keypress="isNumber($event)"
+                @keydown.delete="removeLastNumber"
+              />
             </div>
-          </label>
+          </div>
+          <label class="block" for="priceBon"> </label>
         </div>
         <div>
           <div class="flex flex-col">
             <div class="flex-1">
-              <label class="block my-1" for="priceBon">
+              <label class="block" for="priceBon">
                 <span class="text-gray-700 text-sm inline-block w-full"
                   >บน</span
                 >
@@ -63,19 +61,18 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col pt-7 items-start">
+        <div class="flex flex-col justify-end">
+          <button
+            @click="reset"
+            class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+          >
+            รีเซ็ต
+          </button>
           <button
             @click="submit"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
           >
             ยืนยัน
-          </button>
-
-          <button
-            @click="reset"
-            class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-          >
-            รีเซ็ต
           </button>
         </div>
       </div>
