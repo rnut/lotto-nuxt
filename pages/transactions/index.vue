@@ -81,9 +81,9 @@
             <template v-for="bill in bills">
               <tr
                 :key="bill._id"
-                class="z-0 cursor-pointer text-purple-900 border-t-2 border-white"
+                class="z-0 text-purple-900 border-t-2 border-white"
               >
-                <td @click="onClickBill(bill)">
+                <td class="cursor-pointer" @click="onClickBill(bill)">
                   <img
                     src="/svg/expand_more_black_24dp.svg"
                     alt="Logo"
@@ -91,11 +91,11 @@
                   />
                 </td>
                 <td>{{ bill._id }}</td>
-                <td>{{ bill.marketRef.name }}</td>
+                <td>{{ getBillMarketName(bill) }}</td>
                 <td>
                   {{ bill.createdAt | humanDateTime }}
                 </td>
-                <td>{{ bill.lottos.length }}</td>
+                <td>{{ getBillVolume(bill) }}</td>
                 <td>{{ bill.totalPrice }}</td>
                 <td>{{ bill.totalDiscount }}</td>
                 <td>{{ bill.totalReward }}</td>
@@ -189,8 +189,12 @@ import DateRangePicker from 'vue2-daterange-picker'
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import SelectInput from '~/components/SelectInput.vue'
 import TagInput from '~/components/TagInput.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: { DateRangePicker, TagInput, SelectInput },
+  computed: {
+    ...mapGetters(['loggedInUser'])
+  },
   async asyncData({ $axios }) {
     const url = `${$axios.defaults.baseURL}/markets`
     const resp = await $axios.$get(url)
@@ -215,7 +219,8 @@ export default {
     async onClickSearch() {
       this.bills = []
       const dateFormat = 'YYYY-MM-DD'
-      const url = `${this.$axios.defaults.baseURL}/bills/member`
+      const role = this.loggedInUser.role
+      const url = `${this.$axios.defaults.baseURL}/bills/${role}`
       const startDate = moment(this.dateRange.startDate)
         .locale('th')
         .startOf('day')
@@ -224,7 +229,6 @@ export default {
         .locale('th')
         .endOf('day')
         .format(dateFormat)
-      console.log('moment: ', startDate, endDate)
       try {
         const queryParams = {
           startDate: startDate,
@@ -235,6 +239,24 @@ export default {
         this.bills = resp.data
       } catch (e) {
         console.log('e: ', e)
+      }
+    },
+    getBillVolume(b) {
+      if (typeof b.lottos === 'undefined') {
+        return 'n/a'
+      } else {
+        return b.lottos.length
+      }
+    },
+    getBillMarketName(b) {
+      if (
+        typeof b.marketRef !== 'undefined' &&
+        b.marketRef !== null &&
+        typeof b.marketRef.name !== 'undefined'
+      ) {
+        return b.marketRef.name
+      } else {
+        return 'n/a'
       }
     },
     getLottoResultReward(l) {
@@ -284,7 +306,9 @@ export default {
           bill.isConfirmPayment = true
         } catch (e) {
           console.log('onClickConfirmPayment: ', e)
-          alert('เกิดข้อผิดพลาด(10002)')
+          if (e.response.status == 400) {
+            alert(`เกิดข้อผิดพลาด(10002) ${e.response.data.message}`)
+          }
         }
       }
     },

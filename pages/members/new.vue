@@ -89,9 +89,13 @@
             v-model="role"
             class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
           >
-            <option>แอดมิน</option>
-            <option>เอเย่น</option>
-            <option>ผู้เล่น</option>
+            <option
+              v-for="role in roles"
+              :key="role.value"
+              v-bind:value="role.value"
+            >
+              {{ role.title }}
+            </option>
           </select>
         </div>
 
@@ -108,6 +112,23 @@
 <script>
 export default {
   middleware: 'auth',
+  computed: {
+    roles: function () {
+      const role = this.$auth.user.role
+      switch (role) {
+        case 'member':
+          return []
+        case 'agent':
+          return [{ value: 'member', title: 'ผู้เล่น' }]
+        case 'admin':
+          return [
+            { value: 'member', title: 'ผู้เล่น' },
+            { value: 'agent', title: 'เอเย่น' },
+            { value: 'admin', title: 'แอดมิน' }
+          ]
+      }
+    }
+  },
   data() {
     return {
       username: '',
@@ -120,6 +141,7 @@ export default {
   },
   methods: {
     async create(e) {
+      e.preventDefault()
       const payload = {
         username: this.username,
         password: this.password,
@@ -128,10 +150,14 @@ export default {
         mobileNumber: this.mobileNumber,
         role: this.role
       }
-      const url = `${this.$axios.defaults.baseURL}/users/create/member`
-      const resp = await this.$axios.$post(url, payload)
-      console.log('resp', resp)
-      e.preventDefault()
+      try {
+        const url = `${this.$axios.defaults.baseURL}/users/create/member`
+        const resp = await this.$axios.$post(url, payload)
+        alert('สร้างผู้ใช้งานเรียบร้อย')
+        this.$router.replace('/members')
+      } catch (e) {
+        alert(`เกิดข้อผิดพลาด 90000 ${e.message}`)
+      }
     }
   }
 }
