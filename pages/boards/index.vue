@@ -6,8 +6,13 @@
       <button
         v-for="item in markets"
         :key="item.id"
-        v-bind:style="{ 'background-color': item.color }"
-        class="transition duration-600 ease-in transform hover:scale-125 rounded-md bg-white border border-gray-100 py-8 px-8 m-4 shadow"
+        v-bind:style="{ 'background-color': getMarketCardBGColor(item) }"
+        :class="{
+          'transition duration-600 ease-in transform hover:scale-125': getMarketIsOpen(
+            item
+          )
+        }"
+        class="market-card rounded-md bg-white border border-gray-100 py-8 px-8 m-4 shadow"
         @click="onClickMarket(item)"
       >
         <p
@@ -15,19 +20,25 @@
         >
           {{ item.name }}
         </p>
+
         <p class="text-left tracking-wide overflow-ellipsis overflow-hidden">
-          <span class="text-gray-500 text-sm">นับถอยหลัง</span><br />
-          <client-only placeholder="loading...">
-            <VueCountdown
-              :time="getTimeRemaining(item.openTime, item.closeTime)"
-              v-slot="{ hours, minutes, seconds }"
-            >
-              <span class="text-xl text-grey-600">เหลือเวลาอีก</span><br />
-              <span>
-                {{ hours }} ชั่วโมง {{ minutes }} นาที {{ seconds }} วินาที
-              </span>
-            </VueCountdown>
-          </client-only>
+          <template v-if="getMarketIsOpen(item)">
+            <span class="text-gray-500 text-sm">นับถอยหลัง</span><br />
+            <client-only placeholder="loading...">
+              <VueCountdown
+                :time="getTimeRemaining(item.openTime, item.closeTime)"
+                v-slot="{ hours, minutes, seconds }"
+              >
+                <span class="text-xl text-grey-600">เหลือเวลาอีก</span><br />
+                <span>
+                  {{ hours }} ชั่วโมง {{ minutes }} นาที {{ seconds }} วินาที
+                </span>
+              </VueCountdown>
+            </client-only>
+          </template>
+          <template v-else>
+            <span class="text-gray-500 text-2xl font-bold">ตลาดปิด</span><br />
+          </template>
         </p>
       </button>
     </section>
@@ -83,7 +94,24 @@ export default {
       } else {
         return 0
       }
+    },
+    getMarketIsOpen(item) {
+      return this.getTimeRemaining(item.openTime, item.closeTime) > 0
+    },
+    getMarketCardBGColor(item) {
+      if (this.getMarketIsOpen(item)) {
+        return item.color
+      } else {
+        return '#CBCBCB'
+      }
     }
   }
 }
 </script>
+
+<style scoped>
+.market-card {
+  width: 290px;
+  height: 250px;
+}
+</style>

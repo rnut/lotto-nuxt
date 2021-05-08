@@ -38,6 +38,7 @@
             <input
               type="text"
               id="username"
+              disabled="disabled"
               v-model="member.username"
               class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
             />
@@ -188,14 +189,99 @@
           >
             บันทึก
           </button>
-          <span
-            @click="onDeleteMember(member)"
-            class="cursor-pointer self-end text-sm text-red-600 hover:text-red-700 hover:underline mb-6 mt-2"
-          >
-            ลบผู้ใช้งาน
-          </span>
+          <div class="flex justify-between">
+            <span
+              @click="onClickResetPassword(member)"
+              class="cursor-pointer text-sm text-red-600 hover:text-red-700 hover:underline mb-6 mt-2"
+            >
+              รีเซ็ตรหัสผ่าน
+            </span>
+            <span
+              @click="onDeleteMember(member)"
+              class="cursor-pointer text-sm text-red-600 hover:text-red-700 hover:underline mb-6 mt-2"
+            >
+              ลบผู้ใช้งาน
+            </span>
+          </div>
         </section>
       </form>
+    </section>
+
+    <section>
+      <div
+        v-bind:class="{
+          'opacity-0': !modalActive,
+          'modal-active': modalActive,
+          'pointer-events-none': !modalActive
+        }"
+        class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center"
+      >
+        <div
+          @click="toggleModal()"
+          class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"
+        ></div>
+
+        <div
+          class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto"
+        >
+          <div class="modal-content py-4 text-left px-6">
+            <form class="" autocomplete="off" @submit="submitChangePassword">
+              <!--Title-->
+              <div class="flex justify-between items-center pb-3">
+                <p class="text-2xl font-bold">รีเซ็ตรหัสผ่าน!</p>
+                <div
+                  @click="toggleModal()"
+                  class="modal-close cursor-pointer z-50"
+                >
+                  <svg
+                    class="fill-current text-black"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                  >
+                    <path
+                      d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!--Body-->
+              <p>กรุณาระบุรหัสผ่านที่ต้องการเปลี่ยน</p>
+              <div class="mt-2 mb-6 pt-3 rounded bg-gray-200">
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+                  for="password"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  id="password"
+                  v-model="password"
+                  class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+                />
+              </div>
+              <!--Footer-->
+              <div class="flex justify-end pt-2">
+                <button
+                  type="submit"
+                  class="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2"
+                >
+                  ยืนยันเปลี่ยนรหัสผ่าน
+                </button>
+                <span
+                  type="cancel"
+                  @click="toggleModal()"
+                  class="modal-close px-4 bg-red-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+                >
+                  ปิด
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </template>
@@ -205,7 +291,8 @@ export default {
   data() {
     return {
       modalActive: false,
-      confirmPaymentKey: 'confirmpayment'
+      confirmPaymentKey: 'confirmpayment',
+      password: ''
     }
   },
   computed: {
@@ -250,6 +337,25 @@ export default {
       } catch (e) {
         alert('ลบไม่สำเร็จ')
       }
+    },
+    async submitChangePassword(e) {
+      e.preventDefault()
+      const id = this.slug
+      const url = `${this.$axios.defaults.baseURL}/users/reset/${id}`
+      try {
+        const resp = await this.$axios.patch(url, { password: this.password })
+        alert('รีเซ็ตรหัสผ่านผู้ใช้งานสำเร็จ')
+        this.password = ''
+        this.toggleModal()
+      } catch (e) {
+        alert('ลบไม่สำเร็จ')
+      }
+    },
+    onClickResetPassword(member) {
+      this.toggleModal()
+    },
+    toggleModal() {
+      this.modalActive = !this.modalActive
     },
     onChangeConfirmPayment(m) {
       const key = this.confirmPaymentKey

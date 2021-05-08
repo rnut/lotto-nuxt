@@ -42,13 +42,13 @@
               class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
             />
           </div>
-          <div class="flex justify-end">
+          <!-- <div class="flex justify-end">
             <a
               href="#"
               class="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6"
               >Forgot your password?</a
             >
-          </div>
+          </div> -->
           <button
             class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
             type="submit"
@@ -59,7 +59,7 @@
       </section>
     </main>
 
-    <div class="max-w-lg mx-auto text-center mt-12 mb-6">
+    <!-- <div class="max-w-lg mx-auto text-center mt-12 mb-6">
       <p class="text-white">
         Don't have an account?
         <a href="#" class="font-bold hover:underline">Sign up</a>.
@@ -70,7 +70,7 @@
       <a href="#" class="hover:underline">Contact</a>
       <span class="mx-3">•</span>
       <a href="#" class="hover:underline">Privacy</a>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
@@ -94,7 +94,22 @@ export default {
       try {
         const resp = await this.$auth.loginWith('local', { data: payload })
         this.$auth.setToken('local', 'Bearer ' + resp.data.token)
-        this.$router.push('/')
+        const role = resp.data.user.role
+        var route = ''
+        switch (role) {
+          case 'member':
+            route = '/boards'
+            break
+          case 'agent':
+            route = '/dashboard/agent'
+            break
+          case 'admin':
+            route = '/dashboard/admin'
+            break
+        }
+        console.log('role', role)
+        console.log('route', route)
+        this.$router.push(route)
       } catch (e) {
         console.log('e', e)
         this.$router.push('/login')

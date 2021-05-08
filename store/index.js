@@ -20,7 +20,7 @@ export const getters = {
       case 'admin':
         return [
           { title: 'สรุป', link: '/dashboard/admin' },
-          { title: 'รายการแทง', link: '/transactions' },
+          { title: 'รายการแทง', link: '/transactions/admin' },
           { title: 'สมาชิก', link: '/members' },
           { title: 'ตลาด', link: '/markets' },
           { title: 'ตั้งค่า', link: '/settings' }
@@ -28,7 +28,7 @@ export const getters = {
       case 'agent':
         return [
           { title: 'สรุป', link: '/dashboard/agent' },
-          { title: 'รายการแทง', link: '/transactions' },
+          { title: 'รายการแทง', link: '/transactions/agent' },
           { title: 'สมาชิก', link: '/members' },
         ]
       default:

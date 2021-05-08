@@ -67,6 +67,8 @@
           <thead>
             <th></th>
             <th>bill no.</th>
+            <th>username</th>
+            <th>name</th>
             <th>market</th>
             <th>time</th>
             <th>volumn</th>
@@ -91,15 +93,27 @@
                   />
                 </td>
                 <td>{{ bill._id }}</td>
+                <td>{{ bill.createdBy.username }}</td>
+                <td>{{ bill.createdBy.name }}</td>
                 <td>{{ getBillMarketName(bill) }}</td>
                 <td>
                   {{ bill.createdAt | humanDateTime }}
                 </td>
                 <td>{{ getBillVolume(bill) }}</td>
-                <td>{{ bill.totalPrice }}</td>
-                <td>{{ bill.totalDiscount }}</td>
-                <td>{{ bill.totalReward }}</td>
-                <td>{{ bill.totalReward - bill.totalPrice }}</td>
+                <td>{{ bill.totalPrice | currencies }}</td>
+                <td>{{ bill.totalDiscount | currencies }}</td>
+                <td>{{ bill.totalReward | currencies }}</td>
+                <td>
+                  <span
+                    :class="{
+                      'text-red-500': getTotalSummaryBill(bill) < 0,
+                      'text-green-700': getTotalSummaryBill(bill) > 0,
+                      'text-gray-500': getTotalSummaryBill(bill) === 0
+                    }"
+                  >
+                    {{ getTotalSummaryBill(bill) | currencies }}
+                  </span>
+                </td>
                 <td>
                   <span
                     class="p-2 rounded"
@@ -145,7 +159,7 @@
                 </td>
               </tr>
               <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
-                <td colspan="11">
+                <td colspan="13">
                   <table
                     class="table-auto w-full bg-white border border-purple-400"
                     cellpadding="0"
@@ -165,10 +179,20 @@
                       <tr v-for="lotto in bill.lottos" :key="lotto._id">
                         <td>{{ lotto.lotto.title }}</td>
                         <td>{{ lotto.number }}</td>
-                        <td>{{ lotto.price }}</td>
-                        <td>{{ lotto.lotto.reward }}</td>
-                        <td>{{ lotto.totalDiscount }}</td>
-                        <td>{{ getLottoResultReward(lotto) }}</td>
+                        <td>{{ lotto.price | currencies }}</td>
+                        <td>{{ lotto.lotto.reward | currencies }}</td>
+                        <td>{{ lotto.totalDiscount | currencies }}</td>
+                        <td>
+                          <span
+                            :class="{
+                              'text-red-500': getLottoResultReward(lotto) < 0,
+                              'text-green-700': getLottoResultReward(lotto) > 0,
+                              'text-gray-500': getLottoResultReward(lotto) === 0
+                            }"
+                          >
+                            {{ getLottoResultReward(lotto) | currencies }}
+                          </span>
+                        </td>
                         <td>{{ lotto.resultStatus }}</td>
                       </tr>
                     </tbody>
@@ -195,11 +219,12 @@ export default {
   computed: {
     ...mapGetters(['loggedInUser'])
   },
-  async asyncData({ $axios }) {
+  async asyncData({ params, $axios }) {
+    const slug = params.role
     const url = `${$axios.defaults.baseURL}/markets`
     const resp = await $axios.$get(url)
     const markets = resp
-    return { markets }
+    return { slug, markets }
   },
   data() {
     let startDate = new Date()
@@ -219,7 +244,7 @@ export default {
     async onClickSearch() {
       this.bills = []
       const dateFormat = 'YYYY-MM-DD'
-      const url = `${this.$axios.defaults.baseURL}/bills/member`
+      const url = `${this.$axios.defaults.baseURL}/bills/${this.slug}`
       const startDate = moment(this.dateRange.startDate)
         .locale('th')
         .startOf('day')
@@ -257,6 +282,9 @@ export default {
       } else {
         return 'n/a'
       }
+    },
+    getTotalSummaryBill(bill) {
+      return bill.totalReward - bill.totalPrice
     },
     getLottoResultReward(l) {
       if (l.resultStatus === 'win') {
@@ -326,6 +354,15 @@ export default {
     },
     date(value) {
       return moment(value).locale('th').format('ll')
+    },
+    currencies(value) {
+      if (typeof value !== 'number') {
+        return 'fuck'
+      }
+      var formatter = new Intl.NumberFormat('th-TH', {
+        minimumFractionDigits: 2
+      })
+      return formatter.format(value)
     }
   }
 }
