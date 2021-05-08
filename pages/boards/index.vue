@@ -30,9 +30,9 @@
                 v-slot="{ hours, minutes, seconds }"
               >
                 <span class="text-xl text-grey-600">เหลือเวลาอีก</span><br />
-                <span>
-                  {{ hours }} ชั่วโมง {{ minutes }} นาที {{ seconds }} วินาที
-                </span>
+                <span v-if="hours !== 0">{{ hours }} ชั่วโมง </span>
+                <span v-if="minutes !== 0">{{ minutes }} นาที </span>
+                <span v-if="seconds !== 0">{{ seconds }} วินาที</span>
               </VueCountdown>
             </client-only>
           </template>

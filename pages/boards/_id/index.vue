@@ -1,8 +1,24 @@
 <template>
-  <div class="lg:p-16">
-    <div class="divide-y-2 divide-purple-600 divide-solid">
-      <div class="font-extrabold text-2xl text-purple-600 py-3">Boards</div>
-      <div class="h-16"></div>
+  <div class="lg:p-8">
+    <div class="flex flex-row gap-8">
+      <div>
+        <span class="font-extrabold text-2xl text-purple-600 py-3">
+          {{ market.name }}
+        </span>
+      </div>
+      <div>
+        <client-only placeholder="loading...">
+          <VueCountdown
+            :time="getTimeRemaining()"
+            v-slot="{ hours, minutes, seconds }"
+          >
+            <span class="text-xl text-grey-600">เหลือเวลาอีก</span>
+            <span v-if="hours !== 0">{{ hours }} ชั่วโมง </span>
+            <span v-if="minutes !== 0">{{ minutes }} นาที </span>
+            <span v-if="seconds !== 0">{{ seconds }} วินาที</span>
+          </VueCountdown>
+        </client-only>
+      </div>
     </div>
     <div class="m-4 grid lg:grid-cols-5 lg:gap-16 sm:grid-cols-1">
       <!-- // summary -->
@@ -121,6 +137,8 @@ import SixNumber from '~/components/SixNumber'
 import NineTeenNumber from '~/components/NineTeenNumber'
 import OneNumber from '~/components/OneNumber.vue'
 import Summary from '~/components/Summary.vue'
+import moment from 'moment'
+import VueCountdown from '@chenfengyuan/vue-countdown'
 export default {
   components: {
     TwoNumber,
@@ -128,7 +146,21 @@ export default {
     SixNumber,
     NineTeenNumber,
     OneNumber,
-    Summary
+    Summary,
+    VueCountdown
+  },
+  async asyncData({ params, $axios }) {
+    const slug = params.id
+    const marketStatusURL = `${$axios.defaults.baseURL}/markets/status/${slug}`
+    const url = `${$axios.defaults.baseURL}/markets/${slug}`
+    try {
+      await $axios.$get(marketStatusURL)
+      const market = await $axios.$get(url)
+      return { slug, market }
+    } catch (e) {
+      alert(`เกิดข้อผิดพลาดในการเล่นตลาดนี้  ${e.message}`)
+      this.$router.replace('/boards')
+    }
   },
   data() {
     return {
@@ -149,6 +181,22 @@ export default {
       this.lottos = this.lottos.concat(n)
       console.log('submit', n)
       console.log('lottos', this.lottos)
+    },
+    getTimeRemaining() {
+      const openTime = this.market.openTime
+      const closeTime = this.market.closeTime
+      const timeFormat = 'HH:mm'
+      const startTime = moment(openTime, timeFormat)
+      const endTime = moment(closeTime, timeFormat)
+      const currentTime = moment()
+      const started = currentTime.isAfter(startTime)
+      const ended = currentTime.isAfter(endTime)
+      const remaining = endTime.diff(currentTime, 'seconds')
+      if (started && !ended) {
+        return remaining * 1000
+      } else {
+        return 0
+      }
     }
   }
 }

@@ -8,12 +8,23 @@
             <div
               class="rounded bg-gray-50 border border-gray-200 shadow-md p-4 flex flex-row flex-wrap activeNumbers"
             >
-              <div
-                v-for="item in activeNumbers"
-                :key="item.data"
-                class="p-2 m-2 bg-red-200 rounded text-2xl tag"
-              >
-                {{ item.data }}
+              <div class="tag-input">
+                <div
+                  v-for="item in activeNumbers"
+                  :key="item.data"
+                  class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
+                  @click="removeNumber(index)"
+                >
+                  {{ item.data }}
+                </div>
+                <input
+                  v-model="activeNumber"
+                  type="text"
+                  placeholder="ระบุตัวเลข"
+                  class="tag-input__text"
+                  @keypress="isNumber($event)"
+                  @keydown.delete="removeLastNumber"
+                />
               </div>
             </div>
           </label>
@@ -71,15 +82,6 @@
       <p class="text-sm text-red-900 bg-red-200">
         {{ activeNumberError }}
       </p>
-
-      <input
-        type="number"
-        id="editor"
-        class="editor rounded text-xl shadow-md p-4 border border-indigo-200"
-        placeholder="ใส่ตัวเลขที่ต้องการ"
-        v-model="activeNumber"
-        @keypress="isNumber($event)"
-      />
     </div>
   </div>
 </template>
@@ -89,7 +91,7 @@ export default {
     return {
       bonPrice: Number,
       langPrice: Number,
-      activeNumber: Number,
+      activeNumber: null,
       activeNumbers: [],
       activeNumberError: ''
     }
@@ -161,6 +163,14 @@ export default {
         return obj.data === val
       })
       return duplicated.length > 0
+    },
+    removeNumber(index) {
+      this.activeNumbers.splice(index, 1)
+    },
+    removeLastTag(event) {
+      if (event.target.value.length === 0) {
+        this.removeNumber(this.activeNumbers.length - 1)
+      }
     }
   }
 }
@@ -179,5 +189,38 @@ export default {
   width: 100%;
   min-height: 100px;
   cursor: text;
+}
+
+.tag-input {
+  width: 100%;
+  /* border: 1px solid #eee; */
+  font-size: 0.9em;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.tag-input__tag {
+  height: 30px;
+  float: left;
+  margin-right: 10px;
+  background-color: #eee;
+  margin-top: 10px;
+  line-height: 30px;
+  padding: 0 5px;
+  border-radius: 5px;
+}
+
+.tag-input__tag > span {
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.tag-input__text {
+  border: none;
+  outline: none;
+  font-size: 0.9em;
+  line-height: 50px;
+  background: none;
 }
 </style>
