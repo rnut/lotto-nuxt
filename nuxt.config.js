@@ -50,7 +50,7 @@ export default {
   },
 
   axios: {
-    baseURL: process.env.BASE_URL,
+    baseURL: 'https://mimi-be-ykmu7mrxja-as.a.run.app/api/v1',
     proxyHeaders: false,
     credentials: false,
     headers: {
