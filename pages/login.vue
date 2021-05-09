@@ -9,6 +9,10 @@
     <main
       class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl"
     >
+      <section class="flex justify-between p-4 bg-red-600" v-if="errorMessage">
+        <span class="text-white">{{ errorMessage }}</span>
+        <span @click="clearErrorMessage" class="text-white text-end">x</span>
+      </section>
       <section>
         <h3 class="font-bold text-2xl">Welcome to Startup</h3>
         <p class="text-gray-600 pt-2">Sign in to your account.</p>
@@ -81,11 +85,13 @@ export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      errorMessage: ''
     }
   },
   methods: {
     async login(e) {
+      this.clearErrorMessage()
       e.preventDefault()
       const payload = {
         username: this.username,
@@ -107,13 +113,16 @@ export default {
             route = '/dashboard/admin'
             break
         }
-        console.log('role', role)
-        console.log('route', route)
         this.$router.push(route)
       } catch (e) {
-        console.log('e', e)
-        this.$router.push('/login')
+        if (e.response.status == 400) {
+          this.errorMessage = e.response.data.message
+        }
+        // this.$router.push('/login')
       }
+    },
+    clearErrorMessage() {
+      this.errorMessage = ''
     }
   }
 }
