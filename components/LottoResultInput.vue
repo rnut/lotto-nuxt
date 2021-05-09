@@ -4,16 +4,16 @@
       v-for="(tag, index) in lottoResult.result"
       :key="tag"
       v-bind:class="{
-        'bg-purple-500 text-white': !disabled,
-        'bg-gray-300 text-gray-800': disabled
+        'bg-purple-500 text-white': !inactive,
+        'bg-gray-300 text-gray-800': inactive
       }"
-      class="tag-input__tag p-1"
+      class="input__tag p-1"
     >
-      <span v-if="!disabled" @click="removeTag(index)">x</span>
+      <span v-if="!inactive" @click="removeTag(index)">x</span>
       {{ tag }}
     </div>
     <input
-      v-if="!disabled"
+      v-if="!inactive"
       type="text"
       placeholder="ระบุหมายเลขรางวัล"
       class="tag-input__text"
@@ -25,7 +25,7 @@
 </template>
 <script>
 export default {
-  props: ['lottoResult', 'disabled'],
+  props: ['lottoResult', 'inactive'],
   data() {
     return {
       tags: []
@@ -62,7 +62,7 @@ export default {
   padding: 0 10px;
 }
 
-.tag-input__tag {
+.input__tag {
   height: 30px;
   float: left;
   margin-right: 10px;

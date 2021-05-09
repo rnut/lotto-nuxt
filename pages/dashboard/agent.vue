@@ -6,7 +6,7 @@
         <div class="my-2">
           <label for="date">
             <span class="text-sm text-gray-400">เวลา</span>
-            <date-range-picker v-model="dateRange" opens="rignt">
+            <date-range-picker v-model="dateRange" opens="right">
               <!--    input slot (new slot syntax)-->
               <template #input="picker">
                 {{ picker.startDate | date }} - {{ picker.endDate | date }}
@@ -172,7 +172,7 @@ export default {
       }
     },
     onSubmitTags(tags) {
-      console.log('tags: ', tags)
+      this.filteredMarketIDs = tags.map((t) => t._id)
     },
     updateValues() {},
     checkOpen() {}

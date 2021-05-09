@@ -6,7 +6,7 @@
         <div class="my-2">
           <label for="date">
             <span class="text-sm text-gray-400">เวลา</span>
-            <date-range-picker v-model="dateRange" opens="rignt">
+            <date-range-picker v-model="dateRange" opens="right">
               <!--    input slot (new slot syntax)-->
               <template #input="picker">
                 {{ picker.startDate | date }} - {{ picker.endDate | date }}
@@ -127,9 +127,7 @@ export default {
       },
       bills: [],
       expandedIDs: [],
-      filteredMarketIDs: [],
-      startDate: '2021-04-01',
-      endDate: '2021-04-30'
+      filteredMarketIDs: []
     }
   },
   async asyncData({ $axios }) {
@@ -143,8 +141,8 @@ export default {
       const url = `${this.$axios.defaults.baseURL}/dashboard/admin`
       try {
         const queryParams = {
-          startDate: this.startDate,
-          endDate: this.endDate,
+          startDate: this.dateRange.startDate,
+          endDate: this.dateRange.endDate,
           markets: this.filteredMarketIDs
         }
         const resp = await this.$axios.get(url, { params: queryParams })
@@ -174,7 +172,7 @@ export default {
       }
     },
     onSubmitTags(tags) {
-      console.log('tags: ', tags)
+      this.filteredMarketIDs = tags.map((t) => t._id)
     },
     updateValues() {},
     checkOpen() {}

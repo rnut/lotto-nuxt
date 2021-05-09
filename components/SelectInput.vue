@@ -6,7 +6,9 @@
         @change="onChange()"
         class="tag-input__text"
       >
-        <option value="" disabled selected>Select your markets</option>
+        <option value="" disabled="disabled" selected>
+          Select your markets
+        </option>
         <option
           v-for="market in markets"
           :key="market._id"
@@ -38,7 +40,6 @@ export default {
   },
   methods: {
     onChange() {
-      console.log('onChange: ')
       const val = this.selectedMarket
       if (typeof val === 'undefined') {
         return
@@ -54,6 +55,8 @@ export default {
       this.selectedMarket = {}
     },
     removeTag(index) {
+      const tag = this.tags[index]
+      this.markets.push(tag)
       this.tags.splice(index, 1)
       this.$emit('onSubmitTags', this.tags)
       this.selectedMarket = {}

@@ -75,7 +75,7 @@
               {{ result.lotto.title }}
             </label>
             <LottoResultInput
-              :disabled="true"
+              :inactive="lottoResult.isConfirmed"
               :lottoResult="result"
               @onSubmitResult="onSubmitResult"
             />
@@ -167,3 +167,5 @@ export default {
   }
 }
 </script>
+<style scoped>
+</style>
