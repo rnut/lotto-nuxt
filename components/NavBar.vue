@@ -5,19 +5,14 @@
   >
     <div class="flex items-center">
       <button class="mr-2" aria-label="Open Menu" @click="drawer">
-        <svg
-          fill="none"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          class="w-8 h-8"
-        >
-          <path d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+        <img src="/logos/logo.svg" alt="Logo" class="h-auto w-8" />
       </button>
-      <!-- <img src="/logos/shuttle.png" alt="Logo" class="h-auto w-24" /> -->
+      <span class="ml-2 text-purple-500">
+        {{ loggedInUser.name }}
+      </span>
+      <span class="ml-1 text-xs text-gray-400">
+        ({{ loggedInUser.role }})
+      </span>
     </div>
     <div class="flex items-center justify-items-center">
       <div class="hidden md:block md:flex md:justify-between md:bg-transparent">
@@ -105,12 +100,21 @@
       class="transform top-0 left-0 w-64 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30"
       :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
     >
-      <span
+      <div
         @click="isOpen = false"
-        class="flex w-full items-center p-4 border-b"
+        class="flex flex-col w-full items-center p-4 border-b"
       >
-        <img src="/logos/shuttle.png" alt="Logo" class="h-auto w-32 mx-auto" />
-      </span>
+        <img src="/logos/logo.svg" alt="Logo" class="h-auto w-32 mx-auto" />
+        <p class="mt-2">
+          <span class="ml-2 text-purple-500">
+            {{ loggedInUser.name }}
+          </span>
+          <span class="ml-1 text-xs text-gray-400">
+            ({{ loggedInUser.role }})
+          </span>
+        </p>
+      </div>
+
       <span
         v-for="navigation in navigations"
         :key="navigation.title"
@@ -118,19 +122,7 @@
         class="flex items-center p-4 hover:bg-indigo-500 hover:text-white"
       >
         <span class="mr-2">
-          <svg
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            class="w-6 h-6"
-          >
-            <path
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-            ></path>
-          </svg>
+          <img :src="navigation.logo" alt="Logo" class="h-auto w-8 mx-auto" />
         </span>
         <span>{{ navigation.title }}</span>
       </span>

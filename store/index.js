@@ -19,23 +19,23 @@ export const getters = {
     switch (state.auth.user.role) {
       case 'admin':
         return [
-          { title: 'สรุป', link: '/dashboard/admin' },
-          { title: 'รายการแทง', link: '/transactions/admin' },
-          { title: 'สมาชิก', link: '/members' },
-          { title: 'ตลาด', link: '/markets' },
-          { title: 'ตั้งค่า', link: '/settings' }
+          { title: 'สรุป', link: '/dashboard/admin', logo: '/svg/insights_black_24dp.svg' },
+          { title: 'รายการแทง', link: '/transactions/admin', logo: '/svg/receipt_long_black_24dp.svg' },
+          { title: 'สมาชิก', link: '/members', logo: '/svg/manage_accounts_black_24dp.svg' },
+          { title: 'ตลาด', link: '/markets', logo: '/svg/storefront_black_24dp.svg' },
+          { title: 'ตั้งค่า', link: '/settings', logo: '/svg/tune_black_24dp.svg' }
         ]
       case 'agent':
         return [
-          { title: 'สรุป', link: '/dashboard/agent' },
-          { title: 'รายการแทง', link: '/transactions/agent' },
-          { title: 'สมาชิก', link: '/members' },
+          { title: 'สรุป', link: '/dashboard/agent', logo: '/svg/insights_black_24dp.svg' },
+          { title: 'รายการแทง', link: '/transactions/agent', logo: '/svg/receipt_long_black_24dp.svg' },
+          { title: 'สมาชิก', link: '/members', logo: '/svg/manage_accounts_black_24dp.svg' },
         ]
       default:
         return [
-          { title: 'สรุป', link: '/dashboard/member' },
-          { title: 'แทง', link: '/boards' },
-          { title: 'รายการแทง', link: '/transactions' },
+          { title: 'สรุป', link: '/dashboard/member', logo: '/svg/insights_black_24dp.svg' },
+          { title: 'แทง', link: '/boards', logo: '/svg/casino_black_24dp.svg' },
+          { title: 'รายการแทง', link: '/transactions', logo: '/svg/receipt_long_black_24dp.svg' },
         ]
     }
   }
