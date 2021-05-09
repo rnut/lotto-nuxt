@@ -132,6 +132,7 @@
           @click="logout"
           class="flex items-center p-4 text-white bg-red-400 hover:bg-red-600 w-full"
         >
+          <img src="/svg/logout_white_24dp.svg" alt="Logo" class="h-auto w-8" />
           <span>ออกจากระบบ</span>
         </button>
       </div>
