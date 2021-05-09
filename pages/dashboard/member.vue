@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex p-4">
     <section id="filter-box" class="flex-2 p-8 h-full shadow-lg">
       <div class="flex flex-col">
         <h1 class="font-bold text-gray-800">ระบุเงื่อนไขที่ต้องการค้นหา</h1>
