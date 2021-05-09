@@ -100,13 +100,25 @@
               />
             </transition>
             <transition name="fade">
-              <SixNumber v-show="openTab === 3" class="absolute" />
+              <SixNumber
+                v-show="openTab === 3"
+                class="absolute"
+                @numbers-submitted="onSubmittedNumbers"
+              />
             </transition>
             <transition name="fade">
-              <NineTeenNumber v-show="openTab === 4" class="absolute" />
+              <NineTeenNumber
+                v-show="openTab === 4"
+                class="absolute"
+                @numbers-submitted="onSubmittedNumbers"
+              />
             </transition>
             <transition name="fade">
-              <OneNumber v-show="openTab === 5" class="absolute" />
+              <OneNumber
+                v-show="openTab === 5"
+                class="absolute"
+                @numbers-submitted="onSubmittedNumbers"
+              />
             </transition>
           </div>
         </div>
