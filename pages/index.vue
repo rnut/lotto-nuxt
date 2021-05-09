@@ -20,6 +20,11 @@ export default {
     const role = this.loggedInUser.role
     this.$router.push(`/dashboard/${role}`)
   },
+  head() {
+    return {
+      title: 'start up'
+    }
+  },
   middleware: 'auth'
 }
 </script>

@@ -82,6 +82,11 @@
 import {} from '@nuxtjs/axios'
 export default {
   layout: 'auth',
+  head() {
+    return {
+      title: 'start up'
+    }
+  },
   data() {
     return {
       username: '',
