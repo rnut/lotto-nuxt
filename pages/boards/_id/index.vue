@@ -93,7 +93,11 @@
               />
             </transition>
             <transition name="fade">
-              <ThreeNumber v-show="openTab === 2" class="absolute" />
+              <ThreeNumber
+                v-show="openTab === 2"
+                class="absolute"
+                @numbers-submitted="onSubmittedNumbers"
+              />
             </transition>
             <transition name="fade">
               <SixNumber v-show="openTab === 3" class="absolute" />

@@ -1,85 +1,81 @@
 <template>
   <div class="">
-    <div class="">
-      <div class="grid grid-cols-4 gap-4">
-        <div class="col-span-2">
-          <div
-            class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
-          >
-            <div class="tag-input">
-              <div
-                v-for="item in activeNumbers"
-                :key="item.data"
-                class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
-                @click="removeNumber(index)"
-              >
-                {{ item.data }}
-              </div>
+    <div class="grid grid-cols-4 gap-4">
+      <div class="col-span-2">
+        <div
+          class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
+        >
+          <div class="tag-input">
+            <div
+              v-for="(item, index) in activeNumbers"
+              :key="item.data"
+              class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
+              @click="removeNumber(index)"
+            >
+              {{ item.data }}
+            </div>
+            <input
+              v-model="activeNumber"
+              type="text"
+              placeholder="ระบุตัวเลข"
+              class="tag-input__text"
+              @keypress="isNumber($event)"
+              @keydown.delete="removeLastNumber"
+            />
+          </div>
+        </div>
+        <label class="block" for="priceBon"> </label>
+      </div>
+      <div>
+        <div class="flex flex-col">
+          <div class="flex-1">
+            <label class="block" for="priceBon">
+              <span class="text-gray-700 text-sm inline-block w-full">บน</span>
               <input
-                v-model="activeNumber"
-                type="text"
-                placeholder="ระบุตัวเลข"
-                class="tag-input__text"
-                @keypress="isNumber($event)"
-                @keydown.delete="removeLastNumber"
+                v-model="bonPrice"
+                name="priceBon"
+                id="priceBon"
+                type="number"
+                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
+                placeholder="ราคาบน"
               />
-            </div>
+            </label>
           </div>
-          <label class="block" for="priceBon"> </label>
-        </div>
-        <div>
-          <div class="flex flex-col">
-            <div class="flex-1">
-              <label class="block" for="priceBon">
-                <span class="text-gray-700 text-sm inline-block w-full"
-                  >บน</span
-                >
-                <input
-                  v-model="bonPrice"
-                  name="priceBon"
-                  id="priceBon"
-                  type="number"
-                  class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
-                  placeholder="ราคาบน"
-                />
-              </label>
-            </div>
-            <div class="flex-1">
-              <label class="block" for="priceLang">
-                <span class="text-gray-700 text-sm inline-block w-full"
-                  >ล่าง</span
-                >
-                <input
-                  v-model="langPrice"
-                  name="priceLang"
-                  id="priceLang"
-                  type="number"
-                  class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
-                  placeholder="ราคาล่าง"
-                />
-              </label>
-            </div>
+          <div class="flex-1">
+            <label class="block" for="priceLang">
+              <span class="text-gray-700 text-sm inline-block w-full"
+                >ล่าง</span
+              >
+              <input
+                v-model="langPrice"
+                name="priceLang"
+                id="priceLang"
+                type="number"
+                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
+                placeholder="ราคาล่าง"
+              />
+            </label>
           </div>
-        </div>
-        <div class="flex flex-col justify-end">
-          <button
-            @click="reset"
-            class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-          >
-            รีเซ็ต
-          </button>
-          <button
-            @click="submit"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-          >
-            ยืนยัน
-          </button>
         </div>
       </div>
-      <p class="text-sm text-red-900 bg-red-200">
-        {{ activeNumberError }}
-      </p>
+      <div class="flex flex-col justify-end">
+        <button
+          @click="reset"
+          class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+        >
+          รีเซ็ต
+        </button>
+        <button
+          @click="submit"
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+        >
+          ยืนยัน
+        </button>
+      </div>
     </div>
+    <p class="text-sm text-red-900 bg-red-200">
+      {{ activeNumberError }}
+    </p>
   </div>
 </template>
 <script>
@@ -165,7 +161,7 @@ export default {
     removeNumber(index) {
       this.activeNumbers.splice(index, 1)
     },
-    removeLastTag(event) {
+    removeLastNumber(event) {
       if (event.target.value.length === 0) {
         this.removeNumber(this.activeNumbers.length - 1)
       }
@@ -175,50 +171,4 @@ export default {
 </script>
 
 <style>
-.activeNumbers {
-  min-height: 170px;
-  max-height: 170px;
-  overflow-y: scroll;
-}
-.tag {
-  max-height: 52px;
-}
-.editor {
-  width: 100%;
-  min-height: 100px;
-  cursor: text;
-}
-
-.tag-input {
-  width: 100%;
-  /* border: 1px solid #eee; */
-  font-size: 0.9em;
-  height: 50px;
-  box-sizing: border-box;
-  padding: 0 10px;
-}
-
-.tag-input__tag {
-  height: 30px;
-  float: left;
-  margin-right: 10px;
-  background-color: #eee;
-  margin-top: 10px;
-  line-height: 30px;
-  padding: 0 5px;
-  border-radius: 5px;
-}
-
-.tag-input__tag > span {
-  cursor: pointer;
-  opacity: 0.75;
-}
-
-.tag-input__text {
-  border: none;
-  outline: none;
-  font-size: 0.9em;
-  line-height: 50px;
-  background: none;
-}
 </style>
