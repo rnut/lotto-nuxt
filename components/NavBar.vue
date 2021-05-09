@@ -119,7 +119,7 @@
         v-for="navigation in navigations"
         :key="navigation.title"
         @click="onclick(navigation)"
-        class="flex items-center p-4 hover:bg-indigo-500 hover:text-white"
+        class="flex items-center p-4 hover:bg-indigo-500 hover:text-white cursor-pointer"
       >
         <span class="mr-2">
           <img :src="navigation.logo" alt="Logo" class="h-auto w-8 mx-auto" />

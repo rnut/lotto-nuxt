@@ -5,7 +5,7 @@
         <h1 class="font-bold text-gray-800">ระบุเงื่อนไขที่ต้องการค้นหา</h1>
         <div class="my-2">
           <label for="date">
-            <span class="text-sm text-gray-400">เวลา</span>
+            <span class="text-sm text-gray-400 block">เวลา</span>
             <date-range-picker v-model="dateRange" opens="right">
               <!--    input slot (new slot syntax)-->
               <template #input="picker">
@@ -37,10 +37,13 @@
           </label>
         </div>
         <div class="my-2">
-          <SelectInput
-            v-bind:sourceMarkets="markets"
-            @onSubmitTags="onSubmitTags"
-          />
+          <label for="market">
+            <span class="text-sm text-gray-400 block">ตลาด</span>
+            <SelectInput
+              v-bind:sourceMarkets="markets"
+              @onSubmitTags="onSubmitTags"
+            />
+          </label>
         </div>
         <button
           @click="onClickSearch"

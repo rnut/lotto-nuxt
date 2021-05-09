@@ -4,6 +4,7 @@
       <select
         v-model="selectedMarket"
         @change="onChange()"
+        name="market"
         class="tag-input__text"
       >
         <option value="" disabled="disabled" selected>

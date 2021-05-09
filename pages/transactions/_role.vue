@@ -1,61 +1,61 @@
 <template>
-  <div>
-    <div class="flex p-8 m-8 h-full shadow-lg">
-      <div>
+  <div class="flex flex-wrap">
+    <section id="filter-box" class="flex-2 p-8 h-full shadow-lg">
+      <div class="flex flex-col">
         <h1 class="font-bold text-gray-800">ระบุเงื่อนไขที่ต้องการค้นหา</h1>
-      </div>
-      <div class="my-2">
-        <label for="date">
-          <span class="text-sm text-gray-400">เวลา</span>
-          <date-range-picker v-model="dateRange" opens="right">
-            <!--    input slot (new slot syntax)-->
-            <template #input="picker">
-              {{ picker.startDate | date }} -
-              {{ picker.endDate | date }}
-            </template>
-            <!--    date slot-->
-            <template #date="data">
-              <span class="small">{{ data.date | dateCell }}</span>
-            </template>
-            <!--    ranges (new slot syntax) -->
-            <template #ranges="ranges">
-              <div class="ranges">
-                <ul>
-                  <li
-                    v-for="(range, name) in ranges.ranges"
-                    :key="name"
-                    @click="ranges.clickRange(range)"
-                  >
-                    <b>{{ name }}</b>
-                    <small class="text-muted"
-                      >{{ range[0].toDateString() }} -
-                      {{ range[1].toDateString() }}</small
+        <div class="my-2">
+          <label for="date">
+            <span class="text-sm text-gray-400 block">เวลา</span>
+            <date-range-picker v-model="dateRange" opens="right">
+              <!--    input slot (new slot syntax)-->
+              <template #input="picker">
+                {{ picker.startDate | date }} - {{ picker.endDate | date }}
+              </template>
+              <!--    date slot-->
+              <template #date="data">
+                <span class="small">{{ data.date | dateCell }}</span>
+              </template>
+              <!--    ranges (new slot syntax) -->
+              <template #ranges="ranges">
+                <div class="ranges">
+                  <ul>
+                    <li
+                      v-for="(range, name) in ranges.ranges"
+                      :key="name"
+                      @click="ranges.clickRange(range)"
                     >
-                  </li>
-                </ul>
-              </div>
-            </template>
-          </date-range-picker>
-        </label>
-      </div>
-      <div class="my-2">
-        <div class="">
-          <SelectInput
-            v-bind:sourceMarkets="markets"
-            @onSubmitTags="onSubmitTags"
-          />
-          <button
-            @click="onClickSearch"
-            class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
-          >
-            ค้นหา
-          </button>
+                      <b>{{ name }}</b>
+                      <small class="text-muted"
+                        >{{ range[0].toDateString() }} -
+                        {{ range[1].toDateString() }}</small
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </template>
+            </date-range-picker>
+          </label>
         </div>
+        <div class="my-2">
+          <label for="market">
+            <span class="text-sm text-gray-400 block">ตลาด</span>
+            <SelectInput
+              v-bind:sourceMarkets="markets"
+              @onSubmitTags="onSubmitTags"
+            />
+          </label>
+        </div>
+        <button
+          @click="onClickSearch"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+        >
+          ค้นหา
+        </button>
       </div>
-    </div>
+    </section>
 
     <!-- // table-content -->
-    <section class="p-8">
+    <section class="flex-1 p-8">
       <h1 class="text-2xl py-4 font-bold text-purple-800">รายการแทง</h1>
       <div class="bg-purple-600 rounded">
         <table
@@ -65,19 +65,21 @@
           border="0"
         >
           <thead>
-            <th></th>
-            <th>bill no.</th>
-            <th>username</th>
-            <th>name</th>
-            <th>market</th>
-            <th>time</th>
-            <th>volumn</th>
-            <th>price</th>
-            <th>discount</th>
-            <th>reward</th>
-            <th>summary</th>
-            <th>status</th>
-            <th>actions</th>
+            <tr>
+              <th></th>
+              <th>bill no.</th>
+              <th>username</th>
+              <th>name</th>
+              <th>market</th>
+              <th>time</th>
+              <th>volumn</th>
+              <th>price</th>
+              <th>discount</th>
+              <th>reward</th>
+              <th>summary</th>
+              <th>status</th>
+              <th>actions</th>
+            </tr>
           </thead>
           <tbody class="bg-purple-100">
             <template v-for="bill in bills">
@@ -357,7 +359,7 @@ export default {
     },
     currencies(value) {
       if (typeof value !== 'number') {
-        return 'fuck'
+        return 'n/a'
       }
       var formatter = new Intl.NumberFormat('th-TH', {
         minimumFractionDigits: 2,
