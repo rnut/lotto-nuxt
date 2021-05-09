@@ -21,9 +21,12 @@
       </div>
     </section>
     <div class="flex">
-      <main class="w-1/2">
+      <main class="w-2/5">
         <!-- // creator -->
-        <div class="border border-gray-500 rounded-md p-4 h-72 my-4 w-auto">
+        <div
+          v-if="!calculated"
+          class="border border-gray-500 rounded-md p-4 h-72 my-4 w-auto"
+        >
           <nav class="flex flex-col sm:flex-row">
             <button
               v-on:click="toggleTabs(1)"
@@ -104,34 +107,17 @@
           </div>
         </div>
 
-        <div v-if="lottos.length > 0">
-          <!-- // summary -->
-          <Summary :lottos="lottos" />
-
-          <!-- // calculated -->
-          <div class="" v-if="calculated">
-            <div class="grid grid-cols-5 gap-8 bg-purple-200">
-              <div class="py-3 text-center">ประเภท</div>
-              <div class="py-3 text-center">หมายเลข</div>
-              <div class="py-3 text-center">ยอด</div>
-            </div>
-            <hr />
-            <div class="divide-y-2 divide-purple-200 divide-solid">
-              <div
-                v-for="lotto in lottos"
-                :key="lotto.id"
-                class="grid grid-cols-5 gap-8"
-              >
-                <div class="py-3">{{ lotto.type }}</div>
-                <div class="py-3">{{ lotto.number }}</div>
-                <div class="py-3">{{ lotto.price }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Summary
+          v-if="lottos.length > 0"
+          :lottos="lottos"
+          :market="market"
+          @onSummarySaved="onSummarySaved"
+          @onSummaryCanceled="onSummaryCanceled"
+          @onConfirmedBill="onConfirmedBill"
+        />
       </main>
 
-      <section class="px-8 w-1/2">
+      <section class="px-4 w-3/5">
         <div class="bg-purple-600 rounded">
           <table
             class="table-auto w-full"
@@ -140,16 +126,18 @@
             border="0"
           >
             <thead>
-              <th></th>
-              <th>bill no.</th>
-              <th>market</th>
-              <th>time</th>
-              <th>volumn</th>
-              <th>price</th>
-              <th>discount</th>
-              <th>actions</th>
+              <tr>
+                <th></th>
+                <th>market</th>
+                <th>time</th>
+                <th>volumn</th>
+                <th>price</th>
+                <th>discount</th>
+                <th>สถานะ</th>
+                <th>actions</th>
+              </tr>
             </thead>
-            <tbody class="bg-purple-100">
+            <tbody v-if="bills" class="bg-purple-100">
               <template v-for="bill in bills">
                 <tr
                   :key="bill._id"
@@ -162,9 +150,6 @@
                       class="h-auto mx-auto"
                     />
                   </td>
-                  <td>{{ bill._id }}</td>
-                  <td>{{ bill.createdBy.username }}</td>
-                  <td>{{ bill.createdBy.name }}</td>
                   <td>{{ getBillMarketName(bill) }}</td>
                   <td>
                     {{ bill.createdAt | humanDateTime }}
@@ -172,21 +157,9 @@
                   <td>{{ getBillVolume(bill) }}</td>
                   <td>{{ bill.totalPrice | currencies }}</td>
                   <td>{{ bill.totalDiscount | currencies }}</td>
-                  <td>{{ bill.totalReward | currencies }}</td>
                   <td>
                     <span
-                      :class="{
-                        'text-red-500': getTotalSummaryBill(bill) < 0,
-                        'text-green-700': getTotalSummaryBill(bill) > 0,
-                        'text-gray-500': getTotalSummaryBill(bill) === 0
-                      }"
-                    >
-                      {{ getTotalSummaryBill(bill) | currencies }}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      class="p-2 rounded"
+                      class="p-1 rounded text-xs"
                       v-bind:class="{
                         'bg-red-500 text-white':
                           getBillStatus(bill) === 'รอการชำระเงิน',
@@ -298,29 +271,47 @@ export default {
     Summary,
     VueCountdown
   },
-  async asyncData({ params, $axios }) {
+  async asyncData({ params, $axios, redirect }) {
     const slug = params.id
     const marketStatusURL = `${$axios.defaults.baseURL}/markets/status/${slug}`
     const url = `${$axios.defaults.baseURL}/markets/${slug}`
+
+    const dateFormat = 'YYYY-MM-DD'
+    const urlBills = `${$axios.defaults.baseURL}/bills/member`
+    const startDate = moment().locale('th').startOf('day').format(dateFormat)
+    const endDate = moment().locale('th').endOf('day').format(dateFormat)
     try {
       await $axios.$get(marketStatusURL)
       const market = await $axios.$get(url)
-      return { slug, market }
+      const queryParams = {
+        startDate: startDate,
+        endDate: endDate
+      }
+      const billResp = await $axios.get(urlBills, { params: queryParams })
+      const bills = billResp.data
+      return { slug, market, bills }
     } catch (e) {
-      alert(`เกิดข้อผิดพลาดในการเล่นตลาดนี้  ${e.message}`)
-      this.$router.replace('/boards')
+      redirect('/boards')
     }
   },
   data() {
     return {
       calculated: false,
       openTab: 1,
-      lottos: []
+      lottos: [],
+      bills: [],
+      expandedIDs: []
     }
   },
   methods: {
     onSubmit(value) {
       console.log('submit', value)
+    },
+    onSummarySaved() {
+      this.calculated = true
+    },
+    onSummaryCanceled() {
+      this.calculated = false
     },
     toggleTabs(tabNumber) {
       this.openTab = tabNumber
@@ -346,6 +337,127 @@ export default {
       } else {
         return 0
       }
+    },
+    getBillMarketName(b) {
+      if (
+        typeof b.marketRef !== 'undefined' &&
+        b.marketRef !== null &&
+        typeof b.marketRef.name !== 'undefined'
+      ) {
+        return b.marketRef.name
+      } else {
+        return 'n/a'
+      }
+    },
+    getBillVolume(b) {
+      if (typeof b.lottos === 'undefined') {
+        return 'n/a'
+      } else {
+        return b.lottos.length
+      }
+    },
+    getTotalSummaryBill(bill) {
+      return bill.totalReward - bill.totalPrice
+    },
+    getBillStatus(b) {
+      if (b.isConfirmPayment) {
+        return b.isChecked ? 'ประกาศผลแล้ว' : 'รอผล'
+      } else {
+        return 'รอการชำระเงิน'
+      }
+    },
+    onClickBill(b) {
+      const id = b._id
+      if (this.expandedIDs.includes(id)) {
+        this.expandedIDs = this.expandedIDs.filter(
+          (expandedID) => id != expandedID
+        )
+      } else {
+        this.expandedIDs.push(b._id)
+      }
+    },
+    getLottoResultReward(l) {
+      if (l.resultStatus === 'win') {
+        return l.price * l.lotto.reward
+      } else {
+        return 0
+      }
+    },
+    async getCurrentBills() {
+      this.bills = []
+      const dateFormat = 'YYYY-MM-DD'
+      const url = `${this.$axios.defaults.baseURL}/bills/member`
+      const startDate = moment().locale('th').startOf('day').format(dateFormat)
+      const endDate = moment().locale('th').endOf('day').format(dateFormat)
+      try {
+        const queryParams = {
+          startDate: startDate,
+          endDate: endDate
+        }
+        const resp = await this.$axios.get(url, { params: queryParams })
+        this.bills = resp.data
+      } catch (e) {
+        console.log('e: ', e)
+      }
+    },
+    async onClickDelete(b) {
+      if (confirm('คุณต้องการลบบิลนี้ใช่หรือไม่?')) {
+        try {
+          const url = `${this.$axios.defaults.baseURL}/bills/${b._id}`
+          await this.$axios.delete(url)
+          this.bills = this.bills.filter((bill) => b._id !== bill._id)
+        } catch (e) {
+          alert('เกิดข้อผิดพลาด(10001)')
+        }
+      }
+    },
+    async onClickConfirmPayment(bill) {
+      if (confirm('ยืนยันการชำระเงิน?')) {
+        try {
+          const url = `${this.$axios.defaults.baseURL}/bills/confirmPayment/${bill._id}`
+          await this.$axios.patch(url)
+          bill.isConfirmPayment = true
+        } catch (e) {
+          console.log('onClickConfirmPayment: ', e)
+          if (e.response.status == 400) {
+            alert(`เกิดข้อผิดพลาด(10002) ${e.response.data.message}`)
+          }
+        }
+      }
+    },
+    async onConfirmedBill() {
+      this.lottos = []
+      this.calculated = false
+      await this.getCurrentBills()
+    },
+    async onSummaryCanceled() {
+      this.lottos = []
+      this.calculated = false
+      await this.getCurrentBills()
+    }
+  },
+  filters: {
+    dateCell(value) {
+      let dt = new Date(value)
+      return dt.getDate()
+    },
+    humanDateTime(value) {
+      const date = moment(value).locale('th').format('ll')
+      const time = moment(value).locale('th').format('LT')
+      return `${date} ${time}`
+    },
+    date(value) {
+      return moment(value).locale('th').format('ll')
+    },
+    currencies(value) {
+      if (typeof value !== 'number') {
+        return 'fuck'
+      }
+      var formatter = new Intl.NumberFormat('th-TH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
+      return formatter.format(value)
     }
   }
 }

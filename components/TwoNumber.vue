@@ -86,8 +86,8 @@
 export default {
   data() {
     return {
-      bonPrice: Number,
-      langPrice: Number,
+      bonPrice: null,
+      langPrice: null,
       activeNumber: null,
       activeNumbers: [],
       activeNumberError: ''
@@ -135,7 +135,8 @@ export default {
         title: '2 ตัว',
         subtitle: 'บน x ล่าง',
         detail: `${this.bonPrice} x ${this.langPrice}`,
-        numbers: lottos.flat()
+        numbers: this.activeNumbers,
+        lottos: lottos
       }
 
       this.$emit('numbers-submitted', emitDatas)

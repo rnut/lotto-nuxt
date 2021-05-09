@@ -31,6 +31,9 @@
       >
         <thead class="v-data-table-header">
           <tr>
+            <th>
+              <span>id</span>
+            </th>
             <th
               role="columnheader"
               scope="col"
@@ -127,6 +130,7 @@
         </thead>
         <tbody class="bg-purple-100 cursor-pointer">
           <tr class="" v-for="member in members" :key="member._id">
+            <td class="text-start">{{ member._id }}</td>
             <td class="text-start">{{ member.username }}</td>
             <td class="text-start">{{ member.name }}</td>
             <td class="text-start">{{ member.role }}</td>

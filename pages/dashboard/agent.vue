@@ -191,7 +191,8 @@ export default {
         return value
       }
       var formatter = new Intl.NumberFormat('th-TH', {
-        minimumFractionDigits: 2
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       })
       return formatter.format(value)
     }
