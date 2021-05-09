@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -42,8 +45,12 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
+  env: {
+    BASE_URL: process.env.BASE_URL
+  },
+
   axios: {
-    baseURL: 'http://127.0.0.1:8080/api/v1',
+    baseURL: process.env.BASE_URL,
     proxyHeaders: false,
     credentials: false,
     headers: {
