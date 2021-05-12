@@ -139,7 +139,7 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  :checked="member.cans.includes(confirmPaymentKey)"
+                  :checked="checkCanConfirmPayment(member)"
                   v-on:change="onChangeConfirmPayment(member)"
                 />
                 <div class="slider round">
@@ -228,6 +228,12 @@ export default {
     async upateUserData(m) {
       const url = `${this.$axios.defaults.baseURL}/users/${m._id}`
       return await this.$axios.$patch(url, m)
+    },
+    checkCanConfirmPayment(member) {
+      if (typeof member === 'undefined') return false
+      if (typeof member.cans === 'undefined') return false
+      if (member.cans === null) return false
+      return member.cans.includes(this.confirmPaymentKey)
     }
   }
 }

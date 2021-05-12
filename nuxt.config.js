@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
-
+dotenv.config();
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -50,7 +49,7 @@ export default {
   },
 
   axios: {
-    baseURL: 'https://mimi-be-ykmu7mrxja-as.a.run.app/api/v1',
+    baseURL: process.env.BASE_URL,
     proxyHeaders: false,
     credentials: false,
     headers: {

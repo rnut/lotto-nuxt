@@ -118,6 +118,7 @@ export default {
       }
     },
     async onDelete() {
+      const m = this.market
       if (confirm(`ยืนยันการลบข้อมูลผู้ใช้งาน ${m.name}`)) {
         await this.delete(m._id)
       }

@@ -86,14 +86,9 @@
                   </label>
                 </td>
                 <td class="text-start">
-                  <button
-                    type="button"
-                    class=""
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
+                  <button type="button" class="">
                     <nuxt-link :to="`/markets/${market._id}`">
-                      <button
+                      <div
                         class="bg-purple-500 flex items-center px-3 py-2 rounded hover:bg-purple-700"
                       >
                         <svg
@@ -109,13 +104,13 @@
                           />
                         </svg>
                         <span class="m-2 text-white"> ตั้งค่า </span>
-                      </button>
+                      </div>
                     </nuxt-link>
                   </button>
 
                   <button type="button">
                     <nuxt-link :to="`/markets/results/${market._id}`">
-                      <button
+                      <div
                         class="bg-green-500 flex items-center px-3 py-2 rounded hover:bg-green-700"
                       >
                         <svg
@@ -131,7 +126,7 @@
                           />
                         </svg>
                         <span class="m-2 text-white"> ประกาศรางวัล </span>
-                      </button>
+                      </div>
                     </nuxt-link>
                   </button>
                 </td>
