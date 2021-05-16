@@ -59,6 +59,12 @@
         </div>
       </div>
       <div class="flex flex-col justify-end">
+        <span
+          @click="reverse"
+          class="cursor-pointer bg-purple-500 hover:bg-purple-200 hover:text-purple-600 text-white p-2 m-2 w-10/12 rounded self-center text-center"
+        >
+          กลับเลข
+        </span>
         <button
           @click="reset"
           class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
@@ -121,10 +127,8 @@ export default {
     },
     checkDuplicatedActiveNumber(val) {
       const duplicated = this.activeNumbers.filter((obj) => {
-        console.log('data: ', obj.data)
         return obj.data === val
       })
-      console.log('checkDup', duplicated, ' length:', duplicated.length)
       return duplicated.length > 0
     },
     submit() {
@@ -159,6 +163,50 @@ export default {
       this.activeNumber = null
       this.activeNumbers = []
       this.activeNumberError = ''
+    },
+    reverse() {
+      var reversed = Array()
+      this.activeNumbers.forEach((element) => {
+        const sixNumbers = this.swap6Numbers(element.data)
+        reversed = reversed.concat(sixNumbers)
+      })
+      this.activeNumbers = this.activeNumbers.concat(reversed)
+    },
+    swap(number1, number2) {
+      return `${number2}${number1}`
+    },
+    swap6Numbers(source) {
+      var results = []
+      for (let index = 0; index < 6; index++) {
+        const first = source.charAt((0 + index) % 3)
+        const second = source.charAt((1 + index) % 3)
+        const third = source.charAt((2 + index) % 3)
+        const combine = `${first}${second}${third}`
+        const isDuplicated = this.checkDuplicatedInList(results, combine)
+        if (!isDuplicated) {
+          results.push(combine)
+        }
+        const swaped = this.swap(second, third)
+        const combineSwap = `${first}${swaped}`
+        const isDuplicatedSwap = this.checkDuplicatedInList(
+          results,
+          combineSwap
+        )
+        if (!isDuplicatedSwap) {
+          results.push(combineSwap)
+        }
+      }
+      return results
+        .filter((r) => !this.checkDuplicatedActiveNumber(r))
+        .map((f) => {
+          return { data: f }
+        })
+    },
+    checkDuplicatedInList(list, val) {
+      const duplicated = list.filter((obj) => {
+        return obj === val
+      })
+      return duplicated.length > 0
     },
     removeNumber(index) {
       this.activeNumbers.splice(index, 1)

@@ -124,10 +124,8 @@ export default {
     },
     checkDuplicatedActiveNumber(list, val) {
       const duplicated = list.filter((obj) => {
-        console.log('data: ', obj.data)
         return obj.data === val
       })
-      console.log('checkDup', duplicated, ' length:', duplicated.length)
       return duplicated.length > 0
     },
     runNumbers(data) {

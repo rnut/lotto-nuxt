@@ -59,6 +59,12 @@
         </div>
       </div>
       <div class="flex flex-col justify-end">
+        <span
+          @click="reverse"
+          class="cursor-pointer bg-purple-500 hover:bg-purple-200 hover:text-purple-600 text-white p-2 m-2 w-10/12 rounded self-center text-center"
+        >
+          กลับเลข
+        </span>
         <button
           @click="reset"
           class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
@@ -95,7 +101,7 @@ export default {
       if (inputLenght === 2) {
         const isDuplicated = this.checkDuplicatedActiveNumber(val)
         if (isDuplicated) {
-          this.activeNumberError = 'เลขซ้ำนะจ๊ะ'
+          this.activeNumberError = 'กรุณาระบุเลขที่ไม่ซ้ำกันในบิล'
         } else {
           this.activeNumberError = ''
           this.activeNumbers.push({ data: val })
@@ -137,6 +143,21 @@ export default {
 
       this.$emit('numbers-submitted', emitDatas)
       this.reset()
+    },
+    reverse() {
+      var reversed = []
+      this.activeNumbers.forEach((element) => {
+        const firstIndex = element.data.charAt(0)
+        const secondIndex = element.data.charAt(1)
+        if (firstIndex === secondIndex) {
+          return
+        } else if (this.checkDuplicatedActiveNumber(element)) {
+          return
+        } else {
+          reversed.push({ data: `${secondIndex}${firstIndex}` })
+        }
+      })
+      this.activeNumbers = this.activeNumbers.concat(reversed)
     },
     isNumber(evt) {
       this.activeNumberError = ''

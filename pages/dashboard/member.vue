@@ -107,7 +107,6 @@ export default {
       if (typeof this.summary === 'undefined' || this.summary === null) {
         return 'N/A'
       } else {
-        console.log('this.summary', this.summary)
         return this.summary.sumTotalPrice
       }
     },
@@ -152,9 +151,7 @@ export default {
         }
         const resp = await this.$axios.get(url, { params: queryParams })
         this.summary = resp.data
-      } catch (e) {
-        console.log('e: ', e)
-      }
+      } catch (e) {}
     },
     getLottoResultReward(l) {
       if (l.resultStatus === 'win') {

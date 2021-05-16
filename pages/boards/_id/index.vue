@@ -320,9 +320,6 @@ export default {
     }
   },
   methods: {
-    onSubmit(value) {
-      console.log('submit', value)
-    },
     onSummarySaved() {
       this.calculated = true
     },
@@ -333,10 +330,7 @@ export default {
       this.openTab = tabNumber
     },
     onSubmittedNumbers(n) {
-      console.log('lottos-before', this.lottos)
       this.lottos = this.lottos.concat(n)
-      console.log('submit', n)
-      console.log('lottos', this.lottos)
     },
     getTimeRemaining() {
       const openTime = this.market.openTime
@@ -412,9 +406,7 @@ export default {
         }
         const resp = await this.$axios.get(url, { params: queryParams })
         this.bills = resp.data
-      } catch (e) {
-        console.log('e: ', e)
-      }
+      } catch (e) {}
     },
     async onClickDelete(b) {
       if (confirm('คุณต้องการลบบิลนี้ใช่หรือไม่?')) {
@@ -434,7 +426,6 @@ export default {
           await this.$axios.patch(url)
           bill.isConfirmPayment = true
         } catch (e) {
-          console.log('onClickConfirmPayment: ', e)
           if (e.response.status == 400) {
             alert(`เกิดข้อผิดพลาด(10002) ${e.response.data.message}`)
           }

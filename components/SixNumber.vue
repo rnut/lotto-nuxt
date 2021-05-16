@@ -95,10 +95,8 @@ export default {
   methods: {
     checkDuplicatedActiveNumber(val) {
       const duplicated = this.activeNumbers.filter((obj) => {
-        console.log('data: ', obj.data)
         return obj.data === val
       })
-      console.log('checkDup', duplicated, ' length:', duplicated.length)
       return duplicated.length > 0
     },
     isNumber(evt) {

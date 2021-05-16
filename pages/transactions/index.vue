@@ -236,9 +236,7 @@ export default {
         }
         const resp = await this.$axios.get(url, { params: queryParams })
         this.bills = resp.data
-      } catch (e) {
-        console.log('e: ', e)
-      }
+      } catch (e) {}
     },
     getBillVolume(b) {
       if (typeof b.lottos === 'undefined') {
@@ -284,7 +282,6 @@ export default {
     },
     onSubmitTags(tags) {
       this.filteredMarketIDs = tags.map((t) => t._id)
-      console.log('tags: ', tags)
     },
     async onClickDelete(b) {
       if (confirm('คุณต้องการลบบิลนี้ใช่หรือไม่?')) {
@@ -304,7 +301,6 @@ export default {
           await this.$axios.patch(url)
           bill.isConfirmPayment = true
         } catch (e) {
-          console.log('onClickConfirmPayment: ', e)
           if (e.response.status == 400) {
             alert(`เกิดข้อผิดพลาด(10002) ${e.response.data.message}`)
           }

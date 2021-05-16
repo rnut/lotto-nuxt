@@ -133,8 +133,6 @@ export default {
         await this.$axios.patch(url, payload)
         this.$router.push({ path: '/markets' })
       } catch (e) {
-        console.log(e.message)
-        console.log(e)
         alert('เกิดข้อผิดพลาด(20001)')
       }
     },

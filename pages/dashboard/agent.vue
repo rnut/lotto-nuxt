@@ -150,9 +150,7 @@ export default {
         }
         const resp = await this.$axios.get(url, { params: queryParams })
         this.bills = resp.data
-      } catch (e) {
-        console.log('e: ', e)
-      }
+      } catch (e) {}
     },
     getSummary(b) {
       return b.sumTotalReward - (b.sumTotalPrice - b.sumTotalDiscount)

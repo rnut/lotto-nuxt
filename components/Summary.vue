@@ -110,7 +110,7 @@
         border="0"
       >
         <tbody>
-          <tr v-for="lotto in lottos" :key="lotto.id">
+          <tr v-for="(lotto, index) in lottos" :key="index">
             <td>
               <span class="text-xl">{{ lotto.title }} </span>
             </td>
@@ -126,6 +126,27 @@
               >
                 {{ number.data }}
               </span>
+            </td>
+            <td>
+              <button
+                @click="onDeleteLotto(index)"
+                class="flex justify-center items-center w-12 h-12 rounded-full border border-red-400 hover:border-2 hover:border-red-800 hover:bg-red-100"
+              >
+                <p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    width="24px"
+                    fill="#C70039"
+                  >
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                      d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
+                    />
+                  </svg>
+                </p>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -185,7 +206,6 @@ export default {
         }
         const url = `${this.$axios.defaults.baseURL}/bills`
         const resp = await this.$axios.$post(url, payload)
-        console.log('resp.lottos: ', resp.lottos)
         this.respCalculated = resp
         this.calculated = true
         this.$emit('onSummarySaved', this.calculatedLottos)
@@ -201,6 +221,9 @@ export default {
         this.$emit('onSummaryCanceled')
         this.respCalculated = null
       }
+    },
+    onDeleteLotto(index) {
+      this.lottos.splice(index, 1)
     },
     async onConfirmBill() {
       try {
