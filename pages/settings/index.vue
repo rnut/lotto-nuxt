@@ -32,6 +32,14 @@
             ค่าพื้นฐานส่วนลด ยอดจ่าย สำหรับผู้ใช้งานใหม่ทุกคน
           </p>
         </section>
+        <div v-if="errors.length" class="bg-red-400 p-4 errors">
+          <b class="text-white">กรุณาระบุข้อมูลให้ถูกต้อง</b>
+          <ul>
+            <li v-for="error in errors" :key="error" class="text-red-900 m-1">
+              - {{ error }}
+            </li>
+          </ul>
+        </div>
 
         <section class="mt-10">
           <div
@@ -96,20 +104,49 @@ export default {
   },
   data() {
     return {
-      modalActive: false
+      modalActive: false,
+      isLoading: false,
+      errors: []
     }
   },
   computed: {},
   methods: {
     async submit(e) {
       e.preventDefault()
+      this.errors = this.validateLottos()
+      this.isLoading = true
+      if (this.errors.length > 0) {
+        this.scrollToError()
+        this.isLoading = false
+        return
+      }
       const url = `${this.$axios.defaults.baseURL}/settings/lottos`
       try {
         const resp = await this.$axios.patch(url, this.lottos)
         alert(`แก้ไขข้อมูลสำเร็จ`)
         this.lottos = resp.data
+        this.isLoading = false
       } catch (e) {
         alert(`แก้ไขข้อมูลไม่สำเร็จ ${e.message}`)
+        this.isLoading = false
+      }
+    },
+    validateLottos() {
+      var errors = []
+      this.lottos.forEach((element) => {
+        if (element.discount > 100 || element.discount < 0) {
+          errors.push(`ส่วนลด ${element.title} ต้องอยู่ระหว่าง 0-100`)
+        }
+        if (element.reward < 0) {
+          errors.push(`รางวัล ${element.title} ต้องไม่ติดลบ`)
+        }
+      })
+      return errors
+    },
+    scrollToError() {
+      const el = this.$el.getElementsByClassName('errors')[0]
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
       }
     }
   }

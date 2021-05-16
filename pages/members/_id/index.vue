@@ -164,7 +164,7 @@
                 class="block text-gray-700 text-sm font-bold mb-2 ml-3"
                 v-bind:for="`discount-${lotto.type}`"
               >
-                ส่วนลด
+                ส่วนลด(%)
               </label>
               <input
                 type="text"
@@ -178,7 +178,7 @@
                 class="block text-gray-700 text-sm font-bold mb-2 ml-3"
                 v-bind:for="`reward-${lotto.type}`"
               >
-                ยอดจ่าย
+                ยอดจ่าย(บาท)
               </label>
               <input
                 type="text"
@@ -192,10 +192,33 @@
 
         <section class="flex flex-col">
           <button
-            class="bg-purple-600 hover:bg-purple-700 text-white font-bold mt-8 py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
             type="submit"
+            class="inline-flex justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:border-rose-700 active:bg-rose-700 transition ease-in-out duration-150"
           >
-            บันทึก
+            <template v-if="isLoading">
+              <svg
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Processing
+            </template>
+            <template v-else>บันทึก</template>
           </button>
           <div class="flex justify-between">
             <span
@@ -258,6 +281,20 @@
               <!--Body-->
               <p>กรุณาระบุรหัสผ่านที่ต้องการเปลี่ยน</p>
               <div class="mt-2 mb-6 pt-3 rounded bg-gray-200">
+                <div
+                  v-if="resetPasswordErrors.length"
+                  class="bg-red-400 p-4 errors"
+                >
+                  <ul>
+                    <li
+                      v-for="error in resetPasswordErrors"
+                      :key="error"
+                      class="text-red-900 m-1"
+                    >
+                      - {{ error }}
+                    </li>
+                  </ul>
+                </div>
                 <label
                   class="block text-gray-700 text-sm font-bold mb-2 ml-3"
                   for="password"
@@ -281,7 +318,7 @@
                 <span
                   type="cancel"
                   @click="toggleModal()"
-                  class="modal-close px-4 bg-red-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+                  class="cursor-pointer modal-close px-4 bg-red-500 p-3 rounded-lg text-white hover:bg-indigo-400"
                 >
                   ปิด
                 </span>
@@ -302,7 +339,9 @@ export default {
       modalActive: false,
       confirmPaymentKey: 'confirmpayment',
       password: '',
-      errors: []
+      errors: [],
+      resetPasswordErrors: [],
+      isLoading: false
     }
   },
   computed: {
@@ -328,16 +367,20 @@ export default {
       e.preventDefault()
       const validated = this.validate()
       this.errors = validated.errors
+      this.isLoading = true
       if (this.errors.length > 0) {
         this.scrollToError()
+        this.isLoading = false
         return
       }
       const url = `${this.$axios.defaults.baseURL}/users/${this.slug}`
       try {
         const resp = await this.$axios.patch(url, this.member)
         alert(`แก้ไขข้อมูลสำเร็จ`)
+        this.isLoading = false
         this.$router.replace('/members')
       } catch (e) {
+        this.isLoading = false
         alert(`แก้ไขข้อมูลไม่สำเร็จ ${e.message}`)
       }
     },
@@ -357,17 +400,22 @@ export default {
     },
     async submitChangePassword(e) {
       e.preventDefault()
+      this.resetPasswordErrors = []
       const id = this.slug
       const url = `${this.$axios.defaults.baseURL}/users/reset/${id}`
       const password = this.password.trim()
       const errorPassword = this.validatePassword(password)
+      if (errorPassword !== '') {
+        this.resetPasswordErrors.push(errorPassword)
+        return
+      }
       try {
         const resp = await this.$axios.patch(url, { password: this.password })
         alert('รีเซ็ตรหัสผ่านผู้ใช้งานสำเร็จ')
         this.password = ''
         this.toggleModal()
       } catch (e) {
-        alert('ลบไม่สำเร็จ')
+        alert('รีเซ็ตรหัสผ่านผู้ใช้งานไม่สำเร็จ')
       }
     },
     onClickResetPassword(member) {
@@ -407,7 +455,7 @@ export default {
         mobileNumber,
         'เบอร์โทรศัพท์'
       )
-      const errors = [
+      var errors = [
         errorUserName,
         errorName,
         errorLineID,
@@ -421,6 +469,8 @@ export default {
         mobileNumber,
         role
       }
+      const lottoErrors = this.validateLottos()
+      errors = errors.concat(lottoErrors)
       return { payload, errors }
     },
     validateEmptyString(data, tag) {
@@ -440,6 +490,18 @@ export default {
       } else {
         return ''
       }
+    },
+    validateLottos() {
+      var errors = []
+      this.member.lottos.forEach((element) => {
+        if (element.discount > 100 || element.discount < 0) {
+          errors.push(`ส่วนลด ${element.title} ต้องอยู่ระหว่าง 0-100`)
+        }
+        if (element.reward < 0) {
+          errors.push(`รางวัล ${element.title} ต้องไม่ติดลบ`)
+        }
+      })
+      return errors
     },
     scrollToError() {
       const el = this.$el.getElementsByClassName('errors')[0]
