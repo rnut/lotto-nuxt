@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config();
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'lotto-nuxt',
+    title: 'startup',
     htmlAttrs: {
       lang: 'en'
     },
@@ -44,9 +42,12 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  env: {
-    BASE_URL: process.env.BASE_URL
-  },
+  // publicRuntimeConfig: {
+  //   baseURL: process.env.BASE_URL
+  // },
+  // privateRuntimeConfig: {
+  //   apiSecret: process.env.API_SECRET
+  // },
 
   axios: {
     baseURL: process.env.BASE_URL,

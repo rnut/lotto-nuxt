@@ -29,6 +29,14 @@
 
       <form class="" autocomplete="off" @submit="submit">
         <section class="mt-10">
+          <div v-if="errors.length" class="bg-red-400 p-4 errors">
+            <b class="text-white">กรุณาระบุข้อมูลให้ถูกต้อง</b>
+            <ul>
+              <li v-for="error in errors" :key="error" class="text-red-900 m-1">
+                - {{ error }}
+              </li>
+            </ul>
+          </div>
           <div class="mb-6 pt-3 rounded bg-gray-200">
             <label
               class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -94,7 +102,7 @@
             <input
               disabled
               type="text"
-              id="mobileNumber"
+              id="role"
               v-model="role"
               class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
             />
@@ -124,7 +132,7 @@
             <label class="switch">
               <input
                 type="checkbox"
-                :checked="member.cans.includes(confirmPaymentKey)"
+                :checked="canConfirmPayment(member)"
                 v-on:change="onChangeConfirmPayment(member)"
               />
               <div class="slider round">
@@ -288,11 +296,13 @@
 
 <script>
 export default {
+  middleware: 'auth',
   data() {
     return {
       modalActive: false,
       confirmPaymentKey: 'confirmpayment',
-      password: ''
+      password: '',
+      errors: []
     }
   },
   computed: {
@@ -316,10 +326,17 @@ export default {
   methods: {
     async submit(e) {
       e.preventDefault()
+      const validated = this.validate()
+      this.errors = validated.errors
+      if (this.errors.length > 0) {
+        this.scrollToError()
+        return
+      }
       const url = `${this.$axios.defaults.baseURL}/users/${this.slug}`
       try {
         const resp = await this.$axios.patch(url, this.member)
         alert(`แก้ไขข้อมูลสำเร็จ`)
+        this.$router.replace('/members')
       } catch (e) {
         alert(`แก้ไขข้อมูลไม่สำเร็จ ${e.message}`)
       }
@@ -342,6 +359,8 @@ export default {
       e.preventDefault()
       const id = this.slug
       const url = `${this.$axios.defaults.baseURL}/users/reset/${id}`
+      const password = this.password.trim()
+      const errorPassword = this.validatePassword(password)
       try {
         const resp = await this.$axios.patch(url, { password: this.password })
         alert('รีเซ็ตรหัสผ่านผู้ใช้งานสำเร็จ')
@@ -353,6 +372,11 @@ export default {
     },
     onClickResetPassword(member) {
       this.toggleModal()
+    },
+    canConfirmPayment(member) {
+      if (typeof member === 'undefined') return false
+      if (typeof member.cans === 'undefined') return false
+      return member.cans.includes(this.confirmPaymentKey)
     },
     toggleModal() {
       this.modalActive = !this.modalActive
@@ -368,6 +392,59 @@ export default {
         } else {
           m.cans.push(key)
         }
+      }
+    },
+    validate() {
+      const username = this.member.username.trim()
+      const name = this.member.name.trim()
+      const lineID = this.member.lineID.trim()
+      const mobileNumber = this.member.mobileNumber.trim()
+      const role = this.member.role.trim()
+      const errorUserName = this.validateEmptyString(username, 'ชื่อผู้ใช้')
+      const errorName = this.validateEmptyString(name, 'ชื่อ')
+      const errorLineID = this.validateEmptyString(lineID, 'ไลน์ไอดี')
+      const errorMobileNumber = this.validateEmptyString(
+        mobileNumber,
+        'เบอร์โทรศัพท์'
+      )
+      const errors = [
+        errorUserName,
+        errorName,
+        errorLineID,
+        errorMobileNumber
+      ].filter((e) => e !== '')
+      const payload = {
+        username,
+        password,
+        name,
+        lineID,
+        mobileNumber,
+        role
+      }
+      return { payload, errors }
+    },
+    validateEmptyString(data, tag) {
+      const maxLength = 255
+      const minLength = 1
+      if (data.length < minLength || data.length > maxLength) {
+        return `กรุณาระบุ${tag} ระหว่าง ${minLength}-${maxLength} อักขระ`
+      } else {
+        return ''
+      }
+    },
+    validatePassword(data) {
+      const maxLength = 40
+      const minLength = 8
+      if (data.length < minLength || data.length > maxLength) {
+        return `กรุณาระบุรหัสผ่าน ${minLength}-${maxLength} อักขระ`
+      } else {
+        return ''
+      }
+    },
+    scrollToError() {
+      const el = this.$el.getElementsByClassName('errors')[0]
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
       }
     }
   }

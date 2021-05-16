@@ -9,6 +9,14 @@
 
     <section class="mt-10">
       <form class="flex flex-col" autocomplete="off" @submit="create">
+        <div v-if="errors.length" class="bg-red-400 p-4 errors">
+          <b class="text-white">กรุณาระบุข้อมูลให้ถูกต้อง</b>
+          <ul>
+            <li v-for="error in errors" :key="error" class="text-red-900 m-1">
+              - {{ error }}
+            </li>
+          </ul>
+        </div>
         <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -136,19 +144,19 @@ export default {
       name: '',
       lineID: '',
       mobileNumber: '',
-      role: ''
+      role: 'member',
+      errors: []
     }
   },
   methods: {
     async create(e) {
       e.preventDefault()
-      const payload = {
-        username: this.username,
-        password: this.password,
-        name: this.name,
-        lineID: this.lineID,
-        mobileNumber: this.mobileNumber,
-        role: this.role
+      const validated = this.validate()
+      this.errors = validated.errors
+      const payload = validated.payload
+      if (this.errors.length > 0) {
+        this.scrollToError()
+        return
       }
       try {
         const url = `${this.$axios.defaults.baseURL}/users/create/member`
@@ -157,6 +165,62 @@ export default {
         this.$router.replace('/members')
       } catch (e) {
         alert(`เกิดข้อผิดพลาด 90000 ${e.message}`)
+      }
+    },
+    validate() {
+      const username = this.username.trim()
+      const password = this.password.trim()
+      const name = this.name.trim()
+      const lineID = this.lineID.trim()
+      const mobileNumber = this.mobileNumber.trim()
+      const role = this.role.trim()
+      const errorUserName = this.validateEmptyString(username, 'ชื่อผู้ใช้')
+      const errorPassword = this.validatePassword(password)
+      const errorName = this.validateEmptyString(name, 'ชื่อ')
+      const errorLineID = this.validateEmptyString(lineID, 'ไลน์ไอดี')
+      const errorMobileNumber = this.validateEmptyString(
+        mobileNumber,
+        'เบอร์โทรศัพท์'
+      )
+      const errors = [
+        errorUserName,
+        errorPassword,
+        errorName,
+        errorLineID,
+        errorMobileNumber
+      ].filter((e) => e !== '')
+      const payload = {
+        username,
+        password,
+        name,
+        lineID,
+        mobileNumber,
+        role
+      }
+      return { payload, errors }
+    },
+    validateEmptyString(data, tag) {
+      const maxLength = 255
+      const minLength = 1
+      if (data.length < minLength || data.length > maxLength) {
+        return `กรุณาระบุ${tag} ระหว่าง ${minLength}-${maxLength} อักขระ`
+      } else {
+        return ''
+      }
+    },
+    validatePassword(data) {
+      const maxLength = 40
+      const minLength = 8
+      if (data.length < minLength || data.length > maxLength) {
+        return `กรุณาระบุรหัสผ่าน ${minLength}-${maxLength} อักขระ`
+      } else {
+        return ''
+      }
+    },
+    scrollToError() {
+      const el = this.$el.getElementsByClassName('errors')[0]
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
       }
     }
   }

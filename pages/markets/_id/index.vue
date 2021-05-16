@@ -9,6 +9,14 @@
 
     <section class="mt-10">
       <form class="flex flex-col" autocomplete="off" @submit="onSave">
+        <div v-if="errors.length" class="errors">
+          <p class="bg-red-400 p-4">
+            <b class="text-white">กรุณาระบุข้อมูลให้ถูกต้อง</b>
+            <ul>
+              <li v-for="error in errors" :key="error" class="text-red-900 m-1">- {{ error }}</li>
+            </ul>
+          </p>
+        </div>
         <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -65,10 +73,33 @@
         </div>
 
         <button
-          class="mb-6 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
           type="submit"
+          class="inline-flex justify-center mb-6 px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:border-rose-700 active:bg-rose-700 transition ease-in-out duration-150"
         >
-          บันทึก
+          <template v-if="isLoading">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Processing
+          </template>
+          <template v-else>ยืนยัน</template>
         </button>
         <button
           type="cancel"
@@ -89,7 +120,14 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
+  data() {
+    return {
+      isLoading: false,
+      errors: []
+    }
+  },
   async asyncData({ params, $axios }) {
     const slug = params.id
     const url = `${$axios.defaults.baseURL}/markets/${slug}`
@@ -98,22 +136,25 @@ export default {
   },
   methods: {
     async onSave(e) {
+      e.preventDefault()
+      this.isLoading = true
+      const validation = this.validate()
+      this.errors = validation.err
+      const payload = validation.payload
+      if (this.errors.length > 0) {
+        this.scrollToError()
+        this.isLoading = false
+        return
+      }
       const m = this.market
       const slug = m._id
       const url = `${this.$axios.defaults.baseURL}/markets/${slug}`
-      const payload = {
-        color: m.color,
-        name: m.name,
-        openTime: m.openTime,
-        closeTime: m.closeTime
-      }
-      e.preventDefault()
       try {
         await this.$axios.patch(url, payload)
         this.$router.push({ path: '/markets' })
+        this.isLoading = false
       } catch (e) {
-        console.log(e.message)
-        console.log(e)
+        this.isLoading = false
         alert('เกิดข้อผิดพลาด(20001)')
       }
     },
@@ -130,6 +171,56 @@ export default {
         this.$router.replace({ name: 'markets' })
       } catch (e) {
         alert('ลบไม่สำเร็จ')
+      }
+    },
+    validate() {
+      var err = []
+      const name = this.market.name.trim()
+      const nameLength = name.length
+      const maxNameLength = 255
+      const minNameLength = 1
+      if (nameLength < minNameLength || nameLength > maxNameLength) {
+        err.push(`ข้อมูลชื่อตลาด ${minNameLength}-${maxNameLength} ตัวอักษร`)
+      }
+      const color = this.market.color.trim()
+      const colorLength = color.length
+      if (colorLength < minNameLength || colorLength > maxNameLength) {
+        err.push(`ข้อมูลสีตลาด ${minNameLength}-${maxNameLength} ตัวอักษร`)
+      }
+
+      const timeFormat = 'HH:mm'
+      const rawOpenTime = moment(this.market.openTime, timeFormat)
+      const openTime = rawOpenTime.format(timeFormat)
+      const rawCloseTime = moment(this.market.closeTime, timeFormat)
+      const closeTime = rawCloseTime.format(timeFormat)
+      if (typeof rawOpenTime === 'undefined' || !rawOpenTime.isValid()) {
+        err.push('ระบุเวลาเปิดตลาดให้อยู่ในรูปแบบ HH:mm')
+      } else if (this.openTime !== openTime) {
+        this.openTime = openTime
+      }
+
+      if (typeof rawCloseTime === 'undefined' || !rawCloseTime.isValid()) {
+        err.push('ระบุเวลาปิดตลาดให้อยู่ในรูปแบบ HH:mm')
+      } else if (this.closeTime !== closeTime) {
+        this.closeTime = closeTime
+      }
+
+      if (rawCloseTime.isBefore(rawOpenTime)) {
+        err.push('เวลาเปิดตลาด ตั้งเริ่มต้นก่อน เวลาปิดตลาด')
+      }
+
+      const payload = {
+        name,
+        color,
+        openTime,
+        closeTime
+      }
+      return { err, payload }
+    },
+    scrollToError() {
+      const el = this.$el.getElementsByClassName('errors')[0]
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
       }
     }
   }

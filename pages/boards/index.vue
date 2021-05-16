@@ -53,6 +53,20 @@ export default {
   components: {
     VueCountdown
   },
+  computed: {
+    markets: function () {
+      var openMarkets = []
+      var closedMarkets = []
+      this.allMarkets.forEach((m) => {
+        if (this.getMarketIsOpen(m)) {
+          openMarkets.push(m)
+        } else {
+          closedMarkets.push(m)
+        }
+      })
+      return openMarkets.concat(closedMarkets)
+    }
+  },
   data() {
     return {
       items: [],
@@ -62,10 +76,8 @@ export default {
   },
   async asyncData({ $axios }) {
     const url = `${$axios.defaults.baseURL}/boards`
-    const markets = await $axios.$get(url)
-    return { markets }
-
-    return {}
+    const allMarkets = await $axios.$get(url)
+    return { allMarkets }
   },
   methods: {
     async logout() {
