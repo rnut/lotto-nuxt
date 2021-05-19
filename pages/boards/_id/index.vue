@@ -134,136 +134,145 @@
       </main>
 
       <section class="px-4 w-1/2">
-        <div class="bg-purple-600 rounded">
-          <table
-            class="table-auto w-full"
-            cellpadding="0"
-            cellspacing="0"
-            border="0"
-          >
-            <thead>
-              <tr>
-                <th></th>
-                <th>market</th>
-                <th>time</th>
-                <th>volumn</th>
-                <th>price</th>
-                <th>discount</th>
-                <th>สถานะ</th>
-                <th>actions</th>
-              </tr>
-            </thead>
-            <tbody v-if="bills" class="bg-purple-100">
-              <template v-for="bill in bills">
-                <tr
-                  :key="bill._id"
-                  class="z-0 text-purple-900 border-t-2 border-white"
-                >
-                  <td class="cursor-pointer" @click="onClickBill(bill)">
-                    <img
-                      src="/svg/expand_more_black_24dp.svg"
-                      alt="Logo"
-                      class="h-auto mx-auto"
-                    />
-                  </td>
-                  <td>{{ getBillMarketName(bill) }}</td>
-                  <td>
-                    {{ bill.createdAt | humanDateTime }}
-                  </td>
-                  <td>{{ getBillVolume(bill) }}</td>
-                  <td>{{ bill.totalPrice | currencies }}</td>
-                  <td>{{ bill.totalDiscount | currencies }}</td>
-                  <td>
-                    <span
-                      class="p-1 rounded text-xs"
-                      v-bind:class="{
-                        'bg-red-500 text-white':
-                          getBillStatus(bill) === 'รอการชำระเงิน',
-                        'bg-yellow-200 text-gray-600':
-                          getBillStatus(bill) === 'รอผล',
-                        'bg-green-400 text-white':
-                          getBillStatus(bill) === 'ประกาศผลแล้ว'
-                      }"
-                      >{{ getBillStatus(bill) }}</span
-                    >
-                  </td>
-                  <td class="">
-                    <div class="flex gap">
-                      <button
-                        v-if="canDeleteBill(bill)"
-                        @click="onClickDelete(bill)"
-                        class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                        type="button"
-                      >
-                        <img
-                          src="/svg/delete_white_24dp.svg"
-                          alt="Logo"
-                          class="h-auto mx-auto"
-                        />
-                      </button>
-
-                      <button
-                        v-if="!bill.isConfirmPayment"
-                        @click="onClickConfirmPayment(bill)"
-                        class="bg-green-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                        type="button"
-                      >
-                        <img
-                          src="/svg/payments_white_24dp.svg"
-                          alt="Logo"
-                          class="h-auto mx-auto"
-                        />
-                      </button>
-                    </div>
-                  </td>
+        <template v-if="bills && bills.length > 0">
+          <div class="bg-purple-600 rounded">
+            <table
+              class="table-auto w-full"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>market</th>
+                  <th>time</th>
+                  <th>volumn</th>
+                  <th>price</th>
+                  <th>discount</th>
+                  <th>สถานะ</th>
+                  <th>actions</th>
                 </tr>
-                <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
-                  <td colspan="13">
-                    <table
-                      class="table-auto w-full bg-white border border-purple-400"
-                      cellpadding="0"
-                      cellspacing="0"
-                    >
-                      <thead class="bg-purple-400 rounded">
-                        <th>ประเภท</th>
-                        <th>หมายเลข</th>
-                        <th>ยอด</th>
-                        <th>เรทจ่าย</th>
-                        <th>ส่วนลด</th>
-                        <th>ยอดถูก</th>
-                        <th>สถานะ</th>
-                      </thead>
+              </thead>
+              <tbody class="bg-purple-100">
+                <template v-for="bill in bills">
+                  <tr
+                    :key="bill._id"
+                    class="z-0 text-purple-900 border-t-2 border-white"
+                  >
+                    <td class="cursor-pointer" @click="onClickBill(bill)">
+                      <img
+                        src="/svg/expand_more_black_24dp.svg"
+                        alt="Logo"
+                        class="h-auto mx-auto"
+                      />
+                    </td>
+                    <td>{{ getBillMarketName(bill) }}</td>
+                    <td>
+                      {{ bill.createdAt | humanDateTime }}
+                    </td>
+                    <td>{{ getBillVolume(bill) }}</td>
+                    <td>{{ bill.totalPrice | currencies }}</td>
+                    <td>{{ bill.totalDiscount | currencies }}</td>
+                    <td>
+                      <span
+                        class="p-1 rounded text-xs"
+                        v-bind:class="{
+                          'bg-red-500 text-white':
+                            getBillStatus(bill) === 'รอการชำระเงิน',
+                          'bg-yellow-200 text-gray-600':
+                            getBillStatus(bill) === 'รอผล',
+                          'bg-green-400 text-white':
+                            getBillStatus(bill) === 'ประกาศผลแล้ว'
+                        }"
+                        >{{ getBillStatus(bill) }}</span
+                      >
+                    </td>
+                    <td class="">
+                      <div class="flex gap">
+                        <button
+                          v-if="canDeleteBill(bill)"
+                          @click="onClickDelete(bill)"
+                          class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          type="button"
+                        >
+                          <img
+                            src="/svg/delete_white_24dp.svg"
+                            alt="Logo"
+                            class="h-auto mx-auto"
+                          />
+                        </button>
 
-                      <tbody>
-                        <tr v-for="lotto in bill.lottos" :key="lotto._id">
-                          <td>{{ lotto.lotto.title }}</td>
-                          <td>{{ lotto.number }}</td>
-                          <td>{{ lotto.price | currencies }}</td>
-                          <td>{{ lotto.lotto.reward | currencies }}</td>
-                          <td>{{ lotto.totalDiscount | currencies }}</td>
-                          <td>
-                            <span
-                              :class="{
-                                'text-red-500': getLottoResultReward(lotto) < 0,
-                                'text-green-700':
-                                  getLottoResultReward(lotto) > 0,
-                                'text-gray-500':
-                                  getLottoResultReward(lotto) === 0
-                              }"
-                            >
-                              {{ getLottoResultReward(lotto) | currencies }}
-                            </span>
-                          </td>
-                          <td>{{ lotto.resultStatus }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </div>
+                        <button
+                          v-if="!bill.isConfirmPayment"
+                          @click="onClickConfirmPayment(bill)"
+                          class="bg-green-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          type="button"
+                        >
+                          <img
+                            src="/svg/payments_white_24dp.svg"
+                            alt="Logo"
+                            class="h-auto mx-auto"
+                          />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
+                    <td colspan="13">
+                      <table
+                        class="table-auto w-full bg-white border border-purple-400"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <thead class="bg-purple-400 rounded">
+                          <th>ประเภท</th>
+                          <th>หมายเลข</th>
+                          <th>ยอด</th>
+                          <th>เรทจ่าย</th>
+                          <th>ส่วนลด</th>
+                          <th>ยอดถูก</th>
+                          <th>สถานะ</th>
+                        </thead>
+
+                        <tbody>
+                          <tr v-for="lotto in bill.lottos" :key="lotto._id">
+                            <td>{{ lotto.lotto.title }}</td>
+                            <td>{{ lotto.number }}</td>
+                            <td>{{ lotto.price | currencies }}</td>
+                            <td>{{ lotto.lotto.reward | currencies }}</td>
+                            <td>{{ lotto.totalDiscount | currencies }}</td>
+                            <td>
+                              <span
+                                :class="{
+                                  'text-red-500':
+                                    getLottoResultReward(lotto) < 0,
+                                  'text-green-700':
+                                    getLottoResultReward(lotto) > 0,
+                                  'text-gray-500':
+                                    getLottoResultReward(lotto) === 0
+                                }"
+                              >
+                                {{ getLottoResultReward(lotto) | currencies }}
+                              </span>
+                            </td>
+                            <td>{{ lotto.resultStatus }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </template>
+        <template v-else>
+          <div class="flex flex-col">
+            <img src="/svg/Empty-bro.svg" alt="empty" class="h-96 w-full" />
+            <p class="text-center text-2xl">ไม่พบการทำรายการ</p>
+          </div>
+        </template>
       </section>
     </div>
   </div>
