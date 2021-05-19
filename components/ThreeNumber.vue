@@ -22,6 +22,7 @@
               class="tag-input__text"
               @keypress="isNumber($event)"
               @keydown.delete="removeLastNumber"
+              @keydown.enter="onEnter"
             />
           </div>
         </div>
@@ -92,25 +93,103 @@ export default {
       activeNumbers: [],
       activeNumberError: '',
       priceTong: null,
-      priceTod: null
+      priceTod: null,
     }
   },
   watch: {
     activeNumber: function (val, oldVal) {
-      const inputLenght = String(val).length
-      if (inputLenght === 3) {
-        const isDuplicated = this.checkDuplicatedActiveNumber(val)
-        if (isDuplicated) {
-          this.activeNumberError = 'เลขซ้ำนะจ๊ะ'
-        } else {
-          this.activeNumberError = ''
-          this.activeNumbers.push({ data: val })
-        }
-        this.activeNumber = null
+      if (typeof val === 'undifined' || val === null) {
+        return
       }
+      const splitter = " "
+      const p = new RegExp("(" + splitter + ")")
+      const splittedVals = val.split(p)
+      splittedVals.forEach(element => {
+        const input = String(element)
+        const inputLength = input.length
+        if (inputLength > 3) {
+          this.autoAssignPrice(input)
+        } else if (inputLength === 3) {
+          this.activateNumber(input)
+        } else {
+          return
+        }
+      })
     }
   },
   methods: {
+    activateNumber(val) {
+      const isDuplicated = this.checkDuplicatedActiveNumber(val)
+      if (isDuplicated) {
+        this.activeNumberError = 'เลขซ้ำนะจ๊ะ'
+      } else {
+        this.activeNumberError = ''
+        this.activeNumbers.push({ data: val })
+      }
+      this.activeNumber = null
+    },
+    autoAssignPrice(val) {
+      const equalSign = "="
+      const splittedEqualSingVals = this.split(equalSign, val)
+      if (splittedEqualSingVals.length > 1) {
+        this.activeLastestPasteNumber(splittedEqualSingVals[0])
+        this.activePastePricing(splittedEqualSingVals)
+        return
+      }
+
+      const spaceSign = " "
+      const splittedVals = this.split(spaceSign, val)
+      console.log('spaceSign: splittedVals:', splittedVals);
+      if (splittedVals.length > 0) {
+        this.activatePrice(splittedVals[0])
+        return
+      }
+    },
+    split(splitter, val) {
+      const p = new RegExp("(" + splitter + ")")
+      return val.split(p)
+    },
+    activeLastestPasteNumber(val) {
+      const latestNumber = parseInt(val)
+      const strNumber = String(latestNumber)
+      if (latestNumber > 99) {
+        this.activateNumber(strNumber)
+      }
+    },
+    activePastePricing(vals) {
+      var pricingStatement = ''
+      var foundEqual = false
+      vals.forEach(element => {
+        if (foundEqual) {
+          pricingStatement = element
+          foundEqual = false
+          return
+        } 
+        if (element === '=') {
+          foundEqual = true
+          return
+        }
+      })
+      this.activatePrice(pricingStatement)
+    },
+    activatePrice(pricingStatement) {
+      if (pricingStatement === '') {
+        return
+      }
+      const lowerCase = String(pricingStatement).toLowerCase()
+      const splitted = this.split("x", lowerCase)
+      if (splitted.length > 2) {
+        this.priceTong = splitted[0]
+        this.priceTod = splitted[2]
+        return
+      }
+      
+      const indexOfStar = lowerCase.indexOf('*')
+      if (indexOfStar > -1) {
+        this.priceTong = lowerCase.slice(0, indexOfStar)
+        this.priceTod = lowerCase.slice(indexOfStar+1, lowerCase.length)
+      }
+    },
     isNumber(evt) {
       this.activeNumberError = ''
       evt = evt ? evt : window.event
@@ -153,7 +232,6 @@ export default {
         numbers: this.activeNumbers,
         lottos: lottos
       }
-
       this.$emit('numbers-submitted', emitDatas)
       this.reset()
     },
@@ -163,6 +241,24 @@ export default {
       this.activeNumber = null
       this.activeNumbers = []
       this.activeNumberError = ''
+    },
+    onEnter(e) {
+      this.submit()
+    },
+    validate() {
+      const min = 50
+      const max = 100000
+      const tong = parseInt(this.priceTong)
+      const toad = parseInt(this.priceTod)
+      if (tong < min || tong > max || toad < min || toad > max) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        return false
+      }
+      if (this.activeNumbers.length === 0) {
+        this.activeNumberError = `ระบุยอดระหว่างหมายเลข`
+        return false
+      }
+      return true
     },
     reverse() {
       var reversed = Array()

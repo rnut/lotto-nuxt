@@ -190,7 +190,7 @@
                   <td class="">
                     <div class="flex gap">
                       <button
-                        v-if="!bill.isConfirmPayment"
+                        v-if="canDeleteBill(bill)"
                         @click="onClickDelete(bill)"
                         class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
@@ -441,6 +441,13 @@ export default {
       this.lottos = []
       this.calculated = false
       await this.getCurrentBills()
+    },
+    canDeleteBill(bill) {
+      const currentTime = new moment().locale('th')
+      const closeTime = new moment(bill.marketRef.closeTime, 'HH:mm').locale(
+        'th'
+      )
+      return currentTime.isBefore(closeTime)
     }
   },
   filters: {
