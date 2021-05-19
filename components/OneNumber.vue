@@ -1,7 +1,7 @@
 <template>
   <div class="">
-    <div class="grid grid-cols-4 gap-4">
-      <div class="col-span-2">
+    <div class="flex gap-4">
+      <div class="flex-1">
         <div
           class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
         >
@@ -18,14 +18,15 @@
               v-model="activeNumber"
               type="text"
               placeholder="ระบุตัวเลข"
-              class="tag-input__text"
+              class="tag-input__text w-full"
               @keypress="isNumber($event)"
               @keydown.delete="removeLastNumber"
+              @keydown.enter="onEnter"
             />
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex-2">
         <div class="flex flex-col">
           <div class="flex-1">
             <label class="block" for="priceBon">
@@ -52,24 +53,27 @@
                 type="number"
                 class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
                 placeholder="ราคาล่าง"
+                @keydown.enter="onEnter"
               />
             </label>
           </div>
         </div>
       </div>
-      <div class="flex flex-col justify-end">
-        <button
-          @click="reset"
-          class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-        >
-          รีเซ็ต
-        </button>
-        <button
-          @click="submit"
-          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-        >
-          ยืนยัน
-        </button>
+      <div class="flex-2">
+        <div class="flex flex-col justify-end mt-4">
+          <button
+            @click="reset"
+            class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+          >
+            รีเซ็ต
+          </button>
+          <button
+            @click="submit"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+          >
+            ยืนยัน
+          </button>
+        </div>
       </div>
     </div>
     <p class="text-sm text-red-900 bg-red-200">
@@ -108,8 +112,10 @@ export default {
     }
   },
   methods: {
+    onEnter(e) {
+      this.submit()
+    },
     isNumber(evt) {
-      this.activeNumberError = ''
       evt = evt ? evt : window.event
       var charCode = evt.which ? evt.which : evt.keyCode
       if (
@@ -136,7 +142,32 @@ export default {
       this.activeNumbers = []
       this.activeNumberError = ''
     },
+    validate() {
+      const min = 50
+      const max = 100000
+      if (
+        (typeof this.bonPrice === 'undefined' || this.bonPrice === null,
+        typeof this.langPrice === 'undefined' || this.langPrice === null)
+      ) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        return false
+      }
+      const tong = parseInt(this.bonPrice)
+      const toad = parseInt(this.langPrice)
+      if (tong < min || tong > max || toad < min || toad > max) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        return false
+      }
+      if (this.activeNumbers.length === 0) {
+        this.activeNumberError = `ระบุหมายเลข`
+        return false
+      }
+      return true
+    },
     submit() {
+      if (!this.validate()) {
+        return
+      }
       const lottos = this.activeNumbers.map((number) => {
         return [
           {

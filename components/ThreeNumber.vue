@@ -1,8 +1,8 @@
 
 <template>
   <div class="">
-    <div class="grid grid-cols-4 gap-4">
-      <div class="col-span-2">
+    <div class="flex gap-4">
+      <div class="flex-1">
         <div
           class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
         >
@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex-2">
         <div class="flex flex-col">
           <div class="flex-1">
             <label class="block" for="priceTong">
@@ -54,30 +54,45 @@
                 type="number"
                 class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
                 placeholder="ราคาโต๊ด"
+                @keydown.enter="onEnter"
               />
             </label>
           </div>
         </div>
       </div>
-      <div class="flex flex-col justify-end">
-        <span
-          @click="reverse"
-          class="cursor-pointer bg-purple-500 hover:bg-purple-200 hover:text-purple-600 text-white p-2 m-2 w-10/12 rounded self-center text-center"
-        >
-          กลับเลข
-        </span>
-        <button
-          @click="reset"
-          class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-        >
-          รีเซ็ต
-        </button>
-        <button
-          @click="submit"
-          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
-        >
-          ยืนยัน
-        </button>
+      <div class="flex-2">
+        <div class="flex flex-col justify-end mt-2">
+          <button
+            @click="reset"
+            class="text-white hover:bg-red-700 bg-red-500 py-2 px-4 m-2 w-10/12 rounded self-center"
+          >
+            รีเซ็ต
+          </button>
+          <button
+            @click="reverse"
+            class="flex flex-col items-center cursor-pointer bg-purple-500 hover:bg-purple-200 hover:text-purple-600 text-white p-2 m-2 rounded self-center text-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+              fill="#ffffff"
+            >
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path
+                d="M14 5h8v2h-8V5zm0 5.5h8v2h-8v-2zm0 5.5h8v2h-8v-2zM2 11.5C2 15.08 4.92 18 8.5 18H9v2l3-3-3-3v2h-.5C6.02 16 4 13.98 4 11.5S6.02 7 8.5 7H12V5H8.5C4.92 5 2 7.92 2 11.5z"
+              />
+            </svg>
+            <span class="text-sm">กลับเลข</span>
+          </button>
+          <button
+            @click="submit"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 rounded self-center"
+          >
+            ยืนยัน
+          </button>
+        </div>
       </div>
     </div>
     <p class="text-sm text-red-900 bg-red-200">
@@ -190,7 +205,6 @@ export default {
       }
     },
     isNumber(evt) {
-      this.activeNumberError = ''
       evt = evt ? evt : window.event
       var charCode = evt.which ? evt.which : evt.keyCode
       if (
@@ -250,12 +264,15 @@ export default {
     validate() {
       const min = 50
       const max = 100000
+      if (
+        (typeof this.priceTong === 'undefined' || this.priceTong === null,
+        typeof this.priceTod === 'undefined' || this.priceTod === null)
+      ) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        return false
+      }
       const tong = parseInt(this.priceTong)
       const toad = parseInt(this.priceTod)
-      console.log(
-        'test: ',
-        tong < min || tong > max || toad < min || toad > max
-      )
       if (tong < min || tong > max || toad < min || toad > max) {
         this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
         return false

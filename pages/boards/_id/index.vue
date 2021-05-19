@@ -21,11 +21,11 @@
       </div>
     </section>
     <div class="flex">
-      <main class="w-2/5">
+      <main class="w-1/2">
         <!-- // creator -->
         <div
           v-if="!calculated"
-          class="border border-gray-500 rounded-md p-4 h-72 my-4 w-auto"
+          class="border border-gray-500 rounded-md p-4 h-80 my-4 w-auto"
         >
           <nav class="flex flex-col sm:flex-row">
             <button
@@ -88,35 +88,35 @@
             <transition name="fade ">
               <TwoNumber
                 v-show="openTab === 1"
-                class="absolute"
+                class="absolute w-full"
                 @numbers-submitted="onSubmittedNumbers"
               />
             </transition>
             <transition name="fade">
               <ThreeNumber
                 v-show="openTab === 2"
-                class="absolute"
+                class="absolute w-full"
                 @numbers-submitted="onSubmittedNumbers"
               />
             </transition>
             <transition name="fade">
               <SixNumber
                 v-show="openTab === 3"
-                class="absolute"
+                class="absolute w-full"
                 @numbers-submitted="onSubmittedNumbers"
               />
             </transition>
             <transition name="fade">
               <NineTeenNumber
                 v-show="openTab === 4"
-                class="absolute"
+                class="absolute w-full"
                 @numbers-submitted="onSubmittedNumbers"
               />
             </transition>
             <transition name="fade">
               <OneNumber
                 v-show="openTab === 5"
-                class="absolute"
+                class="absolute w-full"
                 @numbers-submitted="onSubmittedNumbers"
               />
             </transition>
@@ -133,7 +133,7 @@
         />
       </main>
 
-      <section class="px-4 w-3/5">
+      <section class="px-4 w-1/2">
         <div class="bg-purple-600 rounded">
           <table
             class="table-auto w-full"
