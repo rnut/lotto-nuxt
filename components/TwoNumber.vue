@@ -21,6 +21,7 @@
               class="tag-input__text"
               @keypress="isNumber($event)"
               @keydown.delete="removeLastNumber"
+              @keydown.enter="onEnter"
             />
           </div>
         </div>
@@ -53,6 +54,7 @@
                 type="number"
                 class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
                 placeholder="ราคาล่าง"
+                @keydown.enter="onEnter"
               />
             </label>
           </div>
@@ -97,6 +99,24 @@ export default {
   },
   watch: {
     activeNumber: function (val, oldVal) {
+      if (typeof val === 'undifined' || val === null) {
+        return
+      }
+      const splitter = ' '
+      const p = new RegExp('(' + splitter + ')')
+      const splittedVals = val.split(p)
+      splittedVals.forEach((element) => {
+        const input = String(element)
+        const inputLength = input.length
+        if (inputLength > 2) {
+          this.autoAssignPrice(input)
+        } else if (inputLength === 2) {
+          this.activateNumber(input)
+        } else {
+          return
+        }
+      })
+
       const inputLenght = String(val).length
       if (inputLenght === 2) {
         const isDuplicated = this.checkDuplicatedActiveNumber(val)
@@ -111,6 +131,77 @@ export default {
     }
   },
   methods: {
+    activateNumber(val) {
+      const isDuplicated = this.checkDuplicatedActiveNumber(val)
+      if (isDuplicated) {
+        this.activeNumberError = 'เลขซ้ำนะจ๊ะ'
+      } else {
+        this.activeNumberError = ''
+        this.activeNumbers.push({ data: val })
+      }
+      this.activeNumber = null
+    },
+    autoAssignPrice(val) {
+      const equalSign = '='
+      const splittedEqualSingVals = this.split(equalSign, val)
+      if (splittedEqualSingVals.length > 1) {
+        this.activeLastestPasteNumber(splittedEqualSingVals[0])
+        this.activePastePricing(splittedEqualSingVals)
+        return
+      }
+
+      const spaceSign = ' '
+      const splittedVals = this.split(spaceSign, val)
+      if (splittedVals.length > 0) {
+        this.activatePrice(splittedVals[0])
+        return
+      }
+    },
+    activeLastestPasteNumber(val) {
+      const latestNumber = parseInt(val)
+      const strNumber = String(latestNumber)
+      if (latestNumber > 0 && latestNumber < 100 && strNumber.length === 2) {
+        this.activateNumber(strNumber)
+      }
+    },
+    activePastePricing(vals) {
+      var pricingStatement = ''
+      var foundEqual = false
+      vals.forEach((element) => {
+        if (foundEqual) {
+          pricingStatement = element
+          foundEqual = false
+          return
+        }
+        if (element === '=') {
+          foundEqual = true
+          return
+        }
+      })
+      this.activatePrice(pricingStatement)
+    },
+    activatePrice(pricingStatement) {
+      if (pricingStatement === '') {
+        return
+      }
+      const lowerCase = String(pricingStatement).toLowerCase()
+      const splitted = this.split('x', lowerCase)
+      if (splitted.length > 2) {
+        this.bonPrice = splitted[0]
+        this.langPrice = splitted[2]
+        return
+      }
+
+      const indexOfStar = lowerCase.indexOf('*')
+      if (indexOfStar > -1) {
+        this.langPrice = lowerCase.slice(0, indexOfStar)
+        this.bonPrice = lowerCase.slice(indexOfStar + 1, lowerCase.length)
+      }
+    },
+    split(splitter, val) {
+      const p = new RegExp('(' + splitter + ')')
+      return val.split(p)
+    },
     reset() {
       this.bonPrice = null
       this.langPrice = null
@@ -118,7 +209,28 @@ export default {
       this.activeNumbers = []
       this.activeNumberError = ''
     },
+    onEnter(e) {
+      this.submit()
+    },
+    validate() {
+      const min = 50
+      const max = 100000
+      const tong = parseInt(this.bonPrice)
+      const toad = parseInt(this.langPrice)
+      if (tong < min || tong > max || toad < min || toad > max) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        return false
+      }
+      if (this.activeNumbers.length === 0) {
+        this.activeNumberError = `ระบุหมายเลข`
+        return false
+      }
+      return true
+    },
     submit() {
+      if (!this.validate()) {
+        return
+      }
       const lottos = this.activeNumbers.map((number) => {
         return [
           {

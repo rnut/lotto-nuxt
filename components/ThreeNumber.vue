@@ -93,7 +93,7 @@ export default {
       activeNumbers: [],
       activeNumberError: '',
       priceTong: null,
-      priceTod: null,
+      priceTod: null
     }
   },
   watch: {
@@ -101,10 +101,10 @@ export default {
       if (typeof val === 'undifined' || val === null) {
         return
       }
-      const splitter = " "
-      const p = new RegExp("(" + splitter + ")")
+      const splitter = ' '
+      const p = new RegExp('(' + splitter + ')')
       const splittedVals = val.split(p)
-      splittedVals.forEach(element => {
+      splittedVals.forEach((element) => {
         const input = String(element)
         const inputLength = input.length
         if (inputLength > 3) {
@@ -129,7 +129,7 @@ export default {
       this.activeNumber = null
     },
     autoAssignPrice(val) {
-      const equalSign = "="
+      const equalSign = '='
       const splittedEqualSingVals = this.split(equalSign, val)
       if (splittedEqualSingVals.length > 1) {
         this.activeLastestPasteNumber(splittedEqualSingVals[0])
@@ -137,16 +137,15 @@ export default {
         return
       }
 
-      const spaceSign = " "
+      const spaceSign = ' '
       const splittedVals = this.split(spaceSign, val)
-      console.log('spaceSign: splittedVals:', splittedVals);
       if (splittedVals.length > 0) {
         this.activatePrice(splittedVals[0])
         return
       }
     },
     split(splitter, val) {
-      const p = new RegExp("(" + splitter + ")")
+      const p = new RegExp('(' + splitter + ')')
       return val.split(p)
     },
     activeLastestPasteNumber(val) {
@@ -159,12 +158,12 @@ export default {
     activePastePricing(vals) {
       var pricingStatement = ''
       var foundEqual = false
-      vals.forEach(element => {
+      vals.forEach((element) => {
         if (foundEqual) {
           pricingStatement = element
           foundEqual = false
           return
-        } 
+        }
         if (element === '=') {
           foundEqual = true
           return
@@ -177,17 +176,17 @@ export default {
         return
       }
       const lowerCase = String(pricingStatement).toLowerCase()
-      const splitted = this.split("x", lowerCase)
+      const splitted = this.split('x', lowerCase)
       if (splitted.length > 2) {
         this.priceTong = splitted[0]
         this.priceTod = splitted[2]
         return
       }
-      
+
       const indexOfStar = lowerCase.indexOf('*')
       if (indexOfStar > -1) {
         this.priceTong = lowerCase.slice(0, indexOfStar)
-        this.priceTod = lowerCase.slice(indexOfStar+1, lowerCase.length)
+        this.priceTod = lowerCase.slice(indexOfStar + 1, lowerCase.length)
       }
     },
     isNumber(evt) {
@@ -211,6 +210,9 @@ export default {
       return duplicated.length > 0
     },
     submit() {
+      if (!this.validate()) {
+        return
+      }
       const lottos = this.activeNumbers.map((number) => {
         return [
           {
@@ -250,12 +252,16 @@ export default {
       const max = 100000
       const tong = parseInt(this.priceTong)
       const toad = parseInt(this.priceTod)
+      console.log(
+        'test: ',
+        tong < min || tong > max || toad < min || toad > max
+      )
       if (tong < min || tong > max || toad < min || toad > max) {
         this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
         return false
       }
       if (this.activeNumbers.length === 0) {
-        this.activeNumberError = `ระบุยอดระหว่างหมายเลข`
+        this.activeNumberError = `ระบุหมายเลข`
         return false
       }
       return true
