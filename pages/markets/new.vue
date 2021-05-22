@@ -20,6 +20,18 @@
         <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+            for="avatar">
+              รูปปกตลาด
+          </label>
+          <input 
+            id="avatar" 
+            type="file" 
+            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            @change="onFileUpload" />
+        </div>
+        <div class="mb-6 pt-3 rounded bg-gray-200">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2 ml-3"
             for="name"
             >ชื่อ</label
           >
@@ -72,6 +84,20 @@
           />
         </div>
 
+        <div class="mb-6 pt-3 rounded bg-gray-200">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+            for="fontColor"
+            >สีตัวอักษร</label
+          >
+          <input
+            type="text"
+            id="fontColor"
+            v-model="fontColor"
+            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+          />
+        </div>
+
         <button
             type="submit"
             class="inline-flex justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:border-rose-700 active:bg-rose-700 transition ease-in-out duration-150"
@@ -113,10 +139,12 @@ export default {
     return {
       name: '',
       color: '',
+      fontColor: '',
       openTime: '',
       closeTime: '',
       errors: [],
-      isLoading: false
+      isLoading: false,
+      FILE: null
     }
   },
   methods: {
@@ -141,6 +169,9 @@ export default {
         this.isLoading = false
         this.errors.push(e.message)
       }
+    },
+    onFileUpload(event) {
+      this.FILE = event.target.files[0]
     },
     validate() {
       var err = []
@@ -178,12 +209,18 @@ export default {
         err.push('เวลาเปิดตลาด ตั้งเริ่มต้นก่อน เวลาปิดตลาด')
       }
 
-      const payload = {
-        name,
-        color,
-        openTime,
-        closeTime
+      if (this.FILE === null) {
+        err.push('กรุณาเลือกรูปหน้าปกตลาด')
       }
+
+      // upload file
+      const payload = new FormData()
+      payload.append('upload', this.FILE, this.FILE.name)
+      payload.append('name', name)
+      payload.append('color', color)
+      payload.append('fontColor', fontColor)
+      payload.append('openTime', openTime)
+      payload.append('closeTime', closeTime)
       return { err, payload }
     },
     scrollToError() {

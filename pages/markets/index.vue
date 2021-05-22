@@ -34,6 +34,7 @@
           >
             <thead>
               <tr>
+                <th>รูปตลาด</th>
                 <th class="text-start sortable">
                   <span>ชื่อตลาด</span>
                 </th>
@@ -68,10 +69,27 @@
               </tr>
             </thead>
             <tbody class="bg-purple-100 cursor-pointer">
-              <tr class="" v-for="market in markets" :key="market._id">
-                <td class="text-start">{{ market.name }}</td>
-                <td class="text-start">{{ market.openTime }}</td>
-                <td class="text-start">{{ market.closeTime }}</td>
+              <tr
+                :style="{ 'background-color': market.color }"
+                v-for="market in markets"
+                :key="market._id"
+              >
+                <td>
+                  <img
+                    :src="getMarketAvatar(market)"
+                    alt="market_avatar"
+                    class="h-auto w-8 mx-auto shadow-md"
+                  />
+                </td>
+                <td class="text-start" :style="{ color: market.fontColor }">
+                  {{ market.name }}
+                </td>
+                <td class="text-start" :style="{ color: market.fontColor }">
+                  {{ market.openTime }}
+                </td>
+                <td class="text-start" :style="{ color: market.fontColor }">
+                  {{ market.closeTime }}
+                </td>
                 <td class="text-start">
                   <label class="switch">
                     <input
@@ -157,6 +175,14 @@ export default {
       const url = `${this.$axios.defaults.baseURL}/markets/${m._id}`
       await this.$axios.$patch(url, payload)
       m.isActive = activeStatus
+    },
+    getMarketAvatar(market) {
+      const baseImageURL = process.env.BASE_IMAGE_URL
+      if (typeof market.avatar === 'undefined') {
+        return `/logos/logo.svg`
+      } else {
+        return `${baseImageURL}${market.avatar}`
+      }
     }
   }
 }

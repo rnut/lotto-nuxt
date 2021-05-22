@@ -18,6 +18,23 @@
           </p>
         </div>
         <div class="mb-6 pt-3 rounded bg-gray-200">
+          <img
+            :src="getMarketAvatar()"
+            alt="market_avatar"
+            class="h-auto w-32 mx-auto shadow-md"/>
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+            for="avatar">
+            รูปปกตลาด
+          </label>
+          <input 
+            id="avatar" 
+            type="file" 
+            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            @change="onFileUpload" />
+          
+        </div>
+        <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
             for="name"
@@ -72,6 +89,19 @@
           />
         </div>
 
+        <div class="mb-6 pt-3 rounded bg-gray-200">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+            for="fontColor">
+              สีตัวอักษร
+          </label>
+          <input
+            type="text"
+            id="fontColor"
+            v-model="market.fontColor"
+            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+          />
+        </div>
         <button
           type="submit"
           class="inline-flex justify-center mb-6 px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:border-rose-700 active:bg-rose-700 transition ease-in-out duration-150"
@@ -125,7 +155,8 @@ export default {
   data() {
     return {
       isLoading: false,
-      errors: []
+      errors: [],
+      FILE: null
     }
   },
   async asyncData({ params, $axios }) {
@@ -135,6 +166,18 @@ export default {
     return { slug, market }
   },
   methods: {
+    onFileUpload(event) {
+      this.FILE = event.target.files[0]
+    },
+    getMarketAvatar() {
+      const market = this.market
+      const baseImageURL = process.env.BASE_IMAGE_URL
+      if (typeof market.avatar === 'undefined') {
+        return `/logos/logo.svg`
+      } else {
+        return `${baseImageURL}${market.avatar}`
+      }
+    },
     async onSave(e) {
       e.preventDefault()
       this.isLoading = true
@@ -176,6 +219,7 @@ export default {
     validate() {
       var err = []
       const name = this.market.name.trim()
+      console.log('name: ', name)
       const nameLength = name.length
       const maxNameLength = 255
       const minNameLength = 1
@@ -186,6 +230,14 @@ export default {
       const colorLength = color.length
       if (colorLength < minNameLength || colorLength > maxNameLength) {
         err.push(`ข้อมูลสีตลาด ${minNameLength}-${maxNameLength} ตัวอักษร`)
+      }
+
+      const fontColor = this.market.fontColor.trim()
+      const fontColorLength = fontColor.length
+      if (fontColorLength < minNameLength || fontColorLength > maxNameLength) {
+        err.push(
+          `ข้อมูลสีตัวอักษรตลาด ${minNameLength}-${maxNameLength} ตัวอักษร`
+        )
       }
 
       const timeFormat = 'HH:mm'
@@ -209,12 +261,20 @@ export default {
         err.push('เวลาเปิดตลาด ตั้งเริ่มต้นก่อน เวลาปิดตลาด')
       }
 
-      const payload = {
-        name,
-        color,
-        openTime,
-        closeTime
+      // upload file
+      const payload = new FormData()
+      if (
+        this.FILE !== null &&
+        typeof this.FILE !== 'undefined' &&
+        typeof this.FILE.name !== 'undefined'
+      ) {
+        payload.append('upload', this.FILE, this.FILE.name)
       }
+      payload.append('name', name)
+      payload.append('color', color)
+      payload.append('fontColor', fontColor)
+      payload.append('openTime', openTime)
+      payload.append('closeTime', closeTime)
       return { err, payload }
     },
     scrollToError() {

@@ -424,7 +424,11 @@ export default {
           await this.$axios.delete(url)
           this.bills = this.bills.filter((bill) => b._id !== bill._id)
         } catch (e) {
-          alert('เกิดข้อผิดพลาด(10001)')
+          if (e.response.status == 400) {
+            alert(`เกิดข้อผิดพลาด(10001) ${e.response.data.message}`)
+          } else {
+            alert('เกิดข้อผิดพลาด(10001)')
+          }
         }
       }
     },
@@ -452,6 +456,7 @@ export default {
       await this.getCurrentBills()
     },
     canDeleteBill(bill) {
+      return true
       const currentTime = new moment().locale('th')
       const closeTime = new moment(bill.marketRef.closeTime, 'HH:mm').locale(
         'th'

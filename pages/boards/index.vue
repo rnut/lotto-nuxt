@@ -15,11 +15,16 @@
         class="market-card rounded-md bg-white border border-gray-100 py-8 px-8 m-4 shadow"
         @click="onClickMarket(item)"
       >
-        <p
-          class="text-2xl text-left tracking-wide overflow-ellipsis overflow-hidden text-gray-700"
+        <div
+          class="flex text-2xl text-left tracking-wide overflow-ellipsis overflow-hidden text-gray-700"
         >
-          {{ item.name }}
-        </p>
+          <img
+            :src="getMarketAvatar(item)"
+            alt="market_avatar"
+            class="h-auto w-8"
+          />
+          <span class="ml-4">{{ item.name }}</span>
+        </div>
 
         <p class="text-left tracking-wide overflow-ellipsis overflow-hidden">
           <template v-if="getMarketIsOpen(item)">
@@ -116,6 +121,14 @@ export default {
       } else {
         return '#CBCBCB'
       }
+    },
+    getMarketAvatar(market) {
+      const baseImageURL = process.env.BASE_IMAGE_URL
+      if (typeof market.avatar === 'undefined') {
+        return `/logos/logo.svg`
+      } else {
+        return `${baseImageURL}${market.avatar}`
+      }
     }
   }
 }
@@ -123,7 +136,7 @@ export default {
 
 <style scoped>
 .market-card {
-  width: 290px;
+  width: 320px;
   height: 250px;
 }
 </style>
