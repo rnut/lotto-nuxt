@@ -456,7 +456,6 @@ export default {
       await this.getCurrentBills()
     },
     canDeleteBill(bill) {
-      return true
       const currentTime = new moment().locale('th')
       const closeTime = new moment(bill.marketRef.closeTime, 'HH:mm').locale(
         'th'
