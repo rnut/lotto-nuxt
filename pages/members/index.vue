@@ -22,7 +22,7 @@
         </button>
       </nuxt-link>
     </div>
-    <div class="bg-purple-600 rounded">
+    <div v-if="members && members.length > 0" class="bg-purple-600 rounded">
       <table
         class="table-auto w-full"
         cellpadding="0"
@@ -186,6 +186,12 @@
         </tbody>
       </table>
     </div>
+    <template v-else>
+      <div class="flex flex-col">
+        <img src="/svg/Empty-bro.svg" alt="empty" class="h-96 w-full" />
+        <p class="text-center text-2xl">ไม่พบผู้ใช้งาน</p>
+      </div>
+    </template>
   </section>
 </template>
 

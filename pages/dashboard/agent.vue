@@ -56,7 +56,7 @@
 
     <section class="flex-grow lg:p-8">
       <h1 class="text-2xl py-4 font-bold text-purple-800">สรุป</h1>
-      <div class="bg-purple-600 rounded">
+      <div v-if="bills && bills.length > 0" class="bg-purple-600 rounded">
         <table
           class="table-auto w-full"
           cellpadding="0"
@@ -105,6 +105,12 @@
           </tbody>
         </table>
       </div>
+      <template v-else>
+        <div class="flex flex-col">
+          <img src="/svg/Empty-bro.svg" alt="empty" class="h-96 w-full" />
+          <p class="text-center text-2xl">ไม่พบการทำรายการ</p>
+        </div>
+      </template>
     </section>
   </div>
 </template>
