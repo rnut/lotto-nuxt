@@ -49,8 +49,7 @@ export default {
   //   apiSecret: process.env.API_SECRET
   // },
   env: {
-    BASE_URL: process.env.BASE_URL,
-    BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
+    BASE_IMAGE_URL: process.env.BASE_IMAGE_URL
   },
 
   axios: {

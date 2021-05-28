@@ -213,6 +213,13 @@ export default {
         err.push('กรุณาเลือกรูปหน้าปกตลาด')
       }
 
+      const fontColor = this.fontColor.trim()
+      const fontColorLength = fontColor.length
+      if (fontColorLength < minNameLength || fontColorLength > maxNameLength) {
+        err.push(
+          `ข้อมูลสีตัวอักษรตลาด ${minNameLength}-${maxNameLength} ตัวอักษร`
+        )
+      }
       // upload file
       const payload = new FormData()
       payload.append('upload', this.FILE, this.FILE.name)
