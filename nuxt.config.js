@@ -43,17 +43,17 @@ export default {
   build: {},
 
   // publicRuntimeConfig: {
-  //   baseURL: process.env.BASE_URL
+  //   BASE_IMAGE_URL: 'https://mimi-be-ykmu7mrxja-as.a.run.app'
   // },
   // privateRuntimeConfig: {
   //   apiSecret: process.env.API_SECRET
   // },
   env: {
-    BASE_IMAGE_URL: process.env.BASE_IMAGE_URL
+    BASE_IMAGE_URL: 'https://mimi-be-ykmu7mrxja-as.a.run.app'
   },
 
   axios: {
-    baseURL: process.env.BASE_URL,
+    baseURL: 'https://mimi-be-ykmu7mrxja-as.a.run.app/api/v1',
     proxyHeaders: false,
     credentials: false,
     headers: {
