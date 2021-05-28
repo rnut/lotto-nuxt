@@ -219,7 +219,6 @@ export default {
     validate() {
       var err = []
       const name = this.market.name.trim()
-      console.log('name: ', name)
       const nameLength = name.length
       const maxNameLength = 255
       const minNameLength = 1

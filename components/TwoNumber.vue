@@ -221,7 +221,6 @@ export default {
       this.activeNumber = null
       this.activeNumbers = []
       this.activeNumberError = ''
-      console.log('reset: ')
     },
     onEnter(e) {
       this.submit()

@@ -97,10 +97,7 @@ export default {
   },
   methods: {
     toggleTabs(tabIndex) {
-      console.log('trends: ', this.trends)
-      console.log('toggleTabs: ', this.openTab, this.activeTrend)
       this.openTab = Math.min(tabIndex, this.trends.length)
-      console.log('openTab: ', this.openTab, this.activeTrend)
       this.activeTrend = this.trends[this.openTab]
     }
   }
