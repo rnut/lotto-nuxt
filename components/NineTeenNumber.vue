@@ -1,80 +1,139 @@
 <template>
-  <div class="">
+  <div class="flex flex-col">
     <div class="flex gap-4">
       <div class="flex-1">
         <div
-          class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
+          class="
+            rounded
+            bg-gray-50
+            border border-gray-200
+            shadow-md
+            mt-2
+            p-4
+            flex flex-row flex-wrap
+            activeNumbers
+          "
         >
           <div class="tag-input">
             <div
               v-for="(item, index) in activeNumbers"
               :key="item.data"
-              class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
+              class="
+                tag-input__tag
+                p-2
+                m-2
+                bg-red-200
+                rounded
+                text-2xl
+                tag
+                cursor-pointer
+              "
               @click="removeNumber(index)"
             >
               {{ item.data }}
             </div>
-            <input
-              v-model="activeNumber"
-              type="text"
-              placeholder="ระบุตัวเลข"
-              class="tag-input__text w-full"
-              @keypress="isNumber($event)"
-              @keydown.delete="removeLastNumber"
-              @keydown.enter="onEnter"
-            />
           </div>
         </div>
       </div>
       <div class="flex-2">
-        <div class="flex flex-col">
-          <div class="flex-1">
-            <label class="block" for="priceBon">
-              <span class="text-gray-700 text-sm inline-block w-full">บน</span>
-              <input
-                name="priceBon"
-                v-model="bonPrice"
-                id="priceBon"
-                type="number"
-                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
-                placeholder="ราคาบน"
-              />
-            </label>
-          </div>
-          <div class="flex-1">
-            <label class="block" for="priceLang">
-              <span class="text-gray-700 text-sm inline-block w-full"
-                >ล่าง</span
-              >
-              <input
-                name="priceLang"
-                v-model="langPrice"
-                id="priceLang"
-                type="number"
-                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
-                placeholder="ราคาล่าง"
-                @keydown.enter="onEnter"
-              />
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="flex-2">
-        <div class="flex flex-col mt-4">
+        <div class="flex flex-col gap-2">
           <button
             @click="reset"
-            class="text-red-500 hover:text-white hover:bg-red-700 text-white py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+            class="
+              text-red-500
+              hover:text-white
+              hover:bg-red-700
+              text-white
+              p-4
+              w-full
+              rounded
+              self-center
+            "
           >
             รีเซ็ต
           </button>
           <button
             @click="submit"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 h-16 rounded self-center"
+            class="
+              bg-green-500
+              hover:bg-green-700
+              text-white
+              font-bold
+              p-4
+              w-full
+              rounded
+              self-center
+            "
           >
             ยืนยัน
           </button>
         </div>
       </div>
+    </div>
+    <div class="flex gap-3">
+      <label for="activeNumber" class="w-full">
+        <span class="text-gray-700 text-sm inline-block w-full">ตัวเลข</span>
+        <input
+          ref="activeNumber"
+          v-model="activeNumber"
+          type="text"
+          placeholder="ระบุตัวเลข"
+          class="
+            rounded
+            text-md
+            shadow-md
+            p-4
+            w-full
+            block
+            border border-indigo-400
+          "
+          @keypress="isNumber($event)"
+          @keydown.delete="removeLastNumber"
+          @keydown.enter="changeFocus('priceBon')"
+        />
+      </label>
+      <label class="block w-full" for="priceBon">
+        <span class="text-gray-700 text-sm inline-block w-full">บน</span>
+        <input
+          ref="priceBon"
+          @keydown.enter="changeFocus('priceLang')"
+          name="priceBon"
+          v-model="bonPrice"
+          id="priceBon"
+          type="number"
+          class="
+            rounded
+            text-md
+            shadow-md
+            p-4
+            w-full
+            block
+            border border-indigo-400
+          "
+          placeholder="ราคาบน"
+        />
+      </label>
+      <label class="block w-full" for="priceLang">
+        <span class="text-gray-700 text-sm inline-block w-full">ล่าง</span>
+        <input
+          ref="priceLang"
+          name="priceLang"
+          v-model="langPrice"
+          id="priceLang"
+          type="number"
+          class="
+            rounded
+            text-md
+            shadow-md
+            p-4
+            w-full
+            block
+            border border-indigo-400
+          "
+          placeholder="ราคาล่าง"
+          @keydown.enter="onEnter"
+        />
+      </label>
     </div>
     <p class="text-sm text-red-900 bg-red-200">
       {{ activeNumberError }}
@@ -112,6 +171,25 @@ export default {
     }
   },
   methods: {
+    changeFocus(to) {
+      var textField = null
+      switch (to) {
+        case 'priceBon':
+          textField = this.$refs.priceBon
+          break
+        case 'priceLang':
+          textField = this.$refs.priceLang
+          break
+        case 'activeNumber':
+          textField = this.$refs.activeNumber
+          break
+      }
+      console.log('changeFocue: ', to)
+      if (typeof textField === 'undefined') {
+        return
+      }
+      textField.focus()
+    },
     onEnter(e) {
       this.submit()
     },
@@ -217,19 +295,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.activeNumbers {
-  min-height: 170px;
-  max-height: 170px;
-  overflow-y: scroll;
-}
-.tag {
-  max-height: 52px;
-}
-.editor {
-  width: 100%;
-  min-height: 100px;
-  cursor: text;
-}
-</style>

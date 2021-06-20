@@ -107,8 +107,8 @@ input:checked + .slider .off {
 }
 
 .activeNumbers {
-  min-height: 170px;
-  max-height: 170px;
+  min-height: 120px;
+  max-height: 120px;
   overflow-y: scroll;
 }
 .tag {

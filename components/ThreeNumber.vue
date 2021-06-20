@@ -1,76 +1,75 @@
 
 <template>
-  <div class="">
+  <div class="flex flex-col">
     <div class="flex gap-4">
       <div class="flex-1">
         <div
-          class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
+          class="
+            rounded
+            bg-gray-50
+            border border-gray-200
+            shadow-md
+            mt-2
+            p-4
+            flex flex-row flex-wrap
+            activeNumbers
+          "
         >
           <div class="tag-input">
             <div
               v-for="(item, index) in activeNumbers"
               :key="item.data"
-              class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
+              class="
+                tag-input__tag
+                p-2
+                m-2
+                bg-red-200
+                rounded
+                text-2xl
+                tag
+                cursor-pointer
+              "
               @click="removeNumber(index)"
             >
               {{ item.data }}
             </div>
-            <input
-              v-model="activeNumber"
-              type="text"
-              placeholder="ระบุตัวเลข"
-              class="tag-input__text"
-              @keypress="isNumber($event)"
-              @keydown.delete="removeLastNumber"
-              @keydown.enter="onEnter"
-            />
           </div>
         </div>
       </div>
       <div class="flex-2">
-        <div class="flex flex-col">
-          <div class="flex-1">
-            <label class="block" for="priceTong">
-              <span class="text-gray-700 text-sm inline-block w-full">ตรง</span>
-              <input
-                name="priceTong"
-                id="priceTong"
-                type="number"
-                v-model="priceTong"
-                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
-                placeholder="ราคาตรง"
-              />
-            </label>
-          </div>
-          <div class="flex-1">
-            <label class="block" for="priceTod">
-              <span class="text-gray-700 text-sm inline-block w-full"
-                >ราคาโต๊ด</span
-              >
-              <input
-                name="priceTod"
-                id="priceTod"
-                v-model="priceTod"
-                type="number"
-                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
-                placeholder="ราคาโต๊ด"
-                @keydown.enter="onEnter"
-              />
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="flex-2">
-        <div class="flex flex-col justify-end mt-2">
+        <div class="flex flex-col gap-2">
           <button
             @click="reset"
-            class="text-white hover:bg-red-700 bg-red-500 py-2 px-4 m-2 w-10/12 rounded self-center"
+            class="
+              text-white
+              hover:bg-red-700
+              bg-red-500
+              w-full
+              px-4
+              py-2
+              rounded
+              self-center
+            "
           >
             รีเซ็ต
           </button>
           <button
             @click="reverse"
-            class="flex flex-col items-center cursor-pointer bg-purple-500 hover:bg-purple-200 hover:text-purple-600 text-white p-2 m-2 rounded self-center text-center"
+            class="
+              flex
+              w-full
+              px-4
+              py-2
+              items-center
+              cursor-pointer
+              bg-purple-500
+              hover:bg-purple-200
+              hover:text-purple-600
+              text-white
+              rounded
+              self-center
+              text-center
+            "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -88,12 +87,88 @@
           </button>
           <button
             @click="submit"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 rounded self-center"
+            class="
+              bg-green-500
+              hover:bg-green-700
+              text-white
+              font-bold
+              w-full
+              px-4
+              py-2
+              rounded
+              self-center
+            "
           >
             ยืนยัน
           </button>
         </div>
       </div>
+    </div>
+    <div class="flex gap-3">
+      <label for="activeNumber" class="w-full">
+        <span class="text-gray-700 text-sm inline-block w-full">ตัวเลข</span>
+        <input
+          ref="activeNumber"
+          v-model="activeNumber"
+          type="text"
+          placeholder="ระบุตัวเลข"
+          class="
+            rounded
+            text-md
+            shadow-md
+            p-4
+            w-full
+            block
+            border border-indigo-400
+          "
+          @keypress="isNumber($event)"
+          @keydown.delete="removeLastNumber"
+          @keydown.space="reverse()"
+          @keydown.enter="changeFocus('priceTong')"
+        />
+      </label>
+      <label class="block w-full" for="priceTong">
+        <span class="text-gray-700 text-sm inline-block w-full">ตรง</span>
+        <input
+          ref="priceTong"
+          @keydown.enter="changeFocus('priceTod')"
+          name="priceTong"
+          id="priceTong"
+          type="number"
+          v-model="priceTong"
+          class="
+            rounded
+            text-md
+            shadow-md
+            p-4
+            w-full
+            block
+            border border-indigo-400
+          "
+          placeholder="ราคาตรง"
+        />
+      </label>
+      <label class="block w-full" for="priceTod">
+        <span class="text-gray-700 text-sm inline-block w-full">ราคาโต๊ด</span>
+        <input
+          ref="priceTod"
+          name="priceTod"
+          id="priceTod"
+          v-model="priceTod"
+          type="number"
+          class="
+            rounded
+            text-md
+            shadow-md
+            p-4
+            w-full
+            block
+            border border-indigo-400
+          "
+          placeholder="ราคาโต๊ด"
+          @keydown.enter="onEnter"
+        />
+      </label>
     </div>
     <p class="text-sm text-red-900 bg-red-200">
       {{ activeNumberError }}
@@ -133,6 +208,25 @@ export default {
     }
   },
   methods: {
+    changeFocus(to) {
+      var textField = null
+      switch (to) {
+        case 'priceTong':
+          textField = this.$refs.priceTong
+          break
+        case 'priceTod':
+          textField = this.$refs.priceTod
+          break
+        case 'activeNumber':
+          textField = this.$refs.activeNumber
+          break
+      }
+      console.log('changeFocue: ', to)
+      if (typeof textField === 'undefined') {
+        return
+      }
+      textField.focus()
+    },
     activateNumber(val) {
       const isDuplicated = this.checkDuplicatedActiveNumber(val)
       if (isDuplicated) {
