@@ -35,7 +35,15 @@
                 'bg-purple-600 border-b-4 border-purple-300 text-white':
                   openTab === 1
               }"
-              class="font-medium py-4 px-6 block hover:text-purple-500 focus:outline-none text-white-500"
+              class="
+                font-medium
+                py-4
+                px-6
+                block
+                hover:text-purple-500
+                focus:outline-none
+                text-white-500
+              "
             >
               2 ตัว
             </button>
@@ -46,7 +54,15 @@
                 'bg-purple-600 border-b-4 border-purple-300 text-white':
                   openTab === 2
               }"
-              class="font-medium py-4 px-6 block hover:text-purple-500 focus:outline-none text-white-500"
+              class="
+                font-medium
+                py-4
+                px-6
+                block
+                hover:text-purple-500
+                focus:outline-none
+                text-white-500
+              "
             >
               3 ตัว
             </button>
@@ -57,7 +73,15 @@
                 'bg-purple-600 border-b-4 border-purple-300 text-white':
                   openTab === 3
               }"
-              class="font-medium py-4 px-6 block hover:text-purple-500 focus:outline-none text-white-500"
+              class="
+                font-medium
+                py-4
+                px-6
+                block
+                hover:text-purple-500
+                focus:outline-none
+                text-white-500
+              "
             >
               6 กลับ
             </button>
@@ -68,7 +92,15 @@
                 'bg-purple-600 border-b-4 border-purple-300 text-white':
                   openTab === 4
               }"
-              class="font-medium py-4 px-6 block hover:text-purple-500 focus:outline-none text-white-500"
+              class="
+                font-medium
+                py-4
+                px-6
+                block
+                hover:text-purple-500
+                focus:outline-none
+                text-white-500
+              "
             >
               19 ประตู
             </button>
@@ -79,7 +111,15 @@
                 'bg-purple-600 border-b-4 border-purple-300 text-white':
                   openTab === 5
               }"
-              class="font-medium py-4 px-6 block hover:text-purple-500 focus:outline-none text-white-500"
+              class="
+                font-medium
+                py-4
+                px-6
+                block
+                hover:text-purple-500
+                focus:outline-none
+                text-white-500
+              "
             >
               วิ่ง
             </button>
@@ -193,7 +233,26 @@
                         <button
                           v-if="canDeleteBill(bill)"
                           @click="onClickDelete(bill)"
-                          class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          class="
+                            bg-red-500
+                            text-white
+                            active:bg-red-600
+                            font-bold
+                            uppercase
+                            text-xs
+                            px-4
+                            py-2
+                            rounded
+                            shadow
+                            hover:shadow-md
+                            outline-none
+                            focus:outline-none
+                            mr-1
+                            mb-1
+                            ease-linear
+                            transition-all
+                            duration-150
+                          "
                           type="button"
                         >
                           <img
@@ -206,7 +265,26 @@
                         <button
                           v-if="!bill.isConfirmPayment"
                           @click="onClickConfirmPayment(bill)"
-                          class="bg-green-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                          class="
+                            bg-green-500
+                            text-white
+                            active:bg-red-600
+                            font-bold
+                            uppercase
+                            text-xs
+                            px-4
+                            py-2
+                            rounded
+                            shadow
+                            hover:shadow-md
+                            outline-none
+                            focus:outline-none
+                            mr-1
+                            mb-1
+                            ease-linear
+                            transition-all
+                            duration-150
+                          "
                           type="button"
                         >
                           <img
@@ -221,7 +299,12 @@
                   <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
                     <td colspan="13">
                       <table
-                        class="table-auto w-full bg-white border border-purple-400"
+                        class="
+                          table-auto
+                          w-full
+                          bg-white
+                          border border-purple-400
+                        "
                         cellpadding="0"
                         cellspacing="0"
                       >

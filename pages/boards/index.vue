@@ -8,15 +8,29 @@
         :key="item.id"
         v-bind:style="{ 'background-color': getMarketCardBGColor(item) }"
         :class="{
-          'transition duration-600 ease-in transform hover:scale-125': getMarketIsOpen(
-            item
-          )
+          'transition duration-600 ease-in transform hover:scale-125':
+            getMarketIsOpen(item)
         }"
-        class="market-card rounded-md bg-white border border-gray-100 py-8 px-8 m-4 shadow"
+        class="
+          market-card
+          rounded-md
+          bg-white
+          border border-gray-100
+          py-8
+          px-8
+          m-4
+          shadow
+        "
         @click="onClickMarket(item)"
       >
         <div
-          class="flex text-2xl text-left tracking-wide overflow-ellipsis overflow-hidden text-gray-700"
+          class="
+            flex
+            text-2xl text-left
+            tracking-wide
+            overflow-ellipsis overflow-hidden
+            text-gray-700
+          "
         >
           <img
             :src="getMarketAvatar(item)"
@@ -31,7 +45,7 @@
             <span class="text-gray-500 text-sm">นับถอยหลัง</span><br />
             <client-only placeholder="loading...">
               <VueCountdown
-                :time="getTimeRemaining(item.openTime, item.closeTime)"
+                :time="getTimeRemaining(item)"
                 v-slot="{ hours, minutes, seconds }"
               >
                 <span class="text-xl text-grey-600">เหลือเวลาอีก</span><br />
@@ -98,22 +112,47 @@ export default {
         alert('ตลาดนี้ยังไม่พร้อมใช้งาน')
       }
     },
-    getTimeRemaining(openTime, closeTime) {
-      const timeFormat = 'HH:mm'
-      const startTime = moment(openTime, timeFormat)
-      const endTime = moment(closeTime, timeFormat)
+    getTimeRemaining(market) {
+      const onAirTime = this.getOnAirTime(market.onAirTimes)
+      if (typeof onAirTime == 'undefined') {
+        return 0
+      }
+      const startTime = moment(onAirTime.open)
+      const endTime = moment(onAirTime.close)
       const currentTime = moment()
-      const started = currentTime.isAfter(startTime)
-      const ended = currentTime.isAfter(endTime)
-      const remaining = endTime.diff(currentTime, 'seconds')
-      if (started && !ended) {
+      if (currentTime.isBetween(startTime, endTime, '()')) {
+        const remaining = endTime.diff(currentTime, 'seconds')
         return remaining * 1000
       } else {
         return 0
       }
     },
+    getOnAirTime(onAirTimes) {
+      const current = moment()
+      const time = onAirTimes.find((o) => {
+        const open = moment(o.open)
+        const close = moment(o.close)
+        if (current.isBetween(open, close, '()')) {
+          return true
+        } else {
+          return false
+        }
+      })
+      return time
+    },
     getMarketIsOpen(item) {
-      return this.getTimeRemaining(item.openTime, item.closeTime) > 0
+      const onAirTime = this.getOnAirTime(item.onAirTimes)
+      if (typeof onAirTime == 'undefined') {
+        return
+      }
+      const current = moment()
+      const open = moment(onAirTime.open)
+      const close = moment(onAirTime.close)
+      if (current.isBetween(open, close, '()')) {
+        return true
+      } else {
+        return false
+      }
     },
     getMarketCardBGColor(item) {
       if (this.getMarketIsOpen(item)) {

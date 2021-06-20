@@ -76,6 +76,14 @@
           />
         </div>
         <div class="mb-6 pt-3 rounded bg-gray-200">
+            <label for="date"  class="block text-gray-700 text-sm font-bold mb-2 ml-3">
+              <span class="text-gray-400 block">เวลา</span>
+              <client-only placeholder="loading...">
+                <vc-calendar :attributes="attributes" @dayclick="onDayClick" :min-date='new Date()'/>
+              </client-only>
+          </label>
+        </div>
+        <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
             for="color"
@@ -151,7 +159,11 @@
 
 <script>
 import moment from 'moment'
+import VCalendar from 'v-calendar'
 export default {
+  components: {
+    VCalendar
+  },
   data() {
     return {
       isLoading: false,
@@ -159,13 +171,42 @@ export default {
       FILE: null
     }
   },
+  computed: {
+    dates() {
+      return this.days.map((day) => day.date)
+    },
+    attributes() {
+      return this.dates.map((date) => ({
+        highlight: true,
+        dates: date
+      }))
+    }
+  },
   async asyncData({ params, $axios }) {
     const slug = params.id
     const url = `${$axios.defaults.baseURL}/markets/${slug}`
     const market = await $axios.$get(url)
-    return { slug, market }
+    const days = market.onAirTimes.map((d) => {
+      let date = moment(d.open)
+      return {
+        id: date.format('YYYY-MM-DD'),
+        date: d.open
+      }
+    })
+    return { slug, market, days }
   },
   methods: {
+    onDayClick(day) {
+      const idx = this.days.findIndex((d) => d.id === day.id)
+      if (idx >= 0) {
+        this.days.splice(idx, 1)
+      } else {
+        this.days.push({
+          id: day.id,
+          date: day.date
+        })
+      }
+    },
     onFileUpload(event) {
       this.FILE = event.target.files[0]
     },
@@ -256,17 +297,9 @@ export default {
         this.closeTime = closeTime
       }
 
-      if (rawCloseTime.isBefore(rawOpenTime)) {
-        err.push('เวลาเปิดตลาด ตั้งเริ่มต้นก่อน เวลาปิดตลาด')
-      }
-
       // upload file
       const payload = new FormData()
-      if (
-        this.FILE !== null &&
-        typeof this.FILE !== 'undefined' &&
-        typeof this.FILE.name !== 'undefined'
-      ) {
+      if (this.FILE !== null) {
         payload.append('upload', this.FILE, this.FILE.name)
       }
       payload.append('name', name)
@@ -274,6 +307,7 @@ export default {
       payload.append('fontColor', fontColor)
       payload.append('openTime', openTime)
       payload.append('closeTime', closeTime)
+      payload.append('days', JSON.stringify(this.days))
       return { err, payload }
     },
     scrollToError() {
@@ -281,6 +315,26 @@ export default {
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' })
       }
+    }
+  },
+  filters: {
+    dateCell(value) {
+      let dt = new Date(value)
+
+      return dt.getDate()
+    },
+    date(val) {
+      return val ? moment(val).locale('th').format('ll') : ''
+    },
+    currencies(value) {
+      if (typeof value !== 'number') {
+        return value
+      }
+      var formatter = new Intl.NumberFormat('th-TH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
+      return formatter.format(value)
     }
   }
 }

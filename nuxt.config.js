@@ -23,7 +23,9 @@ export default {
   css: ['@assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    { src: '~plugins/v-calendar.js', ssr: false }
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -49,11 +51,13 @@ export default {
   //   apiSecret: process.env.API_SECRET
   // },
   env: {
-    BASE_IMAGE_URL: 'https://mimi-be-ykmu7mrxja-as.a.run.app'
+    BASE_IMAGE_URL: 'http://127.0.0.1:8080'
+    // BASE_IMAGE_URL: 'https://mimi-be-ykmu7mrxja-as.a.run.app'
   },
 
   axios: {
-    baseURL: 'https://mimi-be-ykmu7mrxja-as.a.run.app/api/v1',
+    baseURL: 'http://127.0.0.1:8080/api/v1',
+    // baseURL: 'https://mimi-be-ykmu7mrxja-as.a.run.app/api/v1',
     proxyHeaders: false,
     credentials: false,
     headers: {

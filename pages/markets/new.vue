@@ -71,6 +71,14 @@
           />
         </div>
         <div class="mb-6 pt-3 rounded bg-gray-200">
+            <label for="date"  class="block text-gray-700 text-sm font-bold mb-2 ml-3">
+              <span class="text-gray-400 block">เวลา</span>
+                <vc-calendar :attributes="attributes" @dayclick="onDayClick" :min-date='new Date()'/>
+              <!-- <client-only placeholder="loading...">
+              </client-only> -->
+          </label>
+        </div>
+        <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
             for="color"
@@ -133,7 +141,11 @@
 </template>
 <script>
 import moment from 'moment'
+import VCalendar from 'v-calendar'
 export default {
+  components: {
+    VCalendar
+  },
   middleware: 'auth',
   data() {
     return {
@@ -144,7 +156,19 @@ export default {
       closeTime: '',
       errors: [],
       isLoading: false,
-      FILE: null
+      FILE: null,
+      days: []
+    }
+  },
+  computed: {
+    dates() {
+      return this.days.map((day) => day.date)
+    },
+    attributes() {
+      return this.dates.map((date) => ({
+        highlight: true,
+        dates: date
+      }))
     }
   },
   methods: {
@@ -168,6 +192,17 @@ export default {
       } catch (e) {
         this.isLoading = false
         this.errors.push(e.message)
+      }
+    },
+    onDayClick(day) {
+      const idx = this.days.findIndex((d) => d.id === day.id)
+      if (idx >= 0) {
+        this.days.splice(idx, 1)
+      } else {
+        this.days.push({
+          id: day.id,
+          date: day.date
+        })
       }
     },
     onFileUpload(event) {
@@ -204,11 +239,6 @@ export default {
       } else if (this.closeTime !== closeTime) {
         this.closeTime = closeTime
       }
-
-      if (rawCloseTime.isBefore(rawOpenTime)) {
-        err.push('เวลาเปิดตลาด ตั้งเริ่มต้นก่อน เวลาปิดตลาด')
-      }
-
       if (this.FILE === null) {
         err.push('กรุณาเลือกรูปหน้าปกตลาด')
       }
@@ -220,14 +250,18 @@ export default {
           `ข้อมูลสีตัวอักษรตลาด ${minNameLength}-${maxNameLength} ตัวอักษร`
         )
       }
+
       // upload file
       const payload = new FormData()
-      payload.append('upload', this.FILE, this.FILE.name)
+      if (this.FILE !== null) {
+        payload.append('upload', this.FILE, this.FILE.name)
+      }
       payload.append('name', name)
       payload.append('color', color)
       payload.append('fontColor', fontColor)
       payload.append('openTime', openTime)
       payload.append('closeTime', closeTime)
+      payload.append('days', JSON.stringify(this.days))
       return { err, payload }
     },
     scrollToError() {

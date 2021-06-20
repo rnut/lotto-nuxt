@@ -3,13 +3,31 @@
     <div class="flex gap-4">
       <div class="flex-1">
         <div
-          class="rounded bg-gray-50 border border-gray-200 shadow-md mt-2 p-4 flex flex-row flex-wrap activeNumbers"
+          class="
+            rounded
+            bg-gray-50
+            border border-gray-200
+            shadow-md
+            mt-2
+            p-4
+            flex flex-row flex-wrap
+            activeNumbers
+          "
         >
           <div class="tag-input">
             <div
               v-for="(item, index) in activeNumbers"
               :key="item.data"
-              class="tag-input__tag p-2 m-2 bg-red-200 rounded text-2xl tag cursor-pointer"
+              class="
+                tag-input__tag
+                p-2
+                m-2
+                bg-red-200
+                rounded
+                text-2xl
+                tag
+                cursor-pointer
+              "
               @click="removeNumber(index)"
             >
               {{ item.data }}
@@ -21,6 +39,7 @@
               class="tag-input__text w-full"
               @keypress="isNumber($event)"
               @keydown.delete="removeLastNumber"
+              @keypress.space="onPressSpaceActiveNumber"
               @keydown.enter="onEnter"
             />
           </div>
@@ -36,7 +55,16 @@
                 name="priceBon"
                 id="priceBon"
                 type="number"
-                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
+                class="
+                  rounded
+                  text-md
+                  shadow-md
+                  p-4
+                  h-16
+                  w-full
+                  block
+                  border border-indigo-400
+                "
                 placeholder="ราคาบน"
               />
             </label>
@@ -51,7 +79,16 @@
                 name="priceLang"
                 id="priceLang"
                 type="number"
-                class="rounded text-md shadow-md p-4 h-16 w-full block border border-indigo-400"
+                class="
+                  rounded
+                  text-md
+                  shadow-md
+                  p-4
+                  h-16
+                  w-full
+                  block
+                  border border-indigo-400
+                "
                 placeholder="ราคาล่าง"
                 @keydown.enter="onEnter"
               />
@@ -63,13 +100,36 @@
         <div class="flex flex-col justify-end mt-2">
           <button
             @click="reset"
-            class="text-white hover:bg-red-700 bg-red-500 py-2 px-4 m-2 w-10/12 rounded self-center"
+            class="
+              text-white
+              hover:bg-red-700
+              bg-red-500
+              py-2
+              px-4
+              m-2
+              w-10/12
+              rounded
+              self-center
+            "
           >
             รีเซ็ต
           </button>
           <button
             @click="reverse"
-            class="flex flex-col items-center cursor-pointer bg-purple-500 hover:bg-purple-200 hover:text-purple-600 text-white p-2 m-2 rounded self-center text-center"
+            class="
+              flex flex-col
+              items-center
+              cursor-pointer
+              bg-purple-500
+              hover:bg-purple-200
+              hover:text-purple-600
+              text-white
+              p-2
+              m-2
+              rounded
+              self-center
+              text-center
+            "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +147,18 @@
           </button>
           <button
             @click="submit"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 w-10/12 rounded self-center"
+            class="
+              bg-green-500
+              hover:bg-green-700
+              text-white
+              font-bold
+              py-2
+              px-4
+              m-2
+              w-10/12
+              rounded
+              self-center
+            "
           >
             ยืนยัน
           </button>
@@ -224,6 +295,9 @@ export default {
     },
     onEnter(e) {
       this.submit()
+    },
+    onPressSpaceActiveNumber(e) {
+      this.reverse()
     },
     validate() {
       const min = 50

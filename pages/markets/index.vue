@@ -7,7 +7,14 @@
           <h1 class="text-2xl py-4 font-bold text-purple-800">จัดการตลาด</h1>
           <nuxt-link to="/markets/new">
             <button
-              class="rounded bg-green-500 flex p-2 hover:bg-green-700 hover:ring-green-800"
+              class="
+                rounded
+                bg-green-500
+                flex
+                p-2
+                hover:bg-green-700
+                hover:ring-green-800
+              "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -38,12 +45,11 @@
                 <th class="text-start sortable">
                   <span>ชื่อตลาด</span>
                 </th>
-                <th class="text-start">
+                <th class="text-center">สี</th>
+                <th>
                   <span>เวลาเปิด</span><i aria-hidden="true" class=""></i>
                 </th>
-                <th class="text-start">
-                  <span>เวลาปิด</span><i aria-hidden="true" class=""></i>
-                </th>
+                <th><span>เวลาปิด</span><i aria-hidden="true" class=""></i></th>
                 <th
                   role="columnheader"
                   scope="col"
@@ -54,7 +60,13 @@
                   <span>สถานะ</span
                   ><i
                     aria-hidden="true"
-                    class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                    class="
+                      v-icon
+                      notranslate
+                      v-data-table-header__icon
+                      mdi mdi-arrow-up
+                      theme--light
+                    "
                     style="font-size: 18px"
                   ></i>
                 </th>
@@ -69,11 +81,7 @@
               </tr>
             </thead>
             <tbody class="bg-purple-100 cursor-pointer">
-              <tr
-                :style="{ 'background-color': market.color }"
-                v-for="market in markets"
-                :key="market._id"
-              >
+              <tr v-for="market in markets" :key="market._id">
                 <td>
                   <img
                     :src="getMarketAvatar(market)"
@@ -81,13 +89,21 @@
                     class="h-auto w-8 mx-auto shadow-md"
                   />
                 </td>
-                <td class="text-start" :style="{ color: market.fontColor }">
+                <td class="text-start">
                   {{ market.name }}
                 </td>
-                <td class="text-start" :style="{ color: market.fontColor }">
+                <td>
+                  <div
+                    class="py-3 px-3 rounded text-center"
+                    :style="{ 'background-color': market.color }"
+                  >
+                    <p class="" :style="{ color: market.fontColor }">example</p>
+                  </div>
+                </td>
+                <td class="text-start">
                   {{ market.openTime }}
                 </td>
-                <td class="text-start" :style="{ color: market.fontColor }">
+                <td class="text-start">
                   {{ market.closeTime }}
                 </td>
                 <td class="text-start">
@@ -107,7 +123,15 @@
                   <button type="button" class="">
                     <nuxt-link :to="`/markets/${market._id}`">
                       <div
-                        class="bg-purple-500 flex items-center px-3 py-2 rounded hover:bg-purple-700"
+                        class="
+                          bg-purple-500
+                          flex
+                          items-center
+                          px-3
+                          py-2
+                          rounded
+                          hover:bg-purple-700
+                        "
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +153,15 @@
                   <button type="button">
                     <nuxt-link :to="`/markets/results/${market._id}`">
                       <div
-                        class="bg-green-500 flex items-center px-3 py-2 rounded hover:bg-green-700"
+                        class="
+                          bg-green-500
+                          flex
+                          items-center
+                          px-3
+                          py-2
+                          rounded
+                          hover:bg-green-700
+                        "
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
