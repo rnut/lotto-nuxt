@@ -2,7 +2,7 @@
   <div class="my-8">
     <!-- // calculated -->
     <div class="p-4 rounded border border-gray-200" v-if="calculated">
-      <p class="font-bold text-center"><span>ใบเสร็จ #xxxx </span><br /></p>
+      <p class="font-bold text-center"><span>ใบเสร็จ</span><br /></p>
       <div class="flex flex-col justify-between mb-4">
         <div>
           <span class="text-xs text-gray-600 font-bold">ตลาด: </span>
@@ -62,32 +62,99 @@
               </span>
             </td>
           </tr>
+
+          <tr>
+            <td colspan="5" class="p-0">
+              <div class="flex border border-gray-200 p-2 mb-3">
+                <label
+                  class="block w-full text-gray-700 text-sm font-bold mb-2 ml-3"
+                  for="memo"
+                >
+                  บันทึกช่วยจำ
+                  <input
+                    readonly
+                    type="text"
+                    id="memo"
+                    v-model="memo"
+                    class="
+                      bg-gray-200
+                      rounded
+                      w-full
+                      text-gray-700
+                      focus:outline-none
+                      border-b-4 border-gray-300
+                      focus:border-purple-600
+                      transition
+                      duration-500
+                      p-4
+                    "
+                  />
+                </label>
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+                  for="total"
+                >
+                  ยอดรวม
+                  <input
+                    readonly
+                    type="text"
+                    id="total"
+                    :value="totalPrice"
+                    class="
+                      disabled:opacity-50
+                      bg-gray-200
+                      rounded
+                      w-full
+                      text-gray-700
+                      focus:outline-none
+                      border-b-4 border-gray-300
+                      focus:border-purple-600
+                      transition
+                      duration-500
+                      p-4
+                    "
+                  />
+                </label>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
-      <!-- <div class="mb-6 pt-3 rounded bg-gray-200">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-          for="memo"
-        >
-          บันทึกช่วยจำ
-        </label>
-        <input
-          type="text"
-          id="memo"
-          v-model="memo"
-          class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-        />
-      </div> -->
       <button
         @click="onConfirmBill"
-        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+        class="
+          w-full
+          bg-purple-600
+          hover:bg-purple-700
+          text-white
+          font-bold
+          py-2
+          rounded
+          shadow-lg
+          hover:shadow-xl
+          transition
+          duration-200
+        "
       >
         ยืนยัน
       </button>
 
       <button
         @click="onCancel"
-        class="w-full mt-4 bg-white hover:bg-red-500 text-red-700 hover:text-white font-bold py-2 rounded hover:shadow-xl transition duration-200"
+        class="
+          w-full
+          mt-4
+          bg-white
+          hover:bg-red-500
+          text-red-700
+          hover:text-white
+          font-bold
+          py-2
+          rounded
+          hover:shadow-xl
+          transition
+          duration-200
+        "
       >
         ยกเลิก
       </button>
@@ -98,7 +165,15 @@
         <span class="text-xl text-white">บิลใหม่</span>
         <button
           @click="onSubmitBill"
-          class="flex rounded text-white bg-green-500 px-4 py-1 hover:bg-green-700"
+          class="
+            flex
+            rounded
+            text-white
+            bg-green-500
+            px-4
+            py-1
+            hover:bg-green-700
+          "
         >
           <span> บันทึกบิล </span>
         </button>
@@ -130,7 +205,17 @@
             <td>
               <button
                 @click="onDeleteLotto(index)"
-                class="flex justify-center items-center w-12 h-12 rounded-full border border-red-400 hover:border-2 hover:border-red-800 hover:bg-red-100"
+                class="
+                  flex
+                  justify-center
+                  items-center
+                  w-12
+                  h-12
+                  rounded-full
+                  border border-red-400
+                  hover:border-2 hover:border-red-800
+                  hover:bg-red-100
+                "
               >
                 <p>
                   <svg
@@ -147,6 +232,60 @@
                   </svg>
                 </p>
               </button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="p-0">
+              <div class="flex border border-gray-200 p-2">
+                <label
+                  class="block w-full text-gray-700 text-sm font-bold mb-2 ml-3"
+                  for="memo"
+                >
+                  บันทึกช่วยจำ
+                  <input
+                    type="text"
+                    id="memo"
+                    v-model="memo"
+                    class="
+                      bg-gray-200
+                      rounded
+                      w-full
+                      text-gray-700
+                      focus:outline-none
+                      border-b-4 border-gray-300
+                      focus:border-purple-600
+                      transition
+                      duration-500
+                      p-4
+                    "
+                  />
+                </label>
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+                  for="total"
+                >
+                  ยอดรวม
+                  <input
+                    readonly
+                    type="text"
+                    id="total"
+                    :value="totalPrice"
+                    class="
+                      disabled:opacity-50
+                      bg-gray-200
+                      rounded
+                      w-full
+                      text-gray-700
+                      focus:outline-none
+                      border-b-4 border-gray-300
+                      focus:border-purple-600
+                      transition
+                      duration-500
+                      p-4
+                    "
+                  />
+                </label>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -166,6 +305,21 @@ export default {
     }
   },
   computed: {
+    totalPrice: function () {
+      var total = 0
+      this.lottos
+        .map((l) => l.lottos)
+        .flat()
+        .flat()
+        .forEach((element) => {
+          total = total + parseInt(element.price)
+        })
+      var formatter = new Intl.NumberFormat('th-TH', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      })
+      return formatter.format(total)
+    },
     calculatedAt: function () {
       if (
         typeof this.respCalculated === 'undefined' ||
@@ -202,7 +356,8 @@ export default {
           .flat()
         const payload = {
           marketID: this.market._id,
-          lottos: flatLottos
+          lottos: flatLottos,
+          memo: this.memo
         }
         const url = `${this.$axios.defaults.baseURL}/bills`
         const resp = await this.$axios.$post(url, payload)
@@ -245,7 +400,7 @@ export default {
     },
     currencies(value) {
       if (typeof value !== 'number') {
-        return 'fuck'
+        return 'n/a'
       }
       var formatter = new Intl.NumberFormat('th-TH', {
         minimumFractionDigits: 2,

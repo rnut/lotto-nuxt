@@ -39,8 +39,8 @@
               class="tag-input__text w-full"
               @keypress="isNumber($event)"
               @keydown.delete="removeLastNumber"
-              @keypress.space="onPressSpaceActiveNumber"
-              @keydown.enter="onEnter"
+              @keydown.space="onPressSpaceActiveNumber"
+              @keydown.enter="changeFocus('priceBon')"
             />
           </div>
         </div>
@@ -51,6 +51,8 @@
             <label class="block" for="priceBon">
               <span class="text-gray-700 text-sm inline-block w-full">บน</span>
               <input
+                ref="priceBon"
+                @keydown.enter="changeFocus('priceLang')"
                 v-model="bonPrice"
                 name="priceBon"
                 id="priceBon"
@@ -75,6 +77,8 @@
                 >ล่าง</span
               >
               <input
+                ref="priceLang"
+                @keydown.enter="onEnter"
                 v-model="langPrice"
                 name="priceLang"
                 id="priceLang"
@@ -90,7 +94,6 @@
                   border border-indigo-400
                 "
                 placeholder="ราคาล่าง"
-                @keydown.enter="onEnter"
               />
             </label>
           </div>
@@ -299,24 +302,56 @@ export default {
     onPressSpaceActiveNumber(e) {
       this.reverse()
     },
+    changeFocus(to) {
+      var textField = null
+      switch (to) {
+        case 'priceBon':
+          textField = this.$refs.priceBon
+          break
+        case 'priceLang':
+          textField = this.$refs.priceLang
+          break
+        case 'activeNumber':
+          textField = this.$refs.activeNumber
+          break
+      }
+      console.log('changeFocue: ', to)
+      if (typeof textField === 'undefined') {
+        return
+      }
+      textField.focus()
+    },
     validate() {
       const min = 50
       const max = 100000
-      if (
-        (typeof this.bonPrice === 'undefined' || this.bonPrice === null,
-        typeof this.langPrice === 'undefined' || this.langPrice === null)
+      if (typeof this.bonPrice === 'undefined' || this.bonPrice === null) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        this.changeFocus('priceBon')
+        return false
+      } else if (
+        typeof this.langPrice === 'undefined' ||
+        this.langPrice === null
       ) {
         this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        this.changeFocus('priceLang')
         return false
       }
+
       const tong = parseInt(this.bonPrice)
       const toad = parseInt(this.langPrice)
-      if (tong < min || tong > max || toad < min || toad > max) {
+      if (tong < min || tong > max) {
         this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        this.changeFocus('priceBon')
+        return false
+      } else if (toad < min || toad > max) {
+        this.activeNumberError = `ระบุยอดระหว่าง ${min}-${max}`
+        this.changeFocus('priceLang')
         return false
       }
+
       if (this.activeNumbers.length === 0) {
         this.activeNumberError = `ระบุหมายเลข`
+        this.changeFocus('activeNumber')
         return false
       }
       return true
@@ -349,6 +384,7 @@ export default {
 
       this.$emit('numbers-submitted', emitDatas)
       this.reset()
+      this.changeFocus('activeNumber')
     },
     reverse() {
       var reversed = []
