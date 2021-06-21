@@ -1,23 +1,46 @@
 <template>
-  <div class="p-8">
+  <div class="p-8 h-screen" :style="{ 'background-color': backgroundColor }">
     <section class="flex flex-row gap-8">
-      <div>
-        <span class="font-extrabold text-2xl text-purple-600 py-3">
+      <div class="w-full">
+        <span
+          class="font-extrabold text-2xl py-3 mr-4"
+          :style="{ color: mainFontColor }"
+        >
           {{ market.name }}
         </span>
-      </div>
-      <div>
         <client-only placeholder="loading...">
           <VueCountdown
             :time="getTimeRemaining()"
             v-slot="{ hours, minutes, seconds }"
           >
-            <span class="text-xl text-grey-600">เหลือเวลาอีก</span>
-            <span v-if="hours !== 0">{{ hours }} ชั่วโมง </span>
-            <span v-if="minutes !== 0">{{ minutes }} นาที </span>
-            <span v-if="seconds !== 0">{{ seconds }} วินาที</span>
+            <span class="text-xl" :style="{ color: secondaryFontColor }"
+              >เหลือเวลาอีก</span
+            >
+            <span v-if="hours !== 0" :style="{ color: secondaryFontColor }"
+              >{{ hours }} ชั่วโมง
+            </span>
+            <span v-if="minutes !== 0" :style="{ color: secondaryFontColor }"
+              >{{ minutes }} นาที
+            </span>
+            <span v-if="seconds !== 0" :style="{ color: secondaryFontColor }"
+              >{{ seconds }} วินาที</span
+            >
           </VueCountdown>
         </client-only>
+      </div>
+      <div class=""></div>
+      <div class="self-end">
+        <label class="switch">
+          <input
+            type="checkbox"
+            :checked="isDarkMode"
+            v-on:change="onChangeDarkMode()"
+          />
+          <div class="slider round">
+            <span class="on">dark</span>
+            <span class="off">bright</span>
+          </div>
+        </label>
       </div>
     </section>
     <div class="flex">
@@ -25,7 +48,15 @@
         <!-- // creator -->
         <div
           v-if="!calculated"
-          class="border border-gray-500 rounded-md p-4 h-80 my-4 w-auto"
+          class="
+            border border-gray-300
+            rounded-md
+            p-4
+            h-80
+            my-4
+            w-auto
+            bg-gray-200
+          "
         >
           <nav class="flex flex-col sm:flex-row">
             <button
@@ -353,7 +384,12 @@
         <template v-else>
           <div class="flex flex-col">
             <img src="/svg/Empty-bro.svg" alt="empty" class="h-96 w-full" />
-            <p class="text-center text-2xl">ไม่พบการทำรายการ</p>
+            <p
+              class="text-center text-2xl"
+              :style="{ color: secondaryFontColor }"
+            >
+              ไม่พบการทำรายการ
+            </p>
           </div>
         </template>
       </section>
@@ -378,6 +414,29 @@ export default {
     OneNumber,
     Summary,
     VueCountdown
+  },
+  computed: {
+    mainFontColor: function () {
+      if (this.isDarkMode) {
+        return '#f8f8f8'
+      } else {
+        return '#7C3AED'
+      }
+    },
+    secondaryFontColor: function () {
+      if (this.isDarkMode) {
+        return '#eeeeee'
+      } else {
+        return '#454545'
+      }
+    },
+    backgroundColor: function () {
+      if (this.isDarkMode) {
+        return '#393939'
+      } else {
+        return '#f8f8f8'
+      }
+    }
   },
   async asyncData({ params, $axios, redirect }) {
     const slug = params.id
@@ -405,6 +464,7 @@ export default {
   data() {
     return {
       calculated: false,
+      isDarkMode: false,
       openTab: 1,
       lottos: [],
       bills: [],
@@ -412,6 +472,9 @@ export default {
     }
   },
   methods: {
+    onChangeDarkMode() {
+      this.isDarkMode = !this.isDarkMode
+    },
     onSummarySaved() {
       this.calculated = true
     },
@@ -425,20 +488,33 @@ export default {
       this.lottos = this.lottos.concat(n)
     },
     getTimeRemaining() {
-      const openTime = this.market.openTime
-      const closeTime = this.market.closeTime
-      const timeFormat = 'HH:mm'
-      const startTime = moment(openTime, timeFormat)
-      const endTime = moment(closeTime, timeFormat)
+      const market = this.market
+      const onAirTime = this.getOnAirTime(market.onAirTimes)
+      if (typeof onAirTime == 'undefined') {
+        return 0
+      }
+      const startTime = moment(onAirTime.open)
+      const endTime = moment(onAirTime.close)
       const currentTime = moment()
-      const started = currentTime.isAfter(startTime)
-      const ended = currentTime.isAfter(endTime)
-      const remaining = endTime.diff(currentTime, 'seconds')
-      if (started && !ended) {
+      if (currentTime.isBetween(startTime, endTime, '()')) {
+        const remaining = endTime.diff(currentTime, 'seconds')
         return remaining * 1000
       } else {
         return 0
       }
+    },
+    getOnAirTime(onAirTimes) {
+      const current = moment()
+      const time = onAirTimes.find((o) => {
+        const open = moment(o.open)
+        const close = moment(o.close)
+        if (current.isBetween(open, close, '()')) {
+          return true
+        } else {
+          return false
+        }
+      })
+      return time
     },
     getBillMarketName(b) {
       if (
@@ -522,8 +598,13 @@ export default {
           await this.$axios.patch(url)
           bill.isConfirmPayment = true
         } catch (e) {
-          if (e.response.status == 400) {
-            alert(`เกิดข้อผิดพลาด(10002) ${e.response.data.message}`)
+          if (
+            typeof e.response.data.message === 'undefined' ||
+            e.response.data.message === null
+          ) {
+            return
+          } else {
+            alert(`${e.response.data.message}`)
           }
         }
       }
@@ -539,11 +620,7 @@ export default {
       await this.getCurrentBills()
     },
     canDeleteBill(bill) {
-      const currentTime = new moment().locale('th')
-      const closeTime = new moment(bill.marketRef.closeTime, 'HH:mm').locale(
-        'th'
-      )
-      return currentTime.isBefore(closeTime)
+      return true
     }
   },
   filters: {
@@ -585,5 +662,11 @@ export default {
 }
 .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.slider {
+  background-color: gray;
+}
+input:checked + .slider {
+  background-color: black;
 }
 </style>

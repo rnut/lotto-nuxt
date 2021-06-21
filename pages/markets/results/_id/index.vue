@@ -91,7 +91,7 @@
                     </div>
                   </button>
 
-                  <button type="button">
+                  <button type="button" v-if="false">
                     <nuxt-link :to="`/markets/trends/${onAirTime._id}`">
                       <div
                         class="

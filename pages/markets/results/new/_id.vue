@@ -12,7 +12,15 @@
         </p>
         <button type="button" v-if="canAnnounce" @click="onAnnounce">
           <button
-            class="bg-green-500 flex items-center px-3 py-2 rounded hover:bg-green-700"
+            class="
+              bg-green-500
+              flex
+              items-center
+              px-3
+              py-2
+              rounded
+              hover:bg-green-700
+            "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +41,16 @@
 
       <section
         v-bind:style="{ 'background-color': lottoResult.marketRef.color }"
-        class="p-4 mt-3 kkp-3 rounded-lg flex justify-between items-center gap-16"
+        class="
+          p-4
+          mt-3
+          kkp-3
+          rounded-lg
+          flex
+          justify-between
+          items-center
+          gap-16
+        "
       >
         <p class="">
           <span class="text-xs text-gray-500">ชื่อตลาด: </span><br />
@@ -80,14 +97,31 @@
               @onSubmitResult="onSubmitResult"
             />
           </div>
-
-          <button
-            v-if="canSubmit"
-            class="mb-2 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
-            type="submit"
-          >
-            บันทึก
-          </button>
+          <template v-if="canSubmit">
+            <button
+              class="
+                mb-2
+                bg-purple-600
+                hover:bg-purple-700
+                text-white
+                font-bold
+                py-2
+                rounded
+                shadow-lg
+                hover:shadow-xl
+                transition
+                duration-200
+              "
+              type="submit"
+            >
+              บันทึก
+            </button>
+          </template>
+          <template v-else>
+            <p class="text-red-800 font-bold">
+              บิลนี้ถูกประกาศผลเรียบร้อยแล้ว กรุณาติดต่อผู้ดูแลระบบ เพื่อแก้ไข
+            </p>
+          </template>
         </form>
       </section>
     </main>
@@ -101,10 +135,7 @@ export default {
   components: { LottoResultInput },
   computed: {
     canSubmit: function () {
-      return (
-        !this.lottoResult.isConfirmed &&
-        this.checkIsCompleteResults(this.lottoResult)
-      )
+      return !this.lottoResult.isConfirmed
     },
     canAnnounce: function () {
       return this.canSubmit && this.savedAtLeastOne
