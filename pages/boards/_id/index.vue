@@ -457,7 +457,12 @@ export default {
         endDate: endDate
       }
       const billResp = await $axios.get(urlBills, { params: queryParams })
-      const bills = billResp.data
+      var bills = billResp.data
+      if (typeof bills === 'undefined') {
+        bills = []
+      } else {
+        bills = bills.splice(0, 30)
+      }
       return { slug, market, bills }
     } catch (e) {
       redirect('/boards')
