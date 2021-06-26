@@ -217,6 +217,7 @@
                 <tr>
                   <th></th>
                   <th>market</th>
+                  <th>note</th>
                   <th>time</th>
                   <th>volumn</th>
                   <th>price</th>
@@ -239,6 +240,7 @@
                       />
                     </td>
                     <td>{{ getBillMarketName(bill) }}</td>
+                    <td>{{ bill.note }}</td>
                     <td>
                       {{ bill.createdAt | humanDateTime }}
                     </td>

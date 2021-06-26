@@ -47,7 +47,18 @@
         </div>
         <button
           @click="onClickSearch"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+          class="
+            bg-purple-600
+            hover:bg-purple-700
+            text-white
+            font-bold
+            py-2
+            rounded
+            shadow-lg
+            hover:shadow-xl
+            transition
+            duration-200
+          "
         >
           ค้นหา
         </button>
@@ -71,6 +82,7 @@
               <th>username</th>
               <th>name</th>
               <th>market</th>
+              <th>note</th>
               <th>time</th>
               <th>volumn</th>
               <th>price</th>
@@ -98,6 +110,7 @@
                 <td>{{ bill.createdBy.username }}</td>
                 <td>{{ bill.createdBy.name }}</td>
                 <td>{{ getBillMarketName(bill) }}</td>
+                <td>{{ bill.note }}</td>
                 <td>
                   {{ bill.createdAt | humanDateTime }}
                 </td>
@@ -135,7 +148,26 @@
                     <button
                       v-if="!bill.isConfirmPayment"
                       @click="onClickDelete(bill)"
-                      class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      class="
+                        bg-red-500
+                        text-white
+                        active:bg-red-600
+                        font-bold
+                        uppercase
+                        text-xs
+                        px-4
+                        py-2
+                        rounded
+                        shadow
+                        hover:shadow-md
+                        outline-none
+                        focus:outline-none
+                        mr-1
+                        mb-1
+                        ease-linear
+                        transition-all
+                        duration-150
+                      "
                       type="button"
                     >
                       <img
@@ -148,7 +180,26 @@
                     <button
                       v-if="!bill.isConfirmPayment"
                       @click="onClickConfirmPayment(bill)"
-                      class="bg-green-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      class="
+                        bg-green-500
+                        text-white
+                        active:bg-red-600
+                        font-bold
+                        uppercase
+                        text-xs
+                        px-4
+                        py-2
+                        rounded
+                        shadow
+                        hover:shadow-md
+                        outline-none
+                        focus:outline-none
+                        mr-1
+                        mb-1
+                        ease-linear
+                        transition-all
+                        duration-150
+                      "
                       type="button"
                     >
                       <img
