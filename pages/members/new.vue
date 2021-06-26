@@ -27,7 +27,19 @@
             type="text"
             id="username"
             v-model="username"
-            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
           />
         </div>
         <div class="mb-6 pt-3 rounded bg-gray-200">
@@ -40,7 +52,19 @@
             type="password"
             id="password"
             v-model="password"
-            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
           />
         </div>
 
@@ -54,7 +78,19 @@
             type="text"
             id="name"
             v-model="name"
-            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
           />
         </div>
 
@@ -68,7 +104,19 @@
             type="text"
             id="lineID"
             v-model="lineID"
-            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
           />
         </div>
 
@@ -82,7 +130,19 @@
             type="text"
             id="mobileNumber"
             v-model="mobileNumber"
-            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
           />
         </div>
 
@@ -95,7 +155,19 @@
           <select
             id="role"
             v-model="role"
-            class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
           >
             <option
               v-for="role in roles"
@@ -108,7 +180,18 @@
         </div>
 
         <button
-          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+          class="
+            bg-purple-600
+            hover:bg-purple-700
+            text-white
+            font-bold
+            py-2
+            rounded
+            shadow-lg
+            hover:shadow-xl
+            transition
+            duration-200
+          "
           type="submit"
         >
           ยืนยัน
@@ -132,7 +215,8 @@ export default {
           return [
             { value: 'member', title: 'ผู้เล่น' },
             { value: 'agent', title: 'เอเย่น' },
-            { value: 'admin', title: 'แอดมิน' }
+            { value: 'agent', title: 'เอเย่น' },
+            { value: 'announcer', title: 'ผู้ประกาศรางวัล' }
           ]
       }
     }

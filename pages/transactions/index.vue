@@ -206,7 +206,7 @@
                 </td>
               </tr>
               <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
-                <td colspan="11">
+                <td colspan="12">
                   <table
                     class="table-auto w-full bg-white border border-purple-400"
                     cellpadding="0"
@@ -344,7 +344,7 @@ export default {
       if (!bill.isChecked) {
         return 'n/a'
       } else {
-        return (bill.totalReward - bill.totalPrice) | currencies
+        return bill.totalReward - bill.totalPrice
       }
     },
     onClickBill(b) {
@@ -399,6 +399,16 @@ export default {
     },
     date(value) {
       return moment(value).locale('th').format('ll')
+    },
+    currencies(value) {
+      if (typeof value !== 'number') {
+        return 'n/a'
+      }
+      var formatter = new Intl.NumberFormat('th-TH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })
+      return formatter.format(value)
     }
   }
 }

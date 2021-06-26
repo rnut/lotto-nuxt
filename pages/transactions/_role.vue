@@ -212,7 +212,7 @@
                 </td>
               </tr>
               <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
-                <td colspan="13">
+                <td colspan="14">
                   <table
                     class="table-auto w-full bg-white border border-purple-400"
                     cellpadding="0"
@@ -347,7 +347,7 @@ export default {
       if (!bill.isChecked) {
         return 'n/a'
       } else {
-        return (bill.totalReward - bill.totalPrice) | currencies
+        return bill.totalReward - bill.totalPrice
       }
     },
     getLottoResultReward(l) {

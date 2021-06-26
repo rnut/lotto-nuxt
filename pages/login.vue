@@ -30,7 +30,19 @@
               type="text"
               id="email"
               v-model="username"
-              class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+              class="
+                bg-gray-200
+                rounded
+                w-full
+                text-gray-700
+                focus:outline-none
+                border-b-4 border-gray-300
+                focus:border-purple-600
+                transition
+                duration-500
+                px-3
+                pb-3
+              "
             />
           </div>
           <div class="mb-6 pt-3 rounded bg-gray-200">
@@ -43,19 +55,42 @@
               type="password"
               id="password"
               v-model="password"
-              class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
+              class="
+                bg-gray-200
+                rounded
+                w-full
+                text-gray-700
+                focus:outline-none
+                border-b-4 border-gray-300
+                focus:border-purple-600
+                transition
+                duration-500
+                px-3
+                pb-3
+              "
             />
           </div>
-          <!-- <div class="flex justify-end">
-            <a
-              href="#"
-              class="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6"
-              >Forgot your password?</a
-            >
-          </div> -->
           <button
             type="submit"
-            class="inline-flex justify-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:border-rose-700 active:bg-rose-700 transition ease-in-out duration-150"
+            class="
+              inline-flex
+              justify-center
+              px-4
+              py-2
+              border border-transparent
+              text-base
+              leading-6
+              font-medium
+              rounded-md
+              text-white
+              bg-purple-600
+              hover:bg-purple-700
+              focus:border-rose-700
+              active:bg-rose-700
+              transition
+              ease-in-out
+              duration-150
+            "
           >
             <template v-if="isLoading">
               <svg
@@ -85,19 +120,6 @@
         </form>
       </section>
     </main>
-
-    <!-- <div class="max-w-lg mx-auto text-center mt-12 mb-6">
-      <p class="text-white">
-        Don't have an account?
-        <a href="#" class="font-bold hover:underline">Sign up</a>.
-      </p>
-    </div>
-
-    <footer class="max-w-lg mx-auto flex justify-center text-white">
-      <a href="#" class="hover:underline">Contact</a>
-      <span class="mx-3">•</span>
-      <a href="#" class="hover:underline">Privacy</a>
-    </footer> -->
   </div>
 </template>
 
@@ -142,6 +164,8 @@ export default {
           case 'admin':
             route = '/dashboard/admin'
             break
+          case 'announcer':
+            route = '/announces'
         }
         this.isLoading = false
         this.$router.push(route)

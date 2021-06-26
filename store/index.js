@@ -31,11 +31,15 @@ export const getters = {
           { title: 'รายการแทง', link: '/transactions/agent', logo: '/svg/receipt_long_black_24dp.svg' },
           { title: 'สมาชิก', link: '/members', logo: '/svg/manage_accounts_black_24dp.svg' },
         ]
-      default:
+      case 'member':
         return [
           { title: 'สรุป', link: '/dashboard/member', logo: '/svg/insights_black_24dp.svg' },
           { title: 'แทง', link: '/boards', logo: '/svg/casino_black_24dp.svg' },
           { title: 'รายการแทง', link: '/transactions', logo: '/svg/receipt_long_black_24dp.svg' },
+        ]
+      case 'announcer':
+        return [
+          { title: 'ประกาศผล', link: '/announces', logo: '/svg/storefront_black_24dp.svg' }
         ]
     }
   }

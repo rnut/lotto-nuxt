@@ -37,6 +37,30 @@
             <span class="m-2 text-white"> ประกาศรางวัล </span>
           </button>
         </button>
+
+        <template v-if="loggedInUser.role === 'admin' && !canSubmit">
+          <button
+            type="button"
+            class="
+              cursor-pointer
+              text-center
+              mb-2
+              p-3
+              bg-yellow-300
+              hover:bg-yellow-500
+              text-gray-600
+              font-bold
+              rounded
+              shadow
+              hover:shadow-xl
+              transition
+              duration-200
+            "
+            @click="onClickEditResult"
+          >
+            แก้ไขผลการประกาศรางวัล
+          </button>
+        </template>
       </section>
 
       <section
@@ -117,6 +141,13 @@
               บันทึก
             </button>
           </template>
+          <template v-else-if="loggedInUser.role === 'admin'">
+            <p class="text-red-400">
+              บิลนี้ถูกประกาศผลไปแล้ว หากต้องการยกเลิก
+              และเปิดให้แก้ไขผลการประกาศอีกครั้ง กรุณากดปุ่ม
+              "แก้ไขผลการประกาศผลรางวัล" ด้านบน
+            </p>
+          </template>
           <template v-else>
             <p class="text-red-800 font-bold">
               บิลนี้ถูกประกาศผลเรียบร้อยแล้ว กรุณาติดต่อผู้ดูแลระบบ เพื่อแก้ไข
@@ -129,11 +160,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import LottoResultInput from '~/components/LottoResultInput.vue'
 export default {
   components: { LottoResultInput },
   computed: {
+    ...mapGetters(['loggedInUser']),
     canSubmit: function () {
       return !this.lottoResult.isConfirmed
     },
@@ -178,15 +211,32 @@ export default {
         this.savedAtLeastOne = false
       }
     },
-    async onAnnounce() {
+    async onAnnounce(e) {
       const url = `${this.$axios.defaults.baseURL}/lottoResults/confirm/${this.slug}`
       try {
         const resp = await this.$axios.$patch(url)
+        const marketRef = this.lottoResult.marketRef
         this.lottoResult = resp.lottoResult
+        this.lottoResult.marketRef = marketRef
         const billCount = resp.bills.length
         alert(`ประกาศผลเรียบร้อยแล้ว มีบิลที่ถูกคำนวณจำนวน ${billCount} บิล`)
       } catch (error) {
         alert(`เกิดข้อผิดพลาด (90002) ${error.message}`)
+      }
+    },
+    async onClickEditResult(e) {
+      e.preventDefault()
+      if (confirm('ยืนยันการยกเลิกและเปิดให้แก้ไขประกาศผลรางวัล?')) {
+        const url = `${this.$axios.defaults.baseURL}/lottoResults/cancel/${this.slug}`
+        try {
+          const resp = await this.$axios.$patch(url)
+          const marketRef = this.lottoResult.marketRef
+          this.lottoResult = resp.lottoResult
+          this.lottoResult.marketRef = marketRef
+          alert(`ยกเลิกการประกาศผลเรียบร้อยแล้ว`)
+        } catch (error) {
+          alert(`เกิดข้อผิดพลาด (90003) ${error.message}`)
+        }
       }
     },
     checkIsCompleteResults(l) {

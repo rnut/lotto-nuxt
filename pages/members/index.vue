@@ -4,7 +4,14 @@
       <h1 class="text-2xl py-4 font-bold text-purple-800">จัดการสมาชิก</h1>
       <nuxt-link to="/members/new">
         <button
-          class="rounded bg-green-500 flex p-2 hover:bg-green-700 hover:ring-green-800"
+          class="
+            rounded
+            bg-green-500
+            flex
+            p-2
+            hover:bg-green-700
+            hover:ring-green-800
+          "
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +51,13 @@
               <span>ยูเซอร์เนม</span
               ><i
                 aria-hidden="true"
-                class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                class="
+                  v-icon
+                  notranslate
+                  v-data-table-header__icon
+                  mdi mdi-arrow-up
+                  theme--light
+                "
                 style="font-size: 18px"
               ></i>
             </th>
@@ -58,7 +71,13 @@
               <span>ชื่อเล่น</span
               ><i
                 aria-hidden="true"
-                class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                class="
+                  v-icon
+                  notranslate
+                  v-data-table-header__icon
+                  mdi mdi-arrow-up
+                  theme--light
+                "
                 style="font-size: 18px"
               ></i>
             </th>
@@ -72,7 +91,13 @@
               <span>ระดับ</span
               ><i
                 aria-hidden="true"
-                class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                class="
+                  v-icon
+                  notranslate
+                  v-data-table-header__icon
+                  mdi mdi-arrow-up
+                  theme--light
+                "
                 style="font-size: 18px"
               ></i>
             </th>
@@ -86,7 +111,13 @@
               <span>ผู้สร้าง</span
               ><i
                 aria-hidden="true"
-                class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                class="
+                  v-icon
+                  notranslate
+                  v-data-table-header__icon
+                  mdi mdi-arrow-up
+                  theme--light
+                "
                 style="font-size: 18px"
               ></i>
             </th>
@@ -100,7 +131,13 @@
               <span>แจ้งชำระเงิน</span
               ><i
                 aria-hidden="true"
-                class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                class="
+                  v-icon
+                  notranslate
+                  v-data-table-header__icon
+                  mdi mdi-arrow-up
+                  theme--light
+                "
                 style="font-size: 18px"
               ></i>
             </th>
@@ -114,7 +151,13 @@
               <span>เปิดใช้งาน</span
               ><i
                 aria-hidden="true"
-                class="v-icon notranslate v-data-table-header__icon mdi mdi-arrow-up theme--light"
+                class="
+                  v-icon
+                  notranslate
+                  v-data-table-header__icon
+                  mdi mdi-arrow-up
+                  theme--light
+                "
                 style="font-size: 18px"
               ></i>
             </th>
@@ -134,7 +177,12 @@
             <td class="text-start">{{ member.username }}</td>
             <td class="text-start">{{ member.name }}</td>
             <td class="text-start">{{ member.role }}</td>
-            <td class="text-start">{{ member.createdBy.name }}</td>
+            <td class="text-start">
+              <template v-if="member.createdBy">
+                {{ member.createdBy.name }}
+              </template>
+              <template v-else> n/a </template>
+            </td>
             <td class="text-start">
               <label class="switch">
                 <input
@@ -164,7 +212,15 @@
             <td class="text-start">
               <nuxt-link :to="`/members/${member._id}`">
                 <button
-                  class="bg-gray-500 flex items-center px-3 py rounded hover:bg-green-700"
+                  class="
+                    bg-gray-500
+                    flex
+                    items-center
+                    px-3
+                    py
+                    rounded
+                    hover:bg-green-700
+                  "
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
