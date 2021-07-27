@@ -30,7 +30,14 @@
               "
               @click="removeNumber(index)"
             >
-              {{ item.data }}
+              <p
+                :class="{
+                  'line-through': item.isDelete === true,
+                  'text-gray-400': item.isDelete
+                }"
+              >
+                {{ item.data }}
+              </p>
             </div>
           </div>
         </div>
@@ -213,7 +220,7 @@ export default {
           this.activeNumberError = 'กรุณาระบุเลขที่ไม่ซ้ำกันในบิล'
         } else {
           this.activeNumberError = ''
-          this.activeNumbers.push({ data: val })
+          this.activeNumbers.push({ data: val, isDelete: false })
         }
         this.activeNumber = null
       }
@@ -226,7 +233,7 @@ export default {
         this.activeNumberError = 'เลขซ้ำนะจ๊ะ'
       } else {
         this.activeNumberError = ''
-        this.activeNumbers.push({ data: val })
+        this.activeNumbers.push({ data: val, isDelete: false })
       }
       this.activeNumber = null
     },
@@ -423,7 +430,8 @@ export default {
       return duplicated.length > 0
     },
     removeNumber(index) {
-      this.activeNumbers.splice(index, 1)
+      const isDelete = this.activeNumbers[index].isDelete
+      this.activeNumbers[index].isDelete = !isDelete
     },
     removeLastNumber(event) {
       if (event.target.value.length === 0) {

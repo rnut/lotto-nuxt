@@ -30,7 +30,14 @@
               "
               @click="removeNumber(index)"
             >
-              {{ item.data }}
+              <p
+                :class="{
+                  'line-through': item.isDelete === true,
+                  'text-gray-400': item.isDelete
+                }"
+              >
+                {{ item.data }}
+              </p>
             </div>
           </div>
         </div>
@@ -217,11 +224,11 @@ export default {
       for (let index = 0; index < 10; index++) {
         const combine = `${index}${data}`
         if (!this.checkDuplicatedActiveNumber(result, combine)) {
-          result.push({ data: combine })
+          result.push({ data: combine, isDelete: false })
         }
         const swap = `${data}${index}`
         if (!this.checkDuplicatedActiveNumber(result, swap)) {
-          result.push({ data: swap })
+          result.push({ data: swap, isDelete: false })
         }
       }
       return result
@@ -285,7 +292,8 @@ export default {
       this.reset()
     },
     removeNumber(index) {
-      this.activeNumbers.splice(index, 1)
+      const isDelete = this.activeNumbers[index].isDelete
+      this.activeNumbers[index].isDelete = !isDelete
     },
     removeLastNumber(event) {
       if (event.target.value.length === 0) {

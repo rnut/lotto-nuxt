@@ -70,7 +70,17 @@
             class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
           />
         </div>
-        <div class="mb-6 pt-3 rounded bg-gray-200">
+        <div class="mb-6 pl-2 p-4 rounded bg-gray-200">
+          <label for="periodTypeCalendar" class="pl-4">
+            <input id="periodTypeCalendar" type="radio" v-model="periodType" value="calendar" class="p-2"/>
+            <span>ตามปฏิทิน</span>
+          </label>
+          <label for="periodTypeDay" class="pl-4">
+            <input id="periodTypeDay" type="radio" v-model="periodType" value="period"/>
+            <span>ตามวัน</span>
+          </label>
+        </div>
+        <div v-if="periodType === 'calendar'" class="mb-6 pt-3 rounded bg-gray-200">
             <label for="date"  class="block text-gray-700 text-sm font-bold mb-2 ml-3">
               <span class="text-gray-400 block">เวลา</span>
                 <vc-calendar :attributes="attributes" @dayclick="onDayClick" :min-date='new Date()'/>
@@ -78,6 +88,39 @@
               </client-only> -->
           </label>
         </div>
+        <div v-else class="mb-6 pl-2 p-4 rounded bg-gray-200 flex flex-col">
+          <h3 class="text mb-2 text-gray-400">ระบุวันเปิด..</h3>
+          <label for="checkboxSunday">
+            <input type="checkbox" id="checkboxSunday" v-model="periodDays" value=0/>
+            <span class="text-gray-500">วันอาทิตย์</span>
+          </label>
+          <label for="checkboxMonday">
+            <input type="checkbox" id="checkboxMonday" v-model="periodDays" value=1 />
+            <span class="text-gray-500">วันจันทร์</span>
+          </label>
+          <label for="checkboxTuesday">
+            <input type="checkbox" id="checkboxTuesday" v-model="periodDays" value=2/>
+            <span class="text-gray-500">วันอังคาร</span>
+          </label>
+          <label for="checkboxWednesday">
+            <input type="checkbox" id="checkboxWednesday" v-model="periodDays" value=3/>
+            <span class="text-gray-500">วันพุธ</span>
+          </label>
+          <label for="checkboxThursday">
+            <input type="checkbox" id="checkboxThursday" v-model="periodDays" value=4/>
+            <span class="text-gray-500">วันพฤหัส</span>
+          </label>
+          <label for="checkboxFriday">
+            <input type="checkbox" id="checkboxFriday" v-model="periodDays" value=5/>
+            <span class="text-gray-500">วันศุกร์</span>
+          </label>
+          <label for="checkboxSaturday">
+            <input type="checkbox" id="checkboxSaturday" v-model="periodDays" value=6/>
+            <span class="text-gray-500">วันเสาร์</span>
+          </label>
+
+        </div>
+
         <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -157,7 +200,9 @@ export default {
       errors: [],
       isLoading: false,
       FILE: null,
-      days: []
+      days: [],
+      periodType: 'calendar',
+      periodDays: []
     }
   },
   computed: {

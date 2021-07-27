@@ -30,7 +30,14 @@
               "
               @click="removeNumber(index)"
             >
-              {{ item.data }}
+              <p
+                :class="{
+                  'line-through': item.isDelete === true,
+                  'text-gray-400': item.isDelete
+                }"
+              >
+                {{ item.data }}
+              </p>
             </div>
           </div>
         </div>
@@ -163,7 +170,7 @@ export default {
           this.activeNumberError = 'เลขซ้ำนะจ๊ะ'
         } else {
           this.activeNumberError = ''
-          const oneNumber = { data: val }
+          const oneNumber = { data: val, isDelete: false }
           this.activeNumbers.push(oneNumber)
         }
         this.activeNumber = null
@@ -272,7 +279,8 @@ export default {
       this.reset()
     },
     removeNumber(index) {
-      this.activeNumbers.splice(index, 1)
+      const isDelete = this.activeNumbers[index].isDelete
+      this.activeNumbers[index].isDelete = !isDelete
     },
     removeLastNumber(event) {
       if (event.target.value.length === 0) {

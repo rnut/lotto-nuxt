@@ -31,7 +31,14 @@
               "
               @click="removeNumber(index)"
             >
-              {{ item.data }}
+              <p
+                :class="{
+                  'line-through': item.isDelete === true,
+                  'text-gray-400': item.isDelete
+                }"
+              >
+                {{ item.data }}
+              </p>
             </div>
           </div>
         </div>
@@ -227,7 +234,7 @@ export default {
         }
       }
       return results.map((result) => {
-        return { data: result }
+        return { data: result, isDelete: false }
       })
     },
     reset() {
@@ -280,7 +287,8 @@ export default {
       this.reset()
     },
     removeNumber(index) {
-      this.activeNumbers.splice(index, 1)
+      const isDelete = this.activeNumbers[index].isDelete
+      this.activeNumbers[index].isDelete = !isDelete
     },
     removeLastNumber(event) {
       if (event.target.value.length === 0) {
