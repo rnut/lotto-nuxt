@@ -38,9 +38,6 @@
       >
         <thead class="v-data-table-header">
           <tr>
-            <th>
-              <span>id</span>
-            </th>
             <th
               role="columnheader"
               scope="col"
@@ -173,7 +170,6 @@
         </thead>
         <tbody class="bg-purple-100 cursor-pointer">
           <tr class="" v-for="member in members" :key="member._id">
-            <td class="text-start">{{ member._id }}</td>
             <td class="text-start">{{ member.username }}</td>
             <td class="text-start">{{ member.name }}</td>
             <td class="text-start">{{ member.role }}</td>
@@ -209,7 +205,41 @@
                 </div>
               </label>
             </td>
-            <td class="text-start">
+            <td class="text-start flex gap-2">
+              <nuxt-link
+                v-if="member.role === 'agent'"
+                :to="`/members/underAgent/${member._id}`"
+              >
+                <button
+                  class="
+                    bg-green-500
+                    flex
+                    items-center
+                    px-3
+                    py
+                    rounded
+                    hover:bg-green-700
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    width="24px"
+                    fill="#FFFFFF"
+                  >
+                    <g fill="none">
+                      <path d="M0 0h24v24H0V0z" />
+                      <path d="M0 0h24v24H0V0z" opacity=".87" />
+                    </g>
+                    <path
+                      d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7zm-4 6h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"
+                    />
+                  </svg>
+                  <span class="m-2 text-white">ดูสมาชิก </span>
+                </button>
+              </nuxt-link>
+
               <nuxt-link :to="`/members/${member._id}`">
                 <button
                   class="

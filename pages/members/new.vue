@@ -215,7 +215,6 @@ export default {
           return [
             { value: 'member', title: 'ผู้เล่น' },
             { value: 'agent', title: 'เอเย่น' },
-            { value: 'agent', title: 'เอเย่น' },
             { value: 'announcer', title: 'ผู้ประกาศรางวัล' }
           ]
       }

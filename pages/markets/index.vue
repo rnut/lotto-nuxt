@@ -202,12 +202,9 @@ export default {
   methods: {
     async onChangeActive(m) {
       const activeStatus = !m.isActive
-      const payload = {
-        isActive: activeStatus
-      }
-      const url = `${this.$axios.defaults.baseURL}/markets/${m._id}`
-      await this.$axios.$patch(url, payload)
-      m.isActive = activeStatus
+      const url = `${this.$axios.defaults.baseURL}/markets/toggleActive/${m._id}`
+      const resp = await this.$axios.$patch(url)
+      m.isActive = resp.market.isActive
     },
     getMarketAvatar(market) {
       const baseImageURL = process.env.BASE_IMAGE_URL
