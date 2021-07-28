@@ -363,7 +363,7 @@ export default {
       this.submit()
     },
     validate() {
-      const min = 50
+      const min = 1
       const max = 100000
       if (
         (typeof this.priceTong === 'undefined' || this.priceTong === null,

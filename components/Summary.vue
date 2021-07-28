@@ -185,7 +185,7 @@
         border="0"
       >
         <tbody>
-          <tr v-for="(lotto, index) in lottos" :key="index">
+          <tr v-for="(lotto, index) in lottos" :key="index" class="bg-gray-200">
             <td>
               <span class="text-xl">{{ lotto.title }} </span>
             </td>
@@ -234,7 +234,7 @@
               </button>
             </td>
           </tr>
-          <tr>
+          <tr class="bg-gray-50">
             <td colspan="4" class="p-0">
               <div class="flex border border-gray-200 p-2">
                 <label

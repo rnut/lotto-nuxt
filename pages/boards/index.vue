@@ -141,6 +141,9 @@ export default {
       return time
     },
     getMarketIsOpen(item) {
+      if (!item.isActive) {
+        return false
+      }
       const onAirTime = this.getOnAirTime(item.onAirTimes)
       if (typeof onAirTime == 'undefined') {
         return
