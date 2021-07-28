@@ -266,7 +266,10 @@ export default {
       if (!this.validate()) {
         return
       }
-      const lottos = this.activeNumbers.map((number) => {
+      const filteredNumbers = this.activeNumbers.filter((number) => {
+        return number.isDelete === false
+      })
+      const lottos = filteredNumbers.map((number) => {
         return [
           {
             type: 'char3bon',
@@ -279,7 +282,7 @@ export default {
         title: '3 ตัว',
         subtitle: 'บน',
         detail: `${this.bonPrice}`,
-        numbers: this.activeNumbers,
+        numbers: filteredNumbers,
         lottos: lottos
       }
 
