@@ -179,6 +179,39 @@
           </select>
         </div>
 
+        <div v-if="role === 'member'" class="mb-6 pt-3 rounded bg-gray-200">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+            for="role"
+            >เอเย่นต์</label
+          >
+          <select
+            id="role"
+            v-model="agent"
+            class="
+              bg-gray-200
+              rounded
+              w-full
+              text-gray-700
+              focus:outline-none
+              border-b-4 border-gray-300
+              focus:border-purple-600
+              transition
+              duration-500
+              px-3
+              pb-3
+            "
+          >
+            <option
+              v-for="agent in agents"
+              :key="agent._id"
+              v-bind:value="agent._id"
+            >
+              {{ agent.username }} - {{ agent.name }}
+            </option>
+          </select>
+        </div>
+
         <button
           class="
             bg-purple-600
@@ -227,8 +260,20 @@ export default {
       name: '',
       lineID: '',
       mobileNumber: '',
-      role: 'member',
-      errors: []
+      role: 'agent',
+      errors: [],
+      agents: [],
+      agent: ''
+    }
+  },
+  watch: {
+    role: function (val, oldVal) {
+      if (typeof val === 'undifined' || val === null) {
+        return
+      }
+      if (val === 'member') {
+        this.didSelectMemberRole()
+      }
     }
   },
   methods: {
@@ -248,6 +293,15 @@ export default {
         this.$router.replace('/members')
       } catch (e) {
         alert(`เกิดข้อผิดพลาด 90000 ${e.message}`)
+      }
+    },
+    async didSelectMemberRole() {
+      try {
+        const url = `${this.$axios.defaults.baseURL}/users/agents`
+        const agents = await this.$axios.$get(url)
+        this.agents = agents
+      } catch (e) {
+        this.agents = []
       }
     },
     validate() {
@@ -272,13 +326,16 @@ export default {
         errorLineID,
         errorMobileNumber
       ].filter((e) => e !== '')
-      const payload = {
+      var payload = {
         username,
         password,
         name,
         lineID,
         mobileNumber,
         role
+      }
+      if (role === 'member') {
+        payload.createdBy = this.agent
       }
       return { payload, errors }
     },
