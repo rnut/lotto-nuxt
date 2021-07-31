@@ -446,7 +446,7 @@ export default {
     const url = `${$axios.defaults.baseURL}/markets/${slug}`
 
     const dateFormat = 'YYYY-MM-DD'
-    const urlBills = `${$axios.defaults.baseURL}/bills/member`
+    const urlBills = `${$axios.defaults.baseURL}/bills/board/member`
     const startDate = moment().locale('th').startOf('day').format(dateFormat)
     const endDate = moment().locale('th').endOf('day').format(dateFormat)
     try {
@@ -571,7 +571,7 @@ export default {
     async getCurrentBills() {
       this.bills = []
       const dateFormat = 'YYYY-MM-DD'
-      const url = `${this.$axios.defaults.baseURL}/bills/member`
+      const url = `${this.$axios.defaults.baseURL}/bills/board/member`
       const startDate = moment().locale('th').startOf('day').format(dateFormat)
       const endDate = moment().locale('th').endOf('day').format(dateFormat)
       try {

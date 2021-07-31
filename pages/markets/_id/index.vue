@@ -75,14 +75,57 @@
             class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
           />
         </div>
-        <div class="mb-6 pt-3 rounded bg-gray-200">
-            <label for="date"  class="block text-gray-700 text-sm font-bold mb-2 ml-3">
-              <span class="text-gray-400 block">เวลา</span>
-              <client-only placeholder="loading...">
-                <vc-calendar :attributes="attributes" @dayclick="onDayClick" :min-date='new Date()'/>
-              </client-only>
+        <div class="mb-6 pl-2 p-4 rounded bg-gray-200">
+          <label for="periodTypeCalendar" class="pl-4">
+            <input id="periodTypeCalendar" type="radio" v-model="market.periodType" value="calendar" class="p-2"/>
+            <span>ตามปฏิทิน</span>
+          </label>
+          <label for="periodTypeDay" class="pl-4">
+            <input id="periodTypeDay" type="radio" v-model="market.periodType" value="days"/>
+            <span>ตามวัน</span>
           </label>
         </div>
+        <div v-if="market.periodType === 'calendar'" class="mb-6 pt-3 rounded bg-gray-200">
+            <label for="date"  class="block text-gray-700 text-sm font-bold mb-2 ml-3">
+              <span class="text-gray-400 block">เวลา</span>
+                <vc-calendar :attributes="attributes" @dayclick="onDayClick" :min-date='new Date()'/>
+              <!-- <client-only placeholder="loading...">
+              </client-only> -->
+          </label>
+        </div>
+        
+        <div v-else class="mb-6 pl-2 p-4 rounded bg-gray-200 flex flex-col">
+          <h3 class="text mb-2 text-gray-400">ระบุวันเปิด..</h3>
+          <label for="checkboxSunday">
+            <input type="checkbox" id="checkboxSunday" v-model="market.onAirDays" value='Sunday'/>
+            <span class="text-gray-500">วันอาทิตย์</span>
+          </label>
+          <label for="checkboxMonday">
+            <input type="checkbox" id="checkboxMonday" v-model="market.onAirDays" value='Monday' />
+            <span class="text-gray-500">วันจันทร์</span>
+          </label>
+          <label for="checkboxTuesday">
+            <input type="checkbox" id="checkboxTuesday" v-model="market.onAirDays" value='Tuesday' />
+            <span class="text-gray-500">วันอังคาร</span>
+          </label>
+          <label for="checkboxWednesday">
+            <input type="checkbox" id="checkboxWednesday" v-model="market.onAirDays" value='Wednesday' />
+            <span class="text-gray-500">วันพุธ</span>
+          </label>
+          <label for="checkboxThursday">
+            <input type="checkbox" id="checkboxThursday" v-model="market.onAirDays" value='Thursday' />
+            <span class="text-gray-500">วันพฤหัส</span>
+          </label>
+          <label for="checkboxFriday">
+            <input type="checkbox" id="checkboxFriday" v-model="market.onAirDays" value='Friday'/>
+            <span class="text-gray-500">วันศุกร์</span>
+          </label>
+          <label for="checkboxSaturday">
+            <input type="checkbox" id="checkboxSaturday" v-model="market.onAirDays" value='Saturday'/>
+            <span class="text-gray-500">วันเสาร์</span>
+          </label>
+        </div>
+
         <div class="mb-6 pt-3 rounded bg-gray-200">
           <label
             class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -168,7 +211,9 @@ export default {
     return {
       isLoading: false,
       errors: [],
-      FILE: null
+      FILE: null,
+      periodType: '',
+      periodDays: []
     }
   },
   computed: {
@@ -302,12 +347,18 @@ export default {
       if (this.FILE !== null) {
         payload.append('upload', this.FILE, this.FILE.name)
       }
+      if (this.market.periodType === 'calendar') {
+        payload.append('days', JSON.stringify(this.days))
+      } else {
+        payload.append('onAirDays', JSON.stringify(this.market.onAirDays))
+      }
+
+      payload.append('periodType', this.market.periodType)
       payload.append('name', name)
       payload.append('color', color)
       payload.append('fontColor', fontColor)
       payload.append('openTime', openTime)
       payload.append('closeTime', closeTime)
-      payload.append('days', JSON.stringify(this.days))
       return { err, payload }
     },
     scrollToError() {
