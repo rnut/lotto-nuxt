@@ -256,12 +256,10 @@ export default {
       this.FILE = event.target.files[0]
     },
     getMarketAvatar() {
-      const market = this.market
-      const baseImageURL = process.env.BASE_IMAGE_URL
-      if (typeof market.avatar === 'undefined') {
+      if (typeof this.market.avatar === 'undefined') {
         return `/logos/logo.svg`
       } else {
-        return `${baseImageURL}${market.avatar}`
+        return `${this.market.avatar}`
       }
     },
     async onSave(e) {

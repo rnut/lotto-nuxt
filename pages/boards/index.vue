@@ -165,11 +165,10 @@ export default {
       }
     },
     getMarketAvatar(market) {
-      const baseImageURL = process.env.BASE_IMAGE_URL
       if (typeof market.avatar === 'undefined') {
         return `/logos/logo.svg`
       } else {
-        return `${baseImageURL}${market.avatar}`
+        return `${market.avatar}`
       }
     }
   }
