@@ -47,7 +47,18 @@
         </div>
         <button
           @click="onClickSearch"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+          class="
+            bg-purple-600
+            hover:bg-purple-700
+            text-white
+            font-bold
+            py-2
+            rounded
+            shadow-lg
+            hover:shadow-xl
+            transition
+            duration-200
+          "
         >
           ค้นหา
         </button>
@@ -74,7 +85,12 @@
             <template v-for="bill in bills">
               <tr
                 :key="bill._id"
-                class="cursor-pointer text-purple-900 border-t-2 border-white hover:bg-gray-100"
+                class="
+                  cursor-pointer
+                  text-purple-900
+                  border-t-2 border-white
+                  hover:bg-gray-100
+                "
                 @click="onClickBill(bill)"
               >
                 <td class="table-content">{{ bill.username }}</td>
@@ -99,6 +115,51 @@
                   >
                     {{ getSummary(bill) | currencies }}
                   </span>
+                </td>
+              </tr>
+              <tr :key="bill.id" v-if="expandedIDs.includes(bill._id)">
+                <td colspan="13">
+                  <table
+                    class="table-auto w-full bg-white border border-purple-400"
+                    cellpadding="0"
+                    cellspacing="0"
+                  >
+                    <th
+                      class="table-header bg-purple-400"
+                      v-for="h in headers"
+                      :key="h"
+                    >
+                      <span>{{ h }}</span>
+                    </th>
+
+                    <tbody>
+                      <tr v-for="member in bill.members" :key="member._id">
+                        <td class="table-content">{{ member.username }}</td>
+                        <td class="table-content">{{ member.name }}</td>
+                        <td class="table-content">
+                          <span>{{ member.sumTotalPrice | currencies }}</span>
+                        </td>
+                        <td class="table-content">
+                          {{ member.sumTotalDiscount | currencies }}
+                        </td>
+                        <td class="table-content">
+                          {{ member.sumTotalReward | currencies }}
+                        </td>
+                        <td class="table-content">
+                          <span
+                            class="text-lg"
+                            :class="{
+                              'text-red-500': getSummary(member) < 0,
+                              'text-green-700': getSummary(member) > 0,
+                              'text-gray-500': getSummary(member) === 0
+                            }"
+                          >
+                            {{ getSummary(member) | currencies }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
               </tr>
             </template>
@@ -155,7 +216,32 @@ export default {
           markets: this.filteredMarketIDs
         }
         const resp = await this.$axios.get(url, { params: queryParams })
-        this.bills = resp.data
+        const bills = resp.data.bills
+        const agents = resp.data.agents.map((a) => {
+          var sumTotalPrice = 0
+          var sumTotalDiscount = 0
+          var sumTotalReward = 0
+          const members = bills.filter((b) => {
+            if (b.agentId === a._id) {
+              sumTotalPrice += b.sumTotalPrice
+              sumTotalDiscount += b.sumTotalDiscount
+              sumTotalReward += b.sumTotalReward
+              return true
+            } else {
+              return false
+            }
+          })
+          return {
+            id: a._id,
+            username: a.username,
+            name: a.name,
+            sumTotalPrice,
+            sumTotalDiscount,
+            sumTotalReward,
+            members
+          }
+        })
+        this.bills = agents
       } catch (e) {}
     },
     getSummary(b) {

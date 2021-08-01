@@ -352,7 +352,7 @@ export default {
       } else {
         payload.append('onAirDays', JSON.stringify(this.market.onAirDays))
       }
-
+      payload.append('isActive', this.market.isActive)
       payload.append('periodType', this.market.periodType)
       payload.append('name', name)
       payload.append('color', color)
